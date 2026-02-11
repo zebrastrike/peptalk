@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "PepTalk",
+    "slug": "peptalk",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "peptalk",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1f2a36"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sbbpeptides.peptalk"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1f2a36"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.sbbpeptides.peptalk"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store"
+    ]
+  }
+}
