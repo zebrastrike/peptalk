@@ -15,6 +15,43 @@ export type PeptideCategory =
   | 'Neuropeptide'
   | 'Antimicrobial';
 
+export type Gender = 'Male' | 'Female';
+
+export type AgeRange = '18-29' | '30-44' | '45-60' | '60+';
+
+export type MaritalStatus = 'Single' | 'Married' | 'Other';
+
+export type ReferralSource =
+  | 'Google / Search'
+  | 'Social Media'
+  | 'Podcast / YouTube'
+  | 'Friend / Referral'
+  | 'Ad / Sponsored'
+  | 'Other';
+
+export type Ethnicity =
+  | 'white'
+  | 'black'
+  | 'hispanic'
+  | 'asian'
+  | 'native_american'
+  | 'pacific_islander'
+  | 'middle_eastern'
+  | 'mixed_other';
+
+export type SegmentId =
+  | 'male-18-29' | 'male-30-44' | 'male-45-60' | 'male-60+'
+  | 'female-18-29' | 'female-30-44' | 'female-45-60' | 'female-60+';
+
+export interface EthnicityProfile {
+  id: Ethnicity;
+  label: string;
+  healthFocusAreas: string[];
+  featuredPeptideIds: string[];
+  researchHighlights: string[];
+  paletteAccent?: string;
+}
+
 export interface Peptide {
   id: string;
   name: string;
@@ -34,6 +71,20 @@ export interface Peptide {
   reconstitution?: string;
   isoelectricPoint?: number;
   chargeAtPhysiologicalPH?: string;
+  approvalStatus?: 'fda_approved' | 'ema_approved' | 'approved_other' | 'phase_3' | 'phase_2' | 'phase_1' | 'preclinical' | 'research_only';
+  approvalDetails?: string;
+  clinicalTrialNCT?: string[];
+  adverseEffects?: string[];
+  drugInteractions?: string[];
+  naturalSources?: string;
+  yearDiscovered?: number;
+  aminoAcidSequence?: string;
+  bioavailability?: string;
+  routeOfAdministration?: string[];
+  commonBrandNames?: string[];
+  doiLinks?: string[];
+  evidenceGrade?: 'established' | 'moderate' | 'preliminary';
+  structureImageUrl?: string;
 }
 
 export type InteractionType =
@@ -64,6 +115,8 @@ export interface PeptideStack {
   curatedBy?: string;
   description?: string;
   analysis?: StackAnalysis;
+  targetGoals?: GoalType[];
+  evidenceLevel?: 'established' | 'moderate' | 'preliminary';
 }
 
 export interface StackAnalysis {
@@ -84,6 +137,56 @@ export interface User {
   createdAt: string;
 }
 
+export interface OnboardingProfile {
+  gender: Gender | null;
+  ageRange: AgeRange | null;
+  ethnicity: Ethnicity | null;
+  maritalStatus: MaritalStatus | null;
+  referralSource: ReferralSource | null;
+  interestCategories: PeptideCategory[];
+  acceptedSafety: boolean;
+  dataShareConsent: boolean;
+}
+
+export interface DashboardSegment {
+  id: SegmentId;
+  gender: Gender;
+  ageRange: AgeRange;
+  label: string;
+  tagline: string;
+  focusAreas: string[];
+  heroTitle: string;
+  heroSubtitle: string;
+  palette: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    card: string;
+  };
+  imagery: string[];
+  stackHighlights: string[];
+  researchHighlights: string[];
+}
+
+export type CheckInRating = 1 | 2 | 3 | 4 | 5;
+
+export interface CheckInEntry {
+  id: string;
+  date: string; // YYYY-MM-DD (local date)
+  createdAt: string;
+  mood: CheckInRating;
+  energy: CheckInRating;
+  stress: CheckInRating;
+  sleepQuality: CheckInRating;
+  recovery: CheckInRating;
+  appetite: CheckInRating;
+  weightLbs?: number;
+  restingHeartRate?: number;
+  steps?: number;
+  notes?: string;
+}
+
 export interface ResearchArticle {
   id: string;
   title: string;
@@ -93,4 +196,400 @@ export interface ResearchArticle {
   publishedAt: string;
   relatedPeptides: string[];
   relatedCategories: PeptideCategory[];
+}
+
+// ─── Chat / PepTalk Bot ───────────────────────────────────────────────────────
+
+export type ChatRole = 'user' | 'bot';
+
+export interface ChatMessage {
+  id: string;
+  role: ChatRole;
+  content: string;
+  timestamp: string;
+  relatedPeptideIds?: string[];
+  quickReplies?: string[];
+}
+
+export type BotIntent =
+  | 'peptide_info'
+  | 'dosing_protocol'
+  | 'interaction_check'
+  | 'category_explore'
+  | 'mechanism'
+  | 'comparison'
+  | 'side_effects'
+  | 'storage'
+  | 'health_suggest'
+  | 'stack_help'
+  | 'greeting'
+  | 'general';
+
+export interface BotContext {
+  userProfile: OnboardingProfile | null;
+  recentCheckIns: CheckInEntry[];
+  currentStack: string[];
+  savedStackNames: string[];
+  conversationHistory: ChatMessage[];
+}
+
+// ─── Research Feed / Newsletter ───────────────────────────────────────────────
+
+export type FeedCategory =
+  | 'research'
+  | 'new_peptides'
+  | 'medical'
+  | 'regulatory';
+
+export interface FeedItem {
+  id: string;
+  title: string;
+  summary: string;
+  source: string;
+  url: string;
+  category: FeedCategory;
+  publishedAt: string;
+  fetchedAt: string;
+  relatedPeptideIds?: string[];
+  authors?: string;
+}
+
+export interface DailyDigest {
+  date: string; // YYYY-MM-DD
+  items: FeedItem[];
+  generatedAt: string;
+}
+
+// ─── Dose Logging & Protocol Tracking ─────────────────────────────────────────
+
+export type AdministrationRoute =
+  | 'subcutaneous'
+  | 'intramuscular'
+  | 'oral'
+  | 'nasal'
+  | 'topical'
+  | 'sublingual'
+  | 'other';
+
+export type DoseUnit = 'mcg' | 'mg' | 'IU' | 'ml';
+
+export interface DoseLogEntry {
+  id: string;
+  peptideId: string;
+  date: string;           // YYYY-MM-DD
+  time: string;           // HH:mm
+  amount: number;
+  unit: DoseUnit;
+  route: AdministrationRoute;
+  injectionSite?: string; // e.g., "abdomen left", "deltoid right"
+  batchNumber?: string;
+  notes?: string;
+  createdAt: string;
+}
+
+export type ProtocolFrequency =
+  | 'daily'
+  | 'twice_daily'
+  | 'eod'            // every other day
+  | 'tiw'            // 3x/week
+  | 'biw'            // 2x/week
+  | 'weekly'
+  | 'biweekly'
+  | 'monthly'
+  | 'custom';
+
+export interface ProtocolTemplate {
+  id: string;
+  peptideId: string;
+  name: string;
+  typicalDose: { min: number; max: number; unit: DoseUnit };
+  route: AdministrationRoute;
+  frequency: ProtocolFrequency;
+  frequencyLabel: string;
+  durationWeeks: { min: number; max: number };
+  timing?: string;         // e.g., "before bed", "morning fasted"
+  storageNotes: string;
+  reconstitutionNotes?: string;
+  importantNotes: string[];
+  contraindications?: string[];  // conditions/situations where this peptide should NOT be used
+  cautionConditions?: string[];  // conditions requiring extra monitoring
+  source: string;          // "published research" | "common practice"
+}
+
+export interface ActiveProtocol {
+  id: string;
+  peptideId: string;
+  templateId?: string;     // links to ProtocolTemplate
+  dose: number;
+  unit: DoseUnit;
+  route: AdministrationRoute;
+  frequency: ProtocolFrequency;
+  startDate: string;
+  endDate?: string;        // planned end
+  isActive: boolean;
+  notes?: string;
+  createdAt: string;
+}
+
+// ─── Enhanced Journal / Effect Tracking ───────────────────────────────────────
+
+export type EffectSentiment = 'positive' | 'neutral' | 'negative';
+
+export interface PeptideEffect {
+  peptideId: string;
+  effect: string;          // free-text: "appetite suppressed", "injection site redness"
+  sentiment: EffectSentiment;
+  severity?: CheckInRating; // 1-5 intensity
+}
+
+export interface EnhancedCheckIn extends CheckInEntry {
+  peptideEffects: PeptideEffect[];
+  overallFeeling: string;         // free-text how they feel today
+  sideEffects?: string[];         // list of reported side effects
+  symptomFlags?: SymptomFlag[];   // concerning patterns
+}
+
+export type SymptomSeverity = 'mild' | 'moderate' | 'severe';
+
+export interface SymptomFlag {
+  symptom: string;
+  severity: SymptomSeverity;
+  relatedPeptideId?: string;
+  recommendation: string;   // what the app suggests
+}
+
+// ─── Health Alerts ────────────────────────────────────────────────────────────
+
+export type AlertLevel = 'info' | 'caution' | 'warning' | 'urgent';
+
+export interface HealthAlert {
+  id: string;
+  level: AlertLevel;
+  title: string;
+  message: string;
+  triggeredBy: string;     // what data triggered this
+  actionLabel: string;     // "Talk to your doctor", "Review your protocol"
+  dismissed: boolean;
+  createdAt: string;
+}
+
+// ─── Updated Bot Context ─────────────────────────────────────────────────────
+
+export interface EnhancedBotContext extends BotContext {
+  recentDoses: DoseLogEntry[];
+  activeProtocols: ActiveProtocol[];
+  recentEffects: PeptideEffect[];
+  healthAlerts: HealthAlert[];
+  healthProfile: HealthProfile | null;
+}
+
+// ─── Comprehensive Health Profile ─────────────────────────────────────────────
+
+export type BiologicalSex = 'male' | 'female' | 'other';
+export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+export type DietType =
+  | 'no_restriction'
+  | 'keto'
+  | 'paleo'
+  | 'vegetarian'
+  | 'vegan'
+  | 'mediterranean'
+  | 'carnivore'
+  | 'intermittent_fasting'
+  | 'other';
+
+export type SleepPattern = 'early_bird' | 'night_owl' | 'irregular' | 'shift_work';
+
+export type GoalType =
+  | 'weight_loss'
+  | 'muscle_gain'
+  | 'body_recomp'
+  | 'recovery'
+  | 'longevity'
+  | 'cognitive'
+  | 'sleep'
+  | 'energy'
+  | 'immune'
+  | 'gut_health'
+  | 'skin_hair'
+  | 'hormonal'
+  | 'general_wellness';
+
+export type ConnectedDevice =
+  | 'apple_watch'
+  | 'apple_health'
+  | 'google_fit'
+  | 'fitbit'
+  | 'whoop'
+  | 'oura'
+  | 'garmin'
+  | 'samsung_health'
+  | 'other';
+
+export interface BodyMetrics {
+  weightLbs?: number;
+  heightInches?: number;
+  bodyFatPercent?: number;
+  waistInches?: number;
+  goalWeightLbs?: number;
+}
+
+export interface MedicalHistory {
+  conditions: string[];           // "diabetes", "hypertension", "thyroid", etc.
+  medications: string[];          // current medications
+  allergies: string[];            // drug/food/environmental allergies
+  allergenNotes?: string;         // free-text detail
+  surgeries?: string[];           // relevant surgical history
+  familyHistory?: string[];       // "heart disease", "diabetes", "cancer"
+  pregnantOrNursing?: boolean;
+  hasProviderSupervision: boolean; // are they working with a doctor?
+  providerNotes?: string;         // who/where
+}
+
+export interface NutritionProfile {
+  dietType: DietType;
+  dietNotes?: string;
+  dailyCalorieTarget?: number;
+  dailyProteinGrams?: number;
+  dailyWaterOz?: number;
+  supplementsUsed: string[];      // "creatine", "vitamin D", "magnesium", etc.
+  foodAllergies: string[];        // "gluten", "dairy", "shellfish", etc.
+  mealsPerDay?: number;
+  fastingWindow?: string;         // e.g., "16:8", "20:4"
+}
+
+export interface SleepProfile {
+  averageHours?: number;
+  sleepPattern: SleepPattern;
+  bedtime?: string;               // "22:00"
+  wakeTime?: string;              // "06:00"
+  sleepIssues: string[];          // "insomnia", "apnea", "restless legs", etc.
+  usesSleepAids: boolean;
+  sleepAidNotes?: string;
+}
+
+export interface LifestyleProfile {
+  activityLevel: ActivityLevel;
+  exerciseFrequency?: number;     // days per week
+  exerciseTypes: string[];        // "weight training", "cardio", "yoga", etc.
+  occupation?: string;
+  stressSources: string[];        // "work", "financial", "relationship", etc.
+  smokingStatus: 'never' | 'former' | 'current';
+  alcoholFrequency: 'never' | 'rarely' | 'moderate' | 'frequent';
+}
+
+export interface DeviceConnections {
+  connectedDevices: ConnectedDevice[];
+  primaryDevice?: ConnectedDevice;
+  healthKitEnabled: boolean;
+  googleFitEnabled: boolean;
+}
+
+export interface HealthProfile {
+  // Basic demographics (extends onboarding)
+  biologicalSex?: BiologicalSex;
+  dateOfBirth?: string;           // YYYY-MM-DD for accurate age calc
+  bodyMetrics: BodyMetrics;
+
+  // Health background
+  medical: MedicalHistory;
+
+  // Lifestyle pillars
+  nutrition: NutritionProfile;
+  sleep: SleepProfile;
+  lifestyle: LifestyleProfile;
+
+  // Connected devices
+  devices: DeviceConnections;
+
+  // Goals
+  primaryGoals: GoalType[];
+  secondaryGoals: GoalType[];
+
+  // Peptide experience
+  peptideExperience: 'none' | 'beginner' | 'intermediate' | 'experienced';
+  currentPeptides: string[];      // peptide IDs they're currently using
+  pastPeptides: string[];         // peptide IDs they've used before
+
+  // Consent
+  aiDataConsent: boolean;         // user consents to send health data to cloud AI
+
+  // Meta
+  profileCompleteness: number;    // 0-100 percentage
+  lastUpdated: string;
+  setupComplete: boolean;
+}
+
+// ─── Educational & Media Content ─────────────────────────────────────────────
+
+export type ArticleCategory = 'fundamentals' | 'safety' | 'production' | 'testing' | 'regulation' | 'delivery';
+
+export interface EducationalArticle {
+  id: string;
+  title: string;
+  slug: string;
+  category: ArticleCategory;
+  summary: string;
+  sections: { heading: string; content: string }[];
+  citations: { text: string; url?: string }[];
+  relatedPeptideIds?: string[];
+  lastUpdated: string;
+}
+
+export type VideoCategory = 'success_stories' | 'how_to' | 'research' | 'education';
+
+export interface VideoContent {
+  id: string;
+  title: string;
+  slug: string;
+  category: VideoCategory;
+  description: string;
+  thumbnailUrl?: string;
+  videoUrl: string;
+  duration?: string;
+  tags: string[];
+  relatedPeptideIds?: string[];
+  featured?: boolean;
+  publishedAt: string;
+}
+
+export type GuideCategory = 'reconstitution' | 'injection' | 'storage' | 'dosing' | 'testing' | 'general';
+
+export interface HowToGuide {
+  id: string;
+  title: string;
+  slug: string;
+  category: GuideCategory;
+  summary: string;
+  steps: { stepNumber: number; title: string; content: string; imageUrl?: string }[];
+  warnings?: string[];
+  relatedPeptideIds?: string[];
+  relatedVideoId?: string;
+  lastUpdated: string;
+}
+
+// ─── Safety & Clinical Data ──────────────────────────────────────────────────
+
+export interface SafetyProfile {
+  peptideId: string;
+  contraindications: string[];
+  seriousAdverseEffects: string[];
+  commonSideEffects: string[];
+  drugInteractions: { drug: string; severity: 'mild' | 'moderate' | 'severe'; mechanism: string }[];
+  pregnancyCategory?: string;
+  monitoringRequired?: string[];
+  blackBoxWarnings?: string[];
+}
+
+export interface ClinicalTrial {
+  peptideId: string;
+  name: string;
+  nctId?: string;
+  phase: string;
+  status: string;
+  enrollment?: number;
+  primaryEndpoint?: string;
+  keyFindings?: string;
+  publicationDOI?: string;
+  publicationPMID?: string;
 }

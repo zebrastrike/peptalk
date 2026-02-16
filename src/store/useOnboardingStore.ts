@@ -1,0 +1,101 @@
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import {
+  AgeRange,
+  Ethnicity,
+  Gender,
+  MaritalStatus,
+  OnboardingProfile,
+  PeptideCategory,
+  ReferralSource,
+} from '../types';
+import { secureStorage } from '../services/secureStorage';
+
+interface OnboardingStore {
+  profile: OnboardingProfile;
+  isComplete: boolean;
+  hasHydrated: boolean;
+  setGender: (gender: Gender) => void;
+  setAgeRange: (ageRange: AgeRange) => void;
+  setEthnicity: (ethnicity: Ethnicity) => void;
+  setMaritalStatus: (status: MaritalStatus) => void;
+  setReferralSource: (source: ReferralSource) => void;
+  setInterestCategories: (categories: PeptideCategory[]) => void;
+  toggleInterestCategory: (category: PeptideCategory) => void;
+  setAcceptedSafety: (accepted: boolean) => void;
+  setDataShareConsent: (consent: boolean) => void;
+  completeOnboarding: () => void;
+  reset: () => void;
+}
+
+const emptyProfile: OnboardingProfile = {
+  gender: null,
+  ageRange: null,
+  ethnicity: null,
+  maritalStatus: null,
+  referralSource: null,
+  interestCategories: [],
+  acceptedSafety: false,
+  dataShareConsent: false,
+};
+
+export const useOnboardingStore = create<OnboardingStore>()(
+  persist(
+    (set, get) => ({
+      profile: emptyProfile,
+      isComplete: false,
+      hasHydrated: false,
+
+      setGender: (gender) =>
+        set((state) => ({ profile: { ...state.profile, gender } })),
+      setAgeRange: (ageRange) =>
+        set((state) => ({ profile: { ...state.profile, ageRange } })),
+      setEthnicity: (ethnicity) =>
+        set((state) => ({ profile: { ...state.profile, ethnicity } })),
+      setMaritalStatus: (maritalStatus) =>
+        set((state) => ({ profile: { ...state.profile, maritalStatus } })),
+      setReferralSource: (referralSource) =>
+        set((state) => ({ profile: { ...state.profile, referralSource } })),
+      setInterestCategories: (interestCategories) =>
+        set((state) => ({
+          profile: { ...state.profile, interestCategories },
+        })),
+      toggleInterestCategory: (category) => {
+        const { profile } = get();
+        const next = profile.interestCategories.includes(category)
+          ? profile.interestCategories.filter((c) => c !== category)
+          : [...profile.interestCategories, category];
+        set((state) => ({
+          profile: { ...state.profile, interestCategories: next },
+        }));
+      },
+      setAcceptedSafety: (acceptedSafety) =>
+        set((state) => ({ profile: { ...state.profile, acceptedSafety } })),
+      setDataShareConsent: (dataShareConsent) =>
+        set((state) => ({ profile: { ...state.profile, dataShareConsent } })),
+
+      completeOnboarding: () => set({ isComplete: true }),
+      reset: () => set({ profile: emptyProfile, isComplete: false }),
+    }),
+    {
+      name: 'peptalk-onboarding',
+      storage: createJSONStorage(() => secureStorage),
+      partialize: (state) => ({
+        profile: state.profile,
+        isComplete: state.isComplete,
+      }),
+      onRehydrateStorage: () => (state) => {
+        const safeProfile = {
+          ...emptyProfile,
+          ...state?.profile,
+          interestCategories: state?.profile?.interestCategories ?? [],
+        };
+        set({
+          profile: safeProfile,
+          isComplete: state?.isComplete ?? false,
+          hasHydrated: true,
+        });
+      },
+    }
+  )
+);

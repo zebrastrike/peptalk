@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Linking,
   Alert,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -16,6 +17,60 @@ import { useStackStore } from '../../src/store/useStackStore';
 import { GlassCard } from '../../src/components/GlassCard';
 import { getCategoryColor } from '../../src/constants/categories';
 import { Disclaimer } from '../../src/components/Disclaimer';
+import { trackPeptideView } from '../../src/services/sbbEvents';
+import { getProtocolsByPeptide } from '../../src/data/protocols';
+import { getTrialsByPeptideId } from '../../src/data/clinicalTrials';
+import { getSafetyProfileByPeptideId } from '../../src/data/safetyProfiles';
+import { getCuratedStacksByPeptideId } from '../../src/data/curatedStacks';
+import { getVideosByPeptideId } from '../../src/data/videos';
+import { getGuidesByPeptideId } from '../../src/data/howToGuides';
+import { getInteractionsByPeptideId } from '../../src/data/interactions';
+
+// ── Helper Functions ──────────────────────────────────────────────
+
+function getApprovalColor(status: string): string {
+  switch (status) {
+    case 'fda_approved': return '#22c55e';
+    case 'ema_approved': return '#3b82f6';
+    case 'approved_other': return '#06b6d4';
+    case 'phase_3': return '#f59e0b';
+    case 'phase_2': return '#f97316';
+    case 'phase_1': return '#ef4444';
+    case 'preclinical': return '#8b5cf6';
+    default: return '#6b7280';
+  }
+}
+
+function getApprovalLabel(status: string): string {
+  switch (status) {
+    case 'fda_approved': return 'FDA Approved';
+    case 'ema_approved': return 'EMA Approved';
+    case 'approved_other': return 'Approved (Other)';
+    case 'phase_3': return 'Phase 3';
+    case 'phase_2': return 'Phase 2';
+    case 'phase_1': return 'Phase 1';
+    case 'preclinical': return 'Preclinical';
+    default: return 'Research Only';
+  }
+}
+
+function getEvidenceColor(grade: string): string {
+  switch (grade) {
+    case 'established': return '#22c55e';
+    case 'moderate': return '#f59e0b';
+    case 'preliminary': return '#f97316';
+    default: return '#6b7280';
+  }
+}
+
+function getEvidenceIcon(grade: string): string {
+  switch (grade) {
+    case 'established': return 'checkmark-circle';
+    case 'moderate': return 'ellipse-outline';
+    case 'preliminary': return 'help-circle-outline';
+    default: return 'help-circle-outline';
+  }
+}
 
 export default function PeptideDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -23,6 +78,11 @@ export default function PeptideDetailScreen() {
   const { currentStack, addToStack } = useStackStore();
 
   const peptide = getPeptideById(id ?? '');
+
+  useEffect(() => {
+    if (!peptide) return;
+    trackPeptideView(peptide.id, peptide.name);
+  }, [peptide]);
 
   if (!peptide) {
     return (
@@ -43,6 +103,14 @@ export default function PeptideDetailScreen() {
       </SafeAreaView>
     );
   }
+
+  // ── Data lookups ────────────────────────────────────────────────
+  const safetyProfile = getSafetyProfileByPeptideId(peptide.id);
+  const clinicalTrials = getTrialsByPeptideId(peptide.id);
+  const protocols = getProtocolsByPeptide(peptide.id);
+  const relatedStacks = getCuratedStacksByPeptideId(peptide.id);
+  const relatedVideos = getVideosByPeptideId(peptide.id);
+  const relatedGuides = getGuidesByPeptideId(peptide.id);
 
   const isInStack = currentStack.includes(peptide.id);
   const stackFull = currentStack.length >= 5;
@@ -112,6 +180,39 @@ export default function PeptideDetailScreen() {
             </View>
           ))}
         </View>
+
+        {/* NEW: Approval Status Badge */}
+        {peptide.approvalStatus && (
+          <View style={styles.approvalRow}>
+            <View style={[styles.approvalBadge, { backgroundColor: getApprovalColor(peptide.approvalStatus) }]}>
+              <Text style={styles.approvalBadgeText}>{getApprovalLabel(peptide.approvalStatus)}</Text>
+            </View>
+            {peptide.approvalDetails && (
+              <Text style={styles.approvalDetails}>{peptide.approvalDetails}</Text>
+            )}
+          </View>
+        )}
+
+        {/* NEW: Brand Names */}
+        {peptide.commonBrandNames && peptide.commonBrandNames.length > 0 && (
+          <View style={styles.brandRow}>
+            {peptide.commonBrandNames.map((name, i) => (
+              <View key={i} style={styles.brandPill}>
+                <Text style={styles.brandPillText}>{name}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* NEW: Evidence Grade */}
+        {peptide.evidenceGrade && (
+          <View style={styles.evidenceRow}>
+            <View style={[styles.evidenceBadge, { backgroundColor: getEvidenceColor(peptide.evidenceGrade) }]}>
+              <Ionicons name={getEvidenceIcon(peptide.evidenceGrade) as any} size={14} color="#0f1720" />
+              <Text style={styles.evidenceBadgeText}>{peptide.evidenceGrade.charAt(0).toUpperCase() + peptide.evidenceGrade.slice(1)} Evidence</Text>
+            </View>
+          </View>
+        )}
 
         {/* Research Summary */}
         <GlassCard style={styles.section}>
@@ -220,6 +321,286 @@ export default function PeptideDetailScreen() {
           </View>
         </GlassCard>
 
+        {/* NEW: Chemical Structure Image */}
+        {peptide.structureImageUrl && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="flask-outline" size={18} color="#c7d7e6" />
+              <Text style={styles.sectionTitle}>Chemical Structure</Text>
+            </View>
+            <Image source={{ uri: peptide.structureImageUrl }} style={styles.structureImage} resizeMode="contain" />
+          </GlassCard>
+        )}
+
+        {/* NEW: Additional Information */}
+        {(peptide.bioavailability || peptide.routeOfAdministration?.length || peptide.naturalSources || peptide.yearDiscovered || peptide.aminoAcidSequence) && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="information-circle-outline" size={18} color="#c7d7e6" />
+              <Text style={styles.sectionTitle}>Additional Information</Text>
+            </View>
+            <View style={styles.dataGrid}>
+              {peptide.yearDiscovered && (
+                <View style={styles.dataItem}>
+                  <Text style={styles.dataLabel}>Year Discovered</Text>
+                  <Text style={styles.dataValue}>{peptide.yearDiscovered}</Text>
+                </View>
+              )}
+              {peptide.bioavailability && (
+                <View style={styles.dataItem}>
+                  <Text style={styles.dataLabel}>Bioavailability</Text>
+                  <Text style={styles.dataValue}>{peptide.bioavailability}</Text>
+                </View>
+              )}
+              {peptide.routeOfAdministration && peptide.routeOfAdministration.length > 0 && (
+                <View style={styles.dataItem}>
+                  <Text style={styles.dataLabel}>Route(s)</Text>
+                  <Text style={styles.dataValue}>{peptide.routeOfAdministration.join(', ')}</Text>
+                </View>
+              )}
+              {peptide.naturalSources && (
+                <View style={styles.dataItem}>
+                  <Text style={styles.dataLabel}>Natural Source</Text>
+                  <Text style={styles.dataValue}>{peptide.naturalSources}</Text>
+                </View>
+              )}
+            </View>
+            {peptide.aminoAcidSequence && (
+              <View style={styles.sequenceContainer}>
+                <Text style={styles.dataLabel}>Amino Acid Sequence</Text>
+                <Text style={styles.sequenceText}>{peptide.aminoAcidSequence}</Text>
+              </View>
+            )}
+          </GlassCard>
+        )}
+
+        {/* NEW: Adverse Effects */}
+        {peptide.adverseEffects && peptide.adverseEffects.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="warning-outline" size={18} color="#f0d68a" />
+              <Text style={styles.sectionTitle}>Known Adverse Effects</Text>
+            </View>
+            {peptide.adverseEffects.map((effect, i) => (
+              <View key={i} style={styles.bulletRow}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{effect}</Text>
+              </View>
+            ))}
+          </GlassCard>
+        )}
+
+        {/* NEW: Drug Interactions */}
+        {peptide.drugInteractions && peptide.drugInteractions.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="swap-horizontal-outline" size={18} color="#e3a7a1" />
+              <Text style={styles.sectionTitle}>Drug Interactions</Text>
+            </View>
+            {peptide.drugInteractions.map((interaction, i) => (
+              <View key={i} style={styles.bulletRow}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{interaction}</Text>
+              </View>
+            ))}
+          </GlassCard>
+        )}
+
+        {/* NEW: Safety Profile */}
+        {safetyProfile && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="medkit-outline" size={18} color="#e3a7a1" />
+              <Text style={styles.sectionTitle}>Safety Profile</Text>
+            </View>
+            {safetyProfile.blackBoxWarnings && safetyProfile.blackBoxWarnings.length > 0 && (
+              <View style={styles.warningBox}>
+                <Ionicons name="alert-circle" size={16} color="#ef4444" />
+                <View style={{ flex: 1 }}>
+                  {safetyProfile.blackBoxWarnings.map((w, i) => (
+                    <Text key={i} style={styles.warningText}>{w}</Text>
+                  ))}
+                </View>
+              </View>
+            )}
+            {safetyProfile.contraindications.length > 0 && (
+              <View style={styles.safetySubsection}>
+                <Text style={styles.safetySubtitle}>Contraindications</Text>
+                {safetyProfile.contraindications.map((c, i) => (
+                  <View key={i} style={styles.bulletRow}>
+                    <Text style={[styles.bulletDot, { color: '#ef4444' }]}>•</Text>
+                    <Text style={styles.bulletText}>{c}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+            {safetyProfile.seriousAdverseEffects.length > 0 && (
+              <View style={styles.safetySubsection}>
+                <Text style={styles.safetySubtitle}>Serious Adverse Effects</Text>
+                {safetyProfile.seriousAdverseEffects.map((e, i) => (
+                  <View key={i} style={styles.bulletRow}>
+                    <Text style={[styles.bulletDot, { color: '#f59e0b' }]}>•</Text>
+                    <Text style={styles.bulletText}>{e}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+            {safetyProfile.commonSideEffects.length > 0 && (
+              <View style={styles.safetySubsection}>
+                <Text style={styles.safetySubtitle}>Common Side Effects</Text>
+                {safetyProfile.commonSideEffects.map((e, i) => (
+                  <View key={i} style={styles.bulletRow}>
+                    <Text style={styles.bulletDot}>•</Text>
+                    <Text style={styles.bulletText}>{e}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+            {safetyProfile.monitoringRequired && safetyProfile.monitoringRequired.length > 0 && (
+              <View style={styles.safetySubsection}>
+                <Text style={styles.safetySubtitle}>Monitoring Required</Text>
+                {safetyProfile.monitoringRequired.map((m, i) => (
+                  <View key={i} style={styles.bulletRow}>
+                    <Text style={styles.bulletDot}>•</Text>
+                    <Text style={styles.bulletText}>{m}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+            {safetyProfile.pregnancyCategory && (
+              <View style={styles.safetySubsection}>
+                <Text style={styles.safetySubtitle}>Pregnancy Category</Text>
+                <Text style={styles.sectionText}>{safetyProfile.pregnancyCategory}</Text>
+              </View>
+            )}
+          </GlassCard>
+        )}
+
+        {/* NEW: Clinical Trials */}
+        {clinicalTrials.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="flask-outline" size={18} color="#b9cbb6" />
+              <Text style={styles.sectionTitle}>Clinical Trials</Text>
+            </View>
+            {clinicalTrials.map((trial, i) => (
+              <View key={i} style={styles.trialCard}>
+                <View style={styles.trialHeader}>
+                  <Text style={styles.trialName}>{trial.name}</Text>
+                  <View style={styles.trialPhaseBadge}>
+                    <Text style={styles.trialPhaseText}>{trial.phase}</Text>
+                  </View>
+                </View>
+                <Text style={styles.trialStatus}>{trial.status}</Text>
+                {trial.enrollment && (
+                  <Text style={styles.trialDetail}>Enrollment: {trial.enrollment.toLocaleString()}</Text>
+                )}
+                {trial.primaryEndpoint && (
+                  <Text style={styles.trialDetail}>Primary endpoint: {trial.primaryEndpoint}</Text>
+                )}
+                {trial.keyFindings && (
+                  <Text style={styles.trialFindings}>{trial.keyFindings}</Text>
+                )}
+                {trial.nctId && (
+                  <TouchableOpacity onPress={() => handlePubMedLink(`https://clinicaltrials.gov/study/${trial.nctId}`)}>
+                    <Text style={styles.trialLink}>{trial.nctId}</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            ))}
+          </GlassCard>
+        )}
+
+        {/* NEW: Protocol Templates */}
+        {protocols.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="clipboard-outline" size={18} color="#b9cbb6" />
+              <Text style={styles.sectionTitle}>Protocol Templates</Text>
+            </View>
+            {protocols.map((proto) => (
+              <View key={proto.id} style={styles.protocolCard}>
+                <Text style={styles.protocolName}>{proto.name}</Text>
+                <View style={styles.protocolDetails}>
+                  <Text style={styles.protocolDetail}>
+                    {proto.typicalDose.min}-{proto.typicalDose.max} {proto.typicalDose.unit} • {proto.route}
+                  </Text>
+                  <Text style={styles.protocolDetail}>
+                    {proto.frequencyLabel} • {proto.durationWeeks.min}-{proto.durationWeeks.max} weeks
+                  </Text>
+                  {proto.timing && (
+                    <Text style={styles.protocolTiming}>{proto.timing}</Text>
+                  )}
+                </View>
+              </View>
+            ))}
+          </GlassCard>
+        )}
+
+        {/* NEW: Related Stacks */}
+        {relatedStacks.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="layers-outline" size={18} color="#c7d7e6" />
+              <Text style={styles.sectionTitle}>Featured In Stacks</Text>
+            </View>
+            {relatedStacks.map((stack) => (
+              <TouchableOpacity key={stack.id} style={styles.relatedStackCard} onPress={() => {
+                const { loadStack } = useStackStore.getState();
+                loadStack(stack);
+                router.push('/(tabs)/stack-builder');
+              }} activeOpacity={0.7}>
+                <View style={styles.relatedStackHeader}>
+                  <Text style={styles.relatedStackName}>{stack.name}</Text>
+                  <Text style={styles.relatedStackCount}>{stack.peptideIds.length} peptides</Text>
+                </View>
+                {stack.description && (
+                  <Text style={styles.relatedStackDesc} numberOfLines={2}>{stack.description}</Text>
+                )}
+              </TouchableOpacity>
+            ))}
+          </GlassCard>
+        )}
+
+        {/* NEW: Related Videos */}
+        {relatedVideos.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="videocam-outline" size={18} color="#c7d7e6" />
+              <Text style={styles.sectionTitle}>Related Videos</Text>
+            </View>
+            {relatedVideos.map((video) => (
+              <TouchableOpacity key={video.id} style={styles.videoCard} onPress={() => router.push(`/learn/videos/${video.slug}`)} activeOpacity={0.7}>
+                <Ionicons name="play-circle-outline" size={32} color="#c7d7e6" />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.videoTitle}>{video.title}</Text>
+                  {video.duration && <Text style={styles.videoDuration}>{video.duration}</Text>}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </GlassCard>
+        )}
+
+        {/* NEW: Related How-To Guides */}
+        {relatedGuides.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="book-outline" size={18} color="#b9cbb6" />
+              <Text style={styles.sectionTitle}>How-To Guides</Text>
+            </View>
+            {relatedGuides.map((guide) => (
+              <TouchableOpacity key={guide.id} style={styles.guideCard} onPress={() => router.push(`/learn/guides/${guide.slug}`)} activeOpacity={0.7}>
+                <Ionicons name="list-outline" size={20} color="#b9cbb6" />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.guideTitle}>{guide.title}</Text>
+                  <Text style={styles.guideSummary} numberOfLines={1}>{guide.summary}</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={16} color="#9ca3af" />
+              </TouchableOpacity>
+            ))}
+          </GlassCard>
+        )}
+
         {/* Add to Stack Button */}
         <TouchableOpacity
           style={[
@@ -268,6 +649,22 @@ export default function PeptideDetailScreen() {
                 <Text style={styles.pubmedLinkText} numberOfLines={1}>
                   {link}
                 </Text>
+              </TouchableOpacity>
+            ))}
+          </GlassCard>
+        )}
+
+        {/* NEW: DOI Citations */}
+        {peptide.doiLinks && peptide.doiLinks.length > 0 && (
+          <GlassCard style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="document-outline" size={18} color="#c7d7e6" />
+              <Text style={styles.sectionTitle}>DOI Citations</Text>
+            </View>
+            {peptide.doiLinks.map((doi, index) => (
+              <TouchableOpacity key={index} style={styles.pubmedLink} onPress={() => handlePubMedLink(doi.startsWith('http') ? doi : `https://doi.org/${doi}`)} activeOpacity={0.7}>
+                <Ionicons name="open-outline" size={14} color="#c7d7e6" />
+                <Text style={styles.pubmedLinkText} numberOfLines={1}>{doi}</Text>
               </TouchableOpacity>
             ))}
           </GlassCard>
@@ -371,6 +768,69 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
+  // ── Approval Badge ──────────────────────────────────────────
+  approvalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 12,
+  },
+  approvalBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  approvalBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#0f1720',
+  },
+  approvalDetails: {
+    fontSize: 12,
+    color: '#9ca3af',
+    flex: 1,
+  },
+
+  // ── Brand Names ──────────────────────────────────────────────
+  brandRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 12,
+  },
+  brandPill: {
+    backgroundColor: 'rgba(199, 215, 230, 0.12)',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(199, 215, 230, 0.2)',
+  },
+  brandPillText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#c7d7e6',
+  },
+
+  // ── Evidence Grade ──────────────────────────────────────────
+  evidenceRow: {
+    marginBottom: 16,
+  },
+  evidenceBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  evidenceBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#0f1720',
+  },
+
   // ── Sections ────────────────────────────────────────────────
   section: {
     marginBottom: 14,
@@ -445,6 +905,226 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     flex: 1,
     marginLeft: 16,
+  },
+
+  // ── Chemical Structure ──────────────────────────────────────
+  structureImage: {
+    width: '100%' as any,
+    height: 200,
+    borderRadius: 8,
+  },
+
+  // ── Sequence ────────────────────────────────────────────────
+  sequenceContainer: {
+    marginTop: 12,
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    borderRadius: 8,
+  },
+  sequenceText: {
+    fontSize: 11,
+    fontFamily: 'monospace',
+    color: '#9ca3af',
+    lineHeight: 18,
+    marginTop: 4,
+  },
+
+  // ── Bullet Lists ────────────────────────────────────────────
+  bulletRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    paddingVertical: 4,
+  },
+  bulletDot: {
+    fontSize: 13,
+    color: '#9ca3af',
+    lineHeight: 20,
+  },
+  bulletText: {
+    fontSize: 13,
+    color: '#9ca3af',
+    lineHeight: 20,
+    flex: 1,
+  },
+
+  // ── Safety Profile ──────────────────────────────────────────
+  warningBox: {
+    flexDirection: 'row',
+    gap: 10,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.2)',
+  },
+  warningText: {
+    fontSize: 13,
+    color: '#ef4444',
+    lineHeight: 20,
+    fontWeight: '600',
+  },
+  safetySubsection: {
+    marginBottom: 12,
+  },
+  safetySubtitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#c7d7e6',
+    marginBottom: 6,
+  },
+
+  // ── Clinical Trials ─────────────────────────────────────────
+  trialCard: {
+    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  trialHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  trialName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#e8e6e3',
+    flex: 1,
+    marginRight: 8,
+  },
+  trialPhaseBadge: {
+    backgroundColor: 'rgba(185, 203, 182, 0.15)',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  trialPhaseText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#b9cbb6',
+  },
+  trialStatus: {
+    fontSize: 12,
+    color: '#9ca3af',
+    marginBottom: 4,
+  },
+  trialDetail: {
+    fontSize: 12,
+    color: '#9ca3af',
+    marginBottom: 2,
+  },
+  trialFindings: {
+    fontSize: 12,
+    color: '#b9cbb6',
+    lineHeight: 18,
+    marginTop: 6,
+    fontStyle: 'italic',
+  },
+  trialLink: {
+    fontSize: 12,
+    color: '#c7d7e6',
+    textDecorationLine: 'underline',
+    marginTop: 6,
+  },
+
+  // ── Protocol Templates ──────────────────────────────────────
+  protocolCard: {
+    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  protocolName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#e8e6e3',
+    marginBottom: 6,
+  },
+  protocolDetails: {
+    gap: 2,
+  },
+  protocolDetail: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+  protocolTiming: {
+    fontSize: 12,
+    color: '#b9cbb6',
+    fontStyle: 'italic',
+    marginTop: 2,
+  },
+
+  // ── Related Stacks ──────────────────────────────────────────
+  relatedStackCard: {
+    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  relatedStackHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  relatedStackName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#e8e6e3',
+  },
+  relatedStackCount: {
+    fontSize: 11,
+    color: '#9ca3af',
+  },
+  relatedStackDesc: {
+    fontSize: 12,
+    color: '#9ca3af',
+    lineHeight: 18,
+  },
+
+  // ── Videos ──────────────────────────────────────────────────
+  videoCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  videoTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#e8e6e3',
+  },
+  videoDuration: {
+    fontSize: 11,
+    color: '#9ca3af',
+    marginTop: 2,
+  },
+
+  // ── Guides ──────────────────────────────────────────────────
+  guideCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  guideTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#e8e6e3',
+  },
+  guideSummary: {
+    fontSize: 11,
+    color: '#9ca3af',
+    marginTop: 2,
   },
 
   // ── Add to Stack ────────────────────────────────────────────

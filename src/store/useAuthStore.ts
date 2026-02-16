@@ -1,5 +1,7 @@
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { User } from '../types';
+import { secureStorage } from '../services/secureStorage';
 
 interface AuthStore {
   // ── State ──────────────────────────────────────────────────────────────
@@ -14,82 +16,101 @@ interface AuthStore {
   togglePro: () => void;
 }
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
-  // ── Initial State ────────────────────────────────────────────────────
-  user: null,
-  isAuthenticated: false,
-  isLoading: false,
-
-  // ── Actions ──────────────────────────────────────────────────────────
-
-  login: async (_email: string, _password: string) => {
-    set({ isLoading: true });
-
-    try {
-      // Simulate network latency
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      const dummyUser: User = {
-        id: `user-${Date.now()}`,
-        email: _email,
-        name: _email.split('@')[0],
-        savedStacks: [],
-        favoritePeptides: [],
-        isPro: false,
-        createdAt: new Date().toISOString(),
-      };
-
-      set({
-        user: dummyUser,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-    } catch (error) {
-      console.error('[useAuthStore] Login failed:', error);
-      set({ isLoading: false });
-    }
-  },
-
-  logout: () => {
-    set({
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set, get) => ({
+      // ── Initial State ────────────────────────────────────────────────────
       user: null,
       isAuthenticated: false,
-    });
-  },
+      isLoading: false,
 
-  toggleFavoritePeptide: (peptideId: string) => {
-    const { user } = get();
+      // ── Actions ──────────────────────────────────────────────────────────
 
-    if (!user) {
-      return;
-    }
+      login: async (_email: string, _password: string) => {
+        set({ isLoading: true });
 
-    const isFavorited = user.favoritePeptides.includes(peptideId);
+        try {
+          // Simulate network latency
+          await new Promise((resolve) => setTimeout(resolve, 800));
 
-    const updatedFavorites = isFavorited
-      ? user.favoritePeptides.filter((id) => id !== peptideId)
-      : [...user.favoritePeptides, peptideId];
+          const dummyUser: User = {
+            id: `user-${Date.now()}`,
+            email: _email,
+            name: _email.split('@')[0],
+            savedStacks: [],
+            favoritePeptides: [],
+            isPro: false,
+            createdAt: new Date().toISOString(),
+          };
 
-    set({
-      user: {
-        ...user,
-        favoritePeptides: updatedFavorites,
+          set({
+            user: dummyUser,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        } catch (error) {
+          console.error('[useAuthStore] Login failed:', error);
+          set({ isLoading: false });
+        }
       },
-    });
-  },
 
-  togglePro: () => {
-    const { user } = get();
-
-    if (!user) {
-      return;
-    }
-
-    set({
-      user: {
-        ...user,
-        isPro: !user.isPro,
+      logout: () => {
+        set({
+          user: null,
+          isAuthenticated: false,
+        });
       },
-    });
-  },
-}));
+
+      toggleFavoritePeptide: (peptideId: string) => {
+        const { user } = get();
+
+        if (!user) {
+          return;
+        }
+
+        const isFavorited = user.favoritePeptides.includes(peptideId);
+
+        const updatedFavorites = isFavorited
+          ? user.favoritePeptides.filter((id) => id !== peptideId)
+          : [...user.favoritePeptides, peptideId];
+
+        set({
+          user: {
+            ...user,
+            favoritePeptides: updatedFavorites,
+          },
+        });
+      },
+
+      togglePro: () => {
+        const { user } = get();
+
+        if (!user) {
+          return;
+        }
+
+        set({
+          user: {
+            ...user,
+            isPro: !user.isPro,
+          },
+        });
+      },
+    }),
+    {
+      name: 'peptalk-auth',
+      storage: createJSONStorage(() => secureStorage),
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        set({
+          isAuthenticated: Boolean(state.user),
+          isLoading: false,
+        });
+      },
+    }
+  )
+);

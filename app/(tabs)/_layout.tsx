@@ -19,22 +19,22 @@ const TAB_CONFIG: TabConfig[] = [
     activeIcon: 'library',
   },
   {
-    name: 'stack-builder',
-    title: 'Stack Builder',
-    icon: 'flask-outline',
-    activeIcon: 'flask',
+    name: 'calendar',
+    title: 'Calendar',
+    icon: 'calendar-outline',
+    activeIcon: 'calendar',
+  },
+  {
+    name: 'peptalk',
+    title: 'PepTalk',
+    icon: 'chatbubbles-outline',
+    activeIcon: 'chatbubbles',
   },
   {
     name: 'my-stacks',
-    title: 'My Stacks',
+    title: 'Stacks',
     icon: 'layers-outline',
     activeIcon: 'layers',
-  },
-  {
-    name: 'feed',
-    title: 'Feed',
-    icon: 'newspaper-outline',
-    activeIcon: 'newspaper',
   },
   {
     name: 'profile',
@@ -71,6 +71,10 @@ export default function TabsLayout() {
           }}
         />
       ))}
+      {/* Hidden tabs — still routable but not in tab bar */}
+      <Tabs.Screen name="stack-builder" options={{ href: null }} />
+      <Tabs.Screen name="check-in" options={{ href: null }} />
+      <Tabs.Screen name="feed" options={{ href: null }} />
     </Tabs>
   );
 }

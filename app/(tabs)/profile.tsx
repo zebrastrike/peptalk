@@ -6,14 +6,19 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Alert,
   Switch,
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/useAuthStore';
+import { useOnboardingStore } from '../../src/store/useOnboardingStore';
+import { useHealthProfileStore } from '../../src/store/useHealthProfileStore';
 import { GlassCard } from '../../src/components/GlassCard';
 import { Disclaimer } from '../../src/components/Disclaimer';
+import { trackConsentUpdated } from '../../src/services/sbbEvents';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -206,6 +211,306 @@ function UserProfile() {
   );
 }
 
+function ResearchProfileCard() {
+  const router = useRouter();
+  const {
+    profile,
+    isComplete,
+    setAcceptedSafety,
+    setDataShareConsent,
+    reset,
+  } = useOnboardingStore();
+
+  const handleSafetyToggle = (value: boolean) => {
+    setAcceptedSafety(value);
+    trackConsentUpdated(value, profile.dataShareConsent);
+  };
+
+  const handleShareToggle = (value: boolean) => {
+    setDataShareConsent(value);
+    trackConsentUpdated(profile.acceptedSafety, value);
+  };
+
+  const handleReset = () => {
+    Alert.alert(
+      'Restart Onboarding',
+      'This will clear your research profile selections.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Restart',
+          style: 'destructive',
+          onPress: () => {
+            reset();
+            router.push('/onboarding');
+          },
+        },
+      ]
+    );
+  };
+
+  return (
+    <View style={styles.researchSection}>
+      <View style={styles.sectionHeaderRow}>
+        <Text style={styles.settingsSectionTitle}>Research Profile</Text>
+        {!isComplete && (
+          <Text style={styles.incompleteBadge}>Incomplete</Text>
+        )}
+      </View>
+      <GlassCard style={styles.researchCard}>
+        <View style={styles.profileRow}>
+          <Text style={styles.profileLabel}>Gender</Text>
+          <Text style={styles.profileValue}>
+            {profile.gender ?? 'Not set'}
+          </Text>
+        </View>
+        <View style={styles.profileRow}>
+          <Text style={styles.profileLabel}>Age Range</Text>
+          <Text style={styles.profileValue}>
+            {profile.ageRange ?? 'Not set'}
+          </Text>
+        </View>
+        <View style={styles.profileRow}>
+          <Text style={styles.profileLabel}>Interests</Text>
+          <Text style={styles.profileValue}>
+            {profile.interestCategories.length > 0
+              ? profile.interestCategories.join(', ')
+              : 'Not set'}
+          </Text>
+        </View>
+
+        <View style={styles.settingRow}>
+          <View style={styles.settingInfo}>
+            <Ionicons name="shield-outline" size={20} color="#f0d68a" />
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Safety Acknowledgement</Text>
+              <Text style={styles.settingDescription}>
+                Research-only usage confirmed
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={profile.acceptedSafety}
+            onValueChange={handleSafetyToggle}
+            trackColor={{
+              false: 'rgba(255,255,255,0.12)',
+              true: 'rgba(240, 214, 138, 0.4)',
+            }}
+            thumbColor={profile.acceptedSafety ? '#f0d68a' : '#9ca3af'}
+          />
+        </View>
+
+        <View style={styles.settingRow}>
+          <View style={styles.settingInfo}>
+            <Ionicons name="analytics-outline" size={20} color="#c7d7e6" />
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Data Sharing</Text>
+              <Text style={styles.settingDescription}>
+                Share anonymous usage insights
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={profile.dataShareConsent}
+            onValueChange={handleShareToggle}
+            trackColor={{
+              false: 'rgba(255,255,255,0.12)',
+              true: 'rgba(199, 215, 230, 0.4)',
+            }}
+            thumbColor={profile.dataShareConsent ? '#c7d7e6' : '#9ca3af'}
+          />
+        </View>
+      </GlassCard>
+
+      <View style={styles.profileActions}>
+        <TouchableOpacity
+          style={styles.profileActionButton}
+          onPress={() => router.push('/onboarding?edit=true')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="create-outline" size={16} color="#c7d7e6" />
+          <Text style={styles.profileActionText}>Edit Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.profileActionButton}
+          onPress={handleReset}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="refresh-outline" size={16} color="#e3a7a1" />
+          <Text style={styles.profileActionText}>Restart Onboarding</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+function HealthProfileCard() {
+  const router = useRouter();
+  const { profile, getBMI } = useHealthProfileStore();
+  const bmi = getBMI();
+  const completeness = profile.profileCompleteness;
+
+  return (
+    <View style={styles.researchSection}>
+      <View style={styles.sectionHeaderRow}>
+        <Text style={styles.settingsSectionTitle}>Health Profile</Text>
+        {!profile.setupComplete && (
+          <Text style={styles.incompleteBadge}>
+            {completeness > 0 ? `${completeness}%` : 'Not Started'}
+          </Text>
+        )}
+      </View>
+      <GlassCard style={styles.researchCard}>
+        {/* Completeness bar */}
+        <View style={healthStyles.progressRow}>
+          <View style={healthStyles.progressTrack}>
+            <View
+              style={[
+                healthStyles.progressFill,
+                { width: `${Math.max(completeness, 2)}%` },
+              ]}
+            />
+          </View>
+          <Text style={healthStyles.progressLabel}>{completeness}%</Text>
+        </View>
+
+        {/* Quick stats */}
+        {(profile.bodyMetrics.weightLbs || bmi !== null) && (
+          <View style={styles.profileRow}>
+            <Text style={styles.profileLabel}>Body</Text>
+            <Text style={styles.profileValue}>
+              {[
+                profile.bodyMetrics.weightLbs
+                  ? `${profile.bodyMetrics.weightLbs} lbs`
+                  : null,
+                bmi !== null ? `BMI ${bmi.toFixed(1)}` : null,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </Text>
+          </View>
+        )}
+
+        {profile.primaryGoals.length > 0 && (
+          <View style={styles.profileRow}>
+            <Text style={styles.profileLabel}>Goals</Text>
+            <Text style={styles.profileValue} numberOfLines={2}>
+              {profile.primaryGoals.slice(0, 3).join(', ')}
+            </Text>
+          </View>
+        )}
+
+        {profile.medical.conditions.length > 0 && (
+          <View style={styles.profileRow}>
+            <Text style={styles.profileLabel}>Conditions</Text>
+            <Text style={styles.profileValue} numberOfLines={2}>
+              {profile.medical.conditions.join(', ')}
+            </Text>
+          </View>
+        )}
+
+        {profile.medical.allergies.length > 0 && (
+          <View style={styles.profileRow}>
+            <Text style={styles.profileLabel}>Allergies</Text>
+            <Text style={styles.profileValue} numberOfLines={2}>
+              {profile.medical.allergies.join(', ')}
+            </Text>
+          </View>
+        )}
+
+        {profile.peptideExperience !== 'none' && (
+          <View style={styles.profileRow}>
+            <Text style={styles.profileLabel}>Experience</Text>
+            <Text style={styles.profileValue}>
+              {profile.peptideExperience.charAt(0).toUpperCase() +
+                profile.peptideExperience.slice(1)}
+            </Text>
+          </View>
+        )}
+      </GlassCard>
+
+      <TouchableOpacity
+        style={healthStyles.editButton}
+        onPress={() => router.push('/health-profile')}
+        activeOpacity={0.7}
+      >
+        <Ionicons
+          name={profile.setupComplete ? 'create-outline' : 'add-circle-outline'}
+          size={16}
+          color="#c7d7e6"
+        />
+        <Text style={styles.profileActionText}>
+          {profile.setupComplete ? 'Edit Health Profile' : 'Set Up Health Profile'}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function DeleteDataSection() {
+  const { deleteAllHealthData } = useHealthProfileStore();
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete All Health Data',
+      'This will permanently erase your health profile, dose logs, check-ins, and chat history. This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete Everything',
+          style: 'destructive',
+          onPress: () => {
+            deleteAllHealthData();
+            Alert.alert('Done', 'All health data has been deleted.');
+          },
+        },
+      ]
+    );
+  };
+
+  return (
+    <View style={{ marginTop: 24 }}>
+      <TouchableOpacity
+        style={deleteStyles.button}
+        onPress={handleDelete}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="trash-outline" size={16} color="#ef4444" />
+        <Text style={deleteStyles.text}>Delete My Data</Text>
+      </TouchableOpacity>
+      <Text style={deleteStyles.hint}>
+        Permanently removes all health data, dose logs, check-ins, and chat history from this device.
+      </Text>
+    </View>
+  );
+}
+
+const deleteStyles = StyleSheet.create({
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+    backgroundColor: 'rgba(239, 68, 68, 0.08)',
+  },
+  text: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ef4444',
+  },
+  hint: {
+    fontSize: 11,
+    color: '#6b7280',
+    textAlign: 'center',
+    marginTop: 8,
+    lineHeight: 16,
+  },
+});
+
 export default function ProfileScreen() {
   const { isAuthenticated } = useAuthStore();
 
@@ -224,6 +529,13 @@ export default function ProfileScreen() {
 
         {/* Content */}
         {isAuthenticated ? <UserProfile /> : <LoginForm />}
+
+        <ResearchProfileCard />
+
+        <HealthProfileCard />
+
+        {/* Delete My Data */}
+        <DeleteDataSection />
 
         {/* Disclaimer and Branding */}
         <View style={styles.footerBranding}>
@@ -436,6 +748,65 @@ const styles = StyleSheet.create({
     color: '#e8e6e3',
     marginBottom: 14,
   },
+  researchSection: {
+    marginTop: 28,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  incompleteBadge: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#f0d68a',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  researchCard: {
+    paddingVertical: 6,
+  },
+  profileRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.06)',
+  },
+  profileLabel: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+  profileValue: {
+    fontSize: 12,
+    color: '#e8e6e3',
+    fontWeight: '600',
+    flex: 1,
+    textAlign: 'right',
+    marginLeft: 12,
+  },
+  profileActions: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 12,
+  },
+  profileActionButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(199, 215, 230, 0.25)',
+    paddingVertical: 10,
+    gap: 6,
+  },
+  profileActionText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#c7d7e6',
+  },
   settingRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -503,5 +874,45 @@ const styles = StyleSheet.create({
   brandFooterTagline: {
     fontSize: 12,
     color: '#9ca3af',
+  },
+});
+
+const healthStyles = StyleSheet.create({
+  progressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 10,
+    paddingVertical: 4,
+  },
+  progressTrack: {
+    flex: 1,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 3,
+    backgroundColor: '#b9cbb6',
+  },
+  progressLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#b9cbb6',
+    minWidth: 36,
+    textAlign: 'right',
+  },
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(199, 215, 230, 0.25)',
+    paddingVertical: 10,
+    gap: 6,
+    marginTop: 12,
   },
 });

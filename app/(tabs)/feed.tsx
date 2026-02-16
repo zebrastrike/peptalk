@@ -1,106 +1,341 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   View,
   Text,
-  ScrollView,
+  FlatList,
   StyleSheet,
+  TouchableOpacity,
+  RefreshControl,
+  ActivityIndicator,
+  Linking,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { GlassCard } from '../../src/components/GlassCard';
 import { Disclaimer } from '../../src/components/Disclaimer';
+import { useFeedStore } from '../../src/store/useFeedStore';
+import { getPeptideById } from '../../src/data/peptides';
+import {
+  getCategoryLabel,
+  getCategoryIcon,
+} from '../../src/services/researchFeed';
+import { FeedItem, FeedCategory } from '../../src/types';
 
-export default function FeedScreen() {
+// ─── Category filters ────────────────────────────────────────────────────────
+
+const CATEGORIES: Array<{ key: FeedCategory | 'all'; label: string; icon: string }> = [
+  { key: 'all', label: 'All', icon: 'layers-outline' },
+  { key: 'research', label: 'Research', icon: 'flask-outline' },
+  { key: 'new_peptides', label: 'New Peptides', icon: 'sparkles-outline' },
+  { key: 'medical', label: 'Medical', icon: 'medkit-outline' },
+  { key: 'regulatory', label: 'Regulatory', icon: 'shield-checkmark-outline' },
+];
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function formatDate(dateStr: string): string {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+function getCategoryColor(category: FeedCategory): string {
+  switch (category) {
+    case 'research':
+      return '#c7d7e6';
+    case 'new_peptides':
+      return '#f0d68a';
+    case 'medical':
+      return '#e3a7a1';
+    case 'regulatory':
+      return '#b9cbb6';
+  }
+}
+
+// ─── Feed Item Card ──────────────────────────────────────────────────────────
+
+function FeedItemCard({ item }: { item: FeedItem }) {
+  const router = useRouter();
+  const catColor = getCategoryColor(item.category);
+
+  const relatedPeptides = (item.relatedPeptideIds ?? [])
+    .map((id) => getPeptideById(id))
+    .filter(Boolean);
+
+  const handlePress = () => {
+    if (item.url) {
+      Linking.openURL(item.url);
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Research Feed</Text>
-          <Text style={styles.subtitle}>
-            Curated peptide research news and updates
-          </Text>
+    <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
+      <GlassCard style={styles.feedCard}>
+        {/* Category + Date row */}
+        <View style={styles.feedCardMeta}>
+          <View style={[styles.categoryPill, { backgroundColor: `${catColor}18` }]}>
+            <Ionicons
+              name={getCategoryIcon(item.category) as any}
+              size={11}
+              color={catColor}
+            />
+            <Text style={[styles.categoryPillText, { color: catColor }]}>
+              {getCategoryLabel(item.category)}
+            </Text>
+          </View>
+          <Text style={styles.feedDate}>{formatDate(item.publishedAt)}</Text>
         </View>
 
-        {/* Coming Soon Card */}
-        <GlassCard variant="elevated" style={styles.comingSoonCard}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="newspaper-outline" size={48} color="#c7d7e6" />
-          </View>
-          <Text style={styles.comingSoonTitle}>Coming Soon</Text>
-          <Text style={styles.comingSoonDescription}>
-            The Research Feed will deliver curated news, study summaries, and
-            breaking developments from the world of peptide research. Stay tuned
-            for updates on clinical trials, new publications, and community
-            insights from Science Based Body.
+        {/* Title */}
+        <Text style={styles.feedTitle} numberOfLines={3}>
+          {item.title}
+        </Text>
+
+        {/* Summary */}
+        <Text style={styles.feedSummary} numberOfLines={2}>
+          {item.summary}
+        </Text>
+
+        {/* Authors */}
+        {item.authors && (
+          <Text style={styles.feedAuthors} numberOfLines={1}>
+            {item.authors}
           </Text>
+        )}
 
-          <View style={styles.featuresList}>
-            <View style={styles.featureItem}>
-              <Ionicons
-                name="document-text-outline"
-                size={18}
-                color="#b9cbb6"
-              />
-              <Text style={styles.featureText}>
-                PubMed study summaries in plain language
-              </Text>
-            </View>
-            <View style={styles.featureItem}>
-              <Ionicons name="flask-outline" size={18} color="#e3a7a1" />
-              <Text style={styles.featureText}>
-                Clinical trial progress and results
-              </Text>
-            </View>
-            <View style={styles.featureItem}>
-              <Ionicons
-                name="people-outline"
-                size={18}
-                color="#c7d7e6"
-              />
-              <Text style={styles.featureText}>
-                Community research highlights and discussions
-              </Text>
-            </View>
-            <View style={styles.featureItem}>
-              <Ionicons
-                name="notifications-outline"
-                size={18}
-                color="#f0d68a"
-              />
-              <Text style={styles.featureText}>
-                Alerts for peptides in your saved stacks
-              </Text>
-            </View>
+        {/* Related peptide tags */}
+        {relatedPeptides.length > 0 && (
+          <View style={styles.peptideTags}>
+            {relatedPeptides.slice(0, 3).map((p) => (
+              <TouchableOpacity
+                key={p!.id}
+                style={styles.peptideTag}
+                onPress={() => router.push(`/peptide/${p!.id}`)}
+              >
+                <Text style={styles.peptideTagText}>
+                  {p!.abbreviation || p!.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        </GlassCard>
+        )}
 
-        {/* Disclaimer */}
-        <Disclaimer />
+        {/* Source + external link indicator */}
+        <View style={styles.sourceRow}>
+          <Text style={styles.sourceText}>{item.source}</Text>
+          <Ionicons name="open-outline" size={12} color="#6b7280" />
+        </View>
+      </GlassCard>
+    </TouchableOpacity>
+  );
+}
+
+// ─── Main Screen ─────────────────────────────────────────────────────────────
+
+export default function FeedScreen() {
+  const router = useRouter();
+  const {
+    isLoading,
+    error,
+    selectedCategory,
+    fetchFeed,
+    setCategory,
+    getFilteredItems,
+    digest,
+  } = useFeedStore();
+
+  const items = getFilteredItems();
+
+  // Auto-fetch on mount
+  useEffect(() => {
+    fetchFeed();
+  }, [fetchFeed]);
+
+  const handleRefresh = useCallback(() => {
+    // Force refetch by clearing lastFetchDate first
+    useFeedStore.setState({ lastFetchDate: null });
+    fetchFeed();
+  }, [fetchFeed]);
+
+  const renderItem = useCallback(
+    ({ item }: { item: FeedItem }) => <FeedItemCard item={item} />,
+    []
+  );
+
+  const keyExtractor = useCallback((item: FeedItem) => item.id, []);
+
+  // ─── Header component (rendered inside FlatList) ─────────────────────────
+
+  const ListHeader = (
+    <>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerRow}>
+          <View>
+            <Text style={styles.title}>Research Feed</Text>
+            <Text style={styles.subtitle}>
+              Latest peptide research from PubMed
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.learnButton}
+            onPress={() => router.push('/learn')}
+          >
+            <Ionicons name="book-outline" size={18} color="#e3a7a1" />
+            <Text style={styles.learnButtonText}>Learn</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Category filter chips */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.filterScroll}
+        contentContainerStyle={styles.filterContent}
+      >
+        {CATEGORIES.map((cat) => {
+          const isActive = selectedCategory === cat.key;
+          return (
+            <TouchableOpacity
+              key={cat.key}
+              style={[
+                styles.filterChip,
+                isActive ? styles.filterChipActive : undefined,
+              ]}
+              onPress={() => setCategory(cat.key)}
+            >
+              <Ionicons
+                name={cat.icon as any}
+                size={14}
+                color={isActive ? '#0f1720' : '#9ca3af'}
+              />
+              <Text
+                style={[
+                  styles.filterChipText,
+                  isActive ? styles.filterChipTextActive : undefined,
+                ]}
+              >
+                {cat.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
+
+      {/* Item count */}
+      {digest && !isLoading && (
+        <Text style={styles.itemCount}>
+          {items.length} article{items.length !== 1 ? 's' : ''}
+          {selectedCategory !== 'all'
+            ? ` in ${getCategoryLabel(selectedCategory as FeedCategory)}`
+            : ''}
+        </Text>
+      )}
+
+      {/* Error state */}
+      {error && (
+        <GlassCard style={styles.errorCard}>
+          <Ionicons name="cloud-offline-outline" size={24} color="#e3a7a1" />
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRefresh}>
+            <Text style={styles.retryText}>Retry</Text>
+          </TouchableOpacity>
+        </GlassCard>
+      )}
+
+      {/* Initial loading state */}
+      {isLoading && !digest && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#e3a7a1" />
+          <Text style={styles.loadingText}>
+            Fetching latest research from PubMed...
+          </Text>
+        </View>
+      )}
+    </>
+  );
+
+  // ─── Empty state ─────────────────────────────────────────────────────────
+
+  const ListEmpty = !isLoading && !error ? (
+    <GlassCard style={styles.emptyCard}>
+      <Ionicons name="document-text-outline" size={40} color="#6b7280" />
+      <Text style={styles.emptyTitle}>No Articles Found</Text>
+      <Text style={styles.emptyText}>
+        {selectedCategory !== 'all'
+          ? `No ${getCategoryLabel(selectedCategory as FeedCategory).toLowerCase()} articles available. Try a different category.`
+          : 'Pull down to refresh and fetch the latest research.'}
+      </Text>
+    </GlassCard>
+  ) : null;
+
+  // ─── Footer ──────────────────────────────────────────────────────────────
+
+  const ListFooter = items.length > 0 ? (
+    <View style={styles.footer}>
+      <Text style={styles.footerText}>
+        Data sourced from PubMed (NCBI). Articles open in your browser.
+      </Text>
+      <Disclaimer />
+    </View>
+  ) : null;
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <FlatList
+        data={isLoading && !digest ? [] : items}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        ListHeaderComponent={ListHeader}
+        ListEmptyComponent={ListEmpty}
+        ListFooterComponent={ListFooter}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading && !!digest}
+            onRefresh={handleRefresh}
+            tintColor="#e3a7a1"
+            colors={['#e3a7a1']}
+          />
+        }
+      />
     </SafeAreaView>
   );
 }
+
+// ─── Styles ──────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0f1720',
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
+  listContent: {
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
+
+  // Header
   header: {
     paddingTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 4,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   title: {
     fontSize: 28,
@@ -113,47 +348,216 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     marginTop: 4,
   },
-  comingSoonCard: {
-    marginTop: 32,
+  learnButton: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 40,
-    paddingHorizontal: 24,
+    gap: 6,
+    backgroundColor: 'rgba(227, 167, 161, 0.12)',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(227, 167, 161, 0.2)',
   },
-  iconContainer: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: 'rgba(199, 215, 230, 0.1)',
+  learnButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#e3a7a1',
+  },
+
+  // Filters
+  filterScroll: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  filterContent: {
+    gap: 8,
+    paddingRight: 4,
+  },
+  filterChip: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
-  comingSoonTitle: {
-    fontSize: 22,
-    fontWeight: '800',
+  filterChipActive: {
+    backgroundColor: '#e3a7a1',
+    borderColor: '#e3a7a1',
+  },
+  filterChipText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#9ca3af',
+  },
+  filterChipTextActive: {
+    color: '#0f1720',
+  },
+
+  // Item count
+  itemCount: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginTop: 8,
+    marginBottom: 4,
+  },
+
+  // Feed cards
+  feedCard: {
+    marginTop: 12,
+    padding: 16,
+  },
+  feedCardMeta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  categoryPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  categoryPillText: {
+    fontSize: 11,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+  },
+  feedDate: {
+    fontSize: 11,
+    color: '#6b7280',
+  },
+  feedTitle: {
+    fontSize: 15,
+    fontWeight: '700',
     color: '#f7f2ec',
-    marginBottom: 12,
+    lineHeight: 21,
+    marginBottom: 6,
   },
-  comingSoonDescription: {
+  feedSummary: {
+    fontSize: 13,
+    color: '#9ca3af',
+    lineHeight: 19,
+    marginBottom: 6,
+  },
+  feedAuthors: {
+    fontSize: 11,
+    color: '#6b7280',
+    fontStyle: 'italic',
+    marginBottom: 8,
+  },
+
+  // Related peptide tags
+  peptideTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 10,
+  },
+  peptideTag: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: 'rgba(185, 203, 182, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(185, 203, 182, 0.25)',
+  },
+  peptideTagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#b9cbb6',
+  },
+
+  // Source row
+  sourceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingTop: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(255, 255, 255, 0.06)',
+  },
+  sourceText: {
+    fontSize: 11,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+
+  // Error state
+  errorCard: {
+    marginTop: 24,
+    alignItems: 'center',
+    paddingVertical: 32,
+    gap: 12,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#e3a7a1',
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: 'rgba(227, 167, 161, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(227, 167, 161, 0.3)',
+  },
+  retryText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#e3a7a1',
+  },
+
+  // Loading state
+  loadingContainer: {
+    alignItems: 'center',
+    paddingVertical: 60,
+    gap: 16,
+  },
+  loadingText: {
     fontSize: 14,
     color: '#9ca3af',
     textAlign: 'center',
-    lineHeight: 21,
-    marginBottom: 28,
   },
-  featuresList: {
-    width: '100%',
-    gap: 16,
-  },
-  featureItem: {
-    flexDirection: 'row',
+
+  // Empty state
+  emptyCard: {
+    marginTop: 24,
     alignItems: 'center',
+    paddingVertical: 40,
     gap: 12,
   },
-  featureText: {
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#f7f2ec',
+  },
+  emptyText: {
     fontSize: 13,
-    color: '#e8e6e3',
-    flex: 1,
-    lineHeight: 18,
+    color: '#9ca3af',
+    textAlign: 'center',
+    lineHeight: 19,
+    paddingHorizontal: 20,
+  },
+
+  // Footer
+  footer: {
+    marginTop: 20,
+  },
+  footerText: {
+    fontSize: 11,
+    color: '#6b7280',
+    textAlign: 'center',
+    marginBottom: 16,
   },
 });

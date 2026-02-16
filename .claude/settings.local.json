@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(head:*)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:openclaw.ai)",
+      "WebFetch(domain:docs.x.ai)",
+      "Bash(node -e:*)",
+      "Bash(npm install:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(grep:*)",
+      "Bash(du:*)",
+      "Bash(wc:*)",
+      "Bash(git config:*)"
+    ]
+  }
+}

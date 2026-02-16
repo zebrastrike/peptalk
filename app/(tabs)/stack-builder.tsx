@@ -1,10 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
-  FlatList,
   TextInput,
   ActivityIndicator,
   Alert,
@@ -18,12 +17,46 @@ import { SearchBar } from '../../src/components/SearchBar';
 import { AnalysisCard } from '../../src/components/AnalysisCard';
 import { GlassCard } from '../../src/components/GlassCard';
 import { Disclaimer } from '../../src/components/Disclaimer';
-import { Peptide } from '../../src/types';
+import { Peptide, PeptideCategory, PeptideInteraction } from '../../src/types';
+import { getInteraction } from '../../src/data/interactions';
+import { analyzeStack } from '../../src/services/analysisEngine';
 
 const MAX_STACK_SIZE = 5;
 
+const CATEGORY_FILTERS: PeptideCategory[] = [
+  'Metabolic',
+  'Recovery',
+  'Growth Hormone',
+  'Nootropic',
+  'Immune',
+  'Longevity',
+  'Mitochondrial',
+  'Sleep',
+  'Cosmetic',
+  'Anti-inflammatory',
+  'Sexual Health',
+  'Antimicrobial',
+  'Tanning',
+  'Neuropeptide',
+  'Reproductive',
+];
+
+function getInteractionColor(type: string): string {
+  switch (type) {
+    case 'synergistic':
+      return '#22c55e';
+    case 'competitive':
+      return '#f97316';
+    case 'contraindicated':
+      return '#ef4444';
+    default:
+      return '#f59e0b';
+  }
+}
+
 export default function StackBuilderScreen() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<PeptideCategory | null>(null);
   const [showSaveInput, setShowSaveInput] = useState(false);
   const [stackName, setStackName] = useState('');
 
@@ -38,18 +71,34 @@ export default function StackBuilderScreen() {
     saveStack,
   } = useStackStore();
 
-  const filteredPeptides = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return [];
+  // Auto-analyze when stack has 2+ peptides
+  useEffect(() => {
+    if (currentStack.length >= 2) {
+      analyzeCurrentStack();
+    }
+  }, [currentStack]);
 
-    return PEPTIDES.filter(
-      (p) =>
-        !currentStack.includes(p.id) &&
-        (p.name.toLowerCase().includes(q) ||
+  const filteredPeptides = useMemo(() => {
+    let results = PEPTIDES.filter((p) => !currentStack.includes(p.id));
+
+    // Apply category filter
+    if (selectedCategory) {
+      results = results.filter((p) => p.categories.includes(selectedCategory));
+    }
+
+    // Apply search query
+    const q = searchQuery.toLowerCase().trim();
+    if (q) {
+      results = results.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
           (p.abbreviation && p.abbreviation.toLowerCase().includes(q)) ||
-          p.categories.some((c) => c.toLowerCase().includes(q)))
-    );
-  }, [searchQuery, currentStack]);
+          p.categories.some((c) => c.toLowerCase().includes(q))
+      );
+    }
+
+    return results;
+  }, [searchQuery, selectedCategory, currentStack]);
 
   const stackPeptides = useMemo(
     () =>
@@ -58,6 +107,29 @@ export default function StackBuilderScreen() {
         .filter(Boolean) as Peptide[],
     [currentStack]
   );
+
+  // Real-time pairwise interactions
+  const pairwiseInteractions = useMemo(() => {
+    if (stackPeptides.length < 2) return [];
+    const pairs: { peptideA: Peptide; peptideB: Peptide; interaction: PeptideInteraction }[] = [];
+    for (let i = 0; i < stackPeptides.length; i++) {
+      for (let j = i + 1; j < stackPeptides.length; j++) {
+        const pA = stackPeptides[i];
+        const pB = stackPeptides[j];
+        const known = getInteraction(pA.id, pB.id);
+        if (known) {
+          pairs.push({ peptideA: pA, peptideB: pB, interaction: known });
+        } else {
+          // Use the heuristic analysis for unknown pairs
+          const analysis = analyzeStack([pA.id, pB.id]);
+          if (analysis.interactions.length > 0) {
+            pairs.push({ peptideA: pA, peptideB: pB, interaction: analysis.interactions[0] });
+          }
+        }
+      }
+    }
+    return pairs;
+  }, [stackPeptides]);
 
   const handleAnalyze = useCallback(async () => {
     await analyzeCurrentStack();
@@ -83,21 +155,7 @@ export default function StackBuilderScreen() {
     [addToStack]
   );
 
-  const renderPickerItem = ({ item }: { item: Peptide }) => (
-    <TouchableOpacity
-      style={styles.pickerItem}
-      onPress={() => handleAddPeptide(item.id)}
-      activeOpacity={0.7}
-    >
-      <View style={styles.pickerItemContent}>
-        <Text style={styles.pickerItemName}>{item.name}</Text>
-        <Text style={styles.pickerItemCategories}>
-          {item.categories.join(', ')}
-        </Text>
-      </View>
-      <Ionicons name="add-circle-outline" size={22} color="#b9cbb6" />
-    </TouchableOpacity>
-  );
+  const showSearch = !searchQuery.trim() && !selectedCategory;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -116,7 +174,7 @@ export default function StackBuilderScreen() {
           </Text>
         </View>
 
-        {/* Workspace: Selected Peptides */}
+        {/* ── Visual Slot Workspace ── */}
         <GlassCard style={styles.workspace}>
           <View style={styles.workspaceHeader}>
             <Text style={styles.workspaceTitle}>
@@ -129,46 +187,134 @@ export default function StackBuilderScreen() {
             )}
           </View>
 
-          {stackPeptides.length > 0 ? (
-            <View style={styles.pillsContainer}>
-              {stackPeptides.map((peptide) => (
-                <View key={peptide.id} style={styles.peptidePill}>
-                  <Text style={styles.pillText}>{peptide.name}</Text>
-                  <TouchableOpacity
-                    onPress={() => removeFromStack(peptide.id)}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  >
-                    <Ionicons
-                      name="close-circle"
-                      size={18}
-                      color="#e3a7a1"
-                    />
-                  </TouchableOpacity>
+          {/* 5 Visual Slots */}
+          <View style={styles.slotsRow}>
+            {Array.from({ length: MAX_STACK_SIZE }).map((_, index) => {
+              const peptide = stackPeptides[index];
+              return (
+                <View key={index} style={styles.slotContainer}>
+                  {peptide ? (
+                    <TouchableOpacity
+                      style={styles.slotFilled}
+                      onPress={() => removeFromStack(peptide.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.slotText} numberOfLines={2}>
+                        {peptide.abbreviation || peptide.name.split(' ')[0]}
+                      </Text>
+                      <View style={styles.slotRemove}>
+                        <Ionicons name="close" size={12} color="#e3a7a1" />
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={styles.slotEmpty}>
+                      <Ionicons name="add" size={20} color="#4b5563" />
+                    </View>
+                  )}
                 </View>
-              ))}
-            </View>
-          ) : (
-            <View style={styles.emptyWorkspace}>
-              <Ionicons name="flask-outline" size={36} color="#4b5563" />
-              <Text style={styles.emptyText}>
-                Search and add peptides below
-              </Text>
-            </View>
-          )}
+              );
+            })}
+          </View>
         </GlassCard>
 
-        {/* Peptide Picker */}
+        {/* ── Real-time Interaction Preview ── */}
+        {pairwiseInteractions.length > 0 && (
+          <View style={styles.previewSection}>
+            <Text style={styles.previewTitle}>Interaction Preview</Text>
+            {pairwiseInteractions.map((pair, index) => {
+              const color = getInteractionColor(pair.interaction.interactionType);
+              return (
+                <View
+                  key={index}
+                  style={[styles.previewCard, { borderLeftColor: color }]}
+                >
+                  <View style={styles.previewHeader}>
+                    <Text style={styles.previewPairText}>
+                      {pair.peptideA.abbreviation || pair.peptideA.name}
+                      {' '}
+                      <Text style={styles.previewArrow}>{'\u2194'}</Text>
+                      {' '}
+                      {pair.peptideB.abbreviation || pair.peptideB.name}
+                    </Text>
+                    <View style={[styles.previewScoreBadge, { backgroundColor: `${color}20` }]}>
+                      <Text style={[styles.previewScoreText, { color }]}>
+                        {pair.interaction.synergyScore}/10
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={[styles.previewTypePill, { backgroundColor: `${color}15` }]}>
+                    <Text style={[styles.previewTypeText, { color }]}>
+                      {pair.interaction.interactionType}
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        {/* ── Category Filter Chips ── */}
         {currentStack.length < MAX_STACK_SIZE && (
           <View style={styles.pickerSection}>
             <Text style={styles.sectionTitle}>Add Peptides</Text>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.filterChipsScroll}
+              contentContainerStyle={styles.filterChipsContent}
+            >
+              <TouchableOpacity
+                style={[
+                  styles.filterChip,
+                  !selectedCategory && styles.filterChipActive,
+                ]}
+                onPress={() => setSelectedCategory(null)}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.filterChipText,
+                    !selectedCategory && styles.filterChipTextActive,
+                  ]}
+                >
+                  All
+                </Text>
+              </TouchableOpacity>
+              {CATEGORY_FILTERS.map((cat) => (
+                <TouchableOpacity
+                  key={cat}
+                  style={[
+                    styles.filterChip,
+                    selectedCategory === cat && styles.filterChipActive,
+                  ]}
+                  onPress={() =>
+                    setSelectedCategory(selectedCategory === cat ? null : cat)
+                  }
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.filterChipText,
+                      selectedCategory === cat && styles.filterChipTextActive,
+                    ]}
+                  >
+                    {cat}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
             <SearchBar
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholder="Search peptides to add..."
             />
-            {filteredPeptides.length > 0 && (
+
+            {/* Results list */}
+            {(searchQuery.trim() || selectedCategory) && filteredPeptides.length > 0 && (
               <View style={styles.pickerList}>
-                {filteredPeptides.slice(0, 8).map((peptide) => (
+                {filteredPeptides.slice(0, 12).map((peptide) => (
                   <TouchableOpacity
                     key={peptide.id}
                     style={styles.pickerItem}
@@ -190,9 +336,14 @@ export default function StackBuilderScreen() {
                     />
                   </TouchableOpacity>
                 ))}
+                {filteredPeptides.length > 12 && (
+                  <Text style={styles.moreResultsText}>
+                    +{filteredPeptides.length - 12} more results
+                  </Text>
+                )}
               </View>
             )}
-            {searchQuery.trim() && filteredPeptides.length === 0 && (
+            {(searchQuery.trim() || selectedCategory) && filteredPeptides.length === 0 && (
               <Text style={styles.noResultsText}>
                 No matching peptides found
               </Text>
@@ -215,7 +366,9 @@ export default function StackBuilderScreen() {
           ) : (
             <>
               <Ionicons name="analytics-outline" size={20} color="#0f1720" />
-              <Text style={styles.analyzeButtonText}>Analyze Stack</Text>
+              <Text style={styles.analyzeButtonText}>
+                {currentAnalysis ? 'Re-Analyze Stack' : 'Analyze Stack'}
+              </Text>
             </>
           )}
         </TouchableOpacity>
@@ -274,7 +427,7 @@ export default function StackBuilderScreen() {
         {/* Analysis Results */}
         {currentAnalysis && (
           <View style={styles.analysisSection}>
-            <Text style={styles.sectionTitle}>Analysis Results</Text>
+            <Text style={styles.sectionTitle}>Full Analysis</Text>
             <AnalysisCard analysis={currentAnalysis} />
           </View>
         )}
@@ -314,9 +467,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
     lineHeight: 18,
   },
+
+  // ── Workspace ─────────────────────────────────────────────
   workspace: {
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   workspaceHeader: {
     flexDirection: 'row',
@@ -334,37 +489,141 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#e3a7a1',
   },
-  pillsContainer: {
+
+  // ── Visual Slots ──────────────────────────────────────────
+  slotsRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 10,
+    justifyContent: 'center',
   },
-  peptidePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  slotContainer: {
+    flex: 1,
+  },
+  slotFilled: {
     backgroundColor: 'rgba(227, 167, 161, 0.12)',
-    borderRadius: 20,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(227, 167, 161, 0.25)',
-    paddingLeft: 14,
-    paddingRight: 8,
-    paddingVertical: 8,
-    gap: 8,
+    borderColor: 'rgba(227, 167, 161, 0.3)',
+    paddingVertical: 16,
+    paddingHorizontal: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 72,
   },
-  pillText: {
+  slotText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#e3a7a1',
+    textAlign: 'center',
+  },
+  slotRemove: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  slotEmpty: {
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderStyle: 'dashed',
+    paddingVertical: 16,
+    paddingHorizontal: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 72,
+  },
+
+  // ── Interaction Preview ───────────────────────────────────
+  previewSection: {
+    marginBottom: 20,
+  },
+  previewTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#e8e6e3',
+    marginBottom: 10,
+  },
+  previewCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 10,
+    borderLeftWidth: 3,
+    padding: 12,
+    marginBottom: 8,
+  },
+  previewHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  previewPairText: {
     fontSize: 13,
     fontWeight: '600',
+    color: '#e8e6e3',
+    flex: 1,
+  },
+  previewArrow: {
+    color: '#9ca3af',
+  },
+  previewScoreBadge: {
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginLeft: 8,
+  },
+  previewScoreText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  previewTypePill: {
+    alignSelf: 'flex-start',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginTop: 6,
+  },
+  previewTypeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+
+  // ── Category Filter Chips ─────────────────────────────────
+  filterChipsScroll: {
+    marginBottom: 12,
+  },
+  filterChipsContent: {
+    gap: 8,
+    paddingRight: 8,
+  },
+  filterChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  filterChipActive: {
+    backgroundColor: 'rgba(227, 167, 161, 0.15)',
+    borderColor: 'rgba(227, 167, 161, 0.4)',
+  },
+  filterChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#9ca3af',
+  },
+  filterChipTextActive: {
     color: '#e3a7a1',
   },
-  emptyWorkspace: {
-    alignItems: 'center',
-    paddingVertical: 24,
-  },
-  emptyText: {
-    fontSize: 13,
-    color: '#6b7280',
-    marginTop: 8,
-  },
+
+  // ── Peptide Picker ────────────────────────────────────────
   pickerSection: {
     marginBottom: 20,
   },
@@ -407,6 +666,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 16,
   },
+  moreResultsText: {
+    fontSize: 12,
+    color: '#9ca3af',
+    textAlign: 'center',
+    marginTop: 4,
+    marginBottom: 8,
+  },
+
+  // ── Analyze Button ────────────────────────────────────────
   analyzeButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -432,6 +700,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 12,
   },
+
+  // ── Save ──────────────────────────────────────────────────
   saveSection: {
     marginTop: 12,
     marginBottom: 20,
@@ -487,6 +757,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#0f1720',
   },
+
+  // ── Analysis ──────────────────────────────────────────────
   analysisSection: {
     marginTop: 8,
     marginBottom: 16,

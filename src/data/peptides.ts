@@ -5,9 +5,10 @@ export const PEPTIDES: Peptide[] = [
   {
     id: 'semaglutide',
     name: 'Semaglutide',
+    abbreviation: 'Semaglutide',
     categories: ['Metabolic'],
     researchSummary:
-      'Semaglutide is a glucagon-like peptide-1 (GLP-1) receptor agonist investigated for its role in glycemic regulation and appetite modulation in preclinical and clinical research models. Studies indicate significant reductions in body mass and improvements in metabolic biomarkers in research subjects. Ongoing investigations explore its cardiovascular and neuroprotective research applications.',
+      'Semaglutide is a glucagon-like peptide-1 (GLP-1) receptor agonist investigated for its role in glycemic regulation and appetite modulation in preclinical and clinical research models. FDA-approved as Ozempic (diabetes), Wegovy (weight management), and Rybelsus (oral formulation). SUSTAIN-6 and SELECT trials demonstrated cardiovascular risk reduction. Hypothalamic signaling reduces hunger and increases satiety. Studies indicate significant reductions in body mass and improvements in metabolic biomarkers in research subjects. Ongoing investigations explore its cardiovascular and neuroprotective research applications.',
     mechanismOfAction:
       'Binds to and activates the GLP-1 receptor, stimulating insulin secretion in a glucose-dependent manner while suppressing glucagon release. Delays gastric emptying and modulates hypothalamic appetite-regulating centers via central GLP-1R activation.',
     receptorTargets: ['GLP-1R'],
@@ -22,9 +23,10 @@ export const PEPTIDES: Peptide[] = [
   {
     id: 'tirzepatide',
     name: 'Tirzepatide',
+    abbreviation: 'Tirzepatide',
     categories: ['Metabolic'],
     researchSummary:
-      'Tirzepatide is a dual GIP/GLP-1 receptor agonist under extensive research for metabolic regulation. Preclinical and clinical studies demonstrate robust effects on glycemic control and body composition changes. Research also explores its potential in non-alcoholic steatohepatitis (NASH) models.',
+      'Tirzepatide is a dual GIP/GLP-1 receptor agonist under extensive research for metabolic regulation. FDA-approved as Mounjaro (diabetes) and Zepbound (weight management). SURMOUNT/SURPASS trials showed 20-25% total body weight loss at maximum doses, with approximately 5% greater weight loss than semaglutide in head-to-head trials. Preclinical and clinical studies demonstrate robust effects on glycemic control and body composition changes. Research also explores its potential in non-alcoholic steatohepatitis (NASH) models.',
     mechanismOfAction:
       'Simultaneously activates both the glucose-dependent insulinotropic polypeptide (GIP) receptor and the GLP-1 receptor, producing additive effects on insulin secretion, glucagon suppression, and centrally-mediated appetite regulation.',
     receptorTargets: ['GLP-1R', 'GIPR'],
@@ -39,9 +41,10 @@ export const PEPTIDES: Peptide[] = [
   {
     id: 'retatrutide',
     name: 'Retatrutide',
+    abbreviation: 'Retatrutide',
     categories: ['Metabolic'],
     researchSummary:
-      'Retatrutide is a triple-agonist peptide targeting GLP-1, GIP, and glucagon receptors concurrently, currently studied in phase 2 clinical research. Early research data indicate pronounced effects on body weight reduction and metabolic parameter improvements exceeding those of dual agonists. Investigations continue into its effects on hepatic lipid metabolism.',
+      'Retatrutide is a triple-agonist peptide targeting GLP-1, GIP, and glucagon receptors concurrently, now in Phase 3 trials. Phase 2 showed approximately 24% weight loss at 48 weeks. GLP-1 provides appetite suppression, GIP provides insulin sensitivity, and Glucagon provides thermogenesis and hepatic fat oxidation. Anticipated FDA approval 2025-2026. Research data indicate pronounced effects on body weight reduction and metabolic parameter improvements exceeding those of dual agonists. Investigations continue into its effects on hepatic lipid metabolism.',
     mechanismOfAction:
       'Engages GLP-1R, GIPR, and glucagon receptor (GCGR) simultaneously. GLP-1R and GIPR activation promotes insulin secretion and appetite suppression, while GCGR agonism enhances energy expenditure and hepatic lipid oxidation.',
     receptorTargets: ['GLP-1R', 'GIPR', 'GCGR'],
@@ -108,17 +111,21 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'AOD-9604',
     categories: ['Metabolic'],
     researchSummary:
-      'AOD-9604 is a modified fragment of human growth hormone (hGH 176-191) studied for its lipolytic properties without the growth-promoting or diabetogenic effects of full-length hGH. Research models demonstrate enhanced fat oxidation and reduced lipogenesis. Additional investigations examine its chondroprotective properties in cartilage repair models.',
+      'AOD-9604 is a modified fragment of human growth hormone (hGH 176-191) engineered to selectively stimulate lipolysis without triggering the systemic effects of full-length hGH. Research models demonstrate enhanced fat oxidation and reduced lipogenesis without affecting appetite, glucose levels, or IGF-1. AOD-9604 has achieved U.S. FDA GRAS (Generally Recognized as Safe) designation, highlighting a favorable safety profile. Additional research examines its chondroprotective properties in cartilage repair models. Australian TGA-approved for knee osteoarthritis (intra-articular use) with chondroprotective/anti-catabolic effects on cartilage. Best administered fasted AM for optimal results. Combinable with GLP-1 agonists.',
     mechanismOfAction:
-      'Mimics the lipolytic action of the C-terminal fragment of hGH by stimulating beta-3 adrenergic receptor-mediated lipolysis in adipocytes. Does not interact with the growth hormone receptor and therefore does not affect IGF-1 levels.',
-    receptorTargets: ['Beta-3 adrenergic receptor'],
-    signalingPathways: ['cAMP/PKA', 'HSL activation', 'lipolytic cascade'],
+      'Selectively stimulates lipolysis by activating hormone-sensitive lipase (HSL) in adipocytes, promoting adipose tissue mobilization. Does not interact with the growth hormone receptor and therefore does not affect IGF-1 levels, reducing systemic concerns associated with traditional GH research. Activates beta-3 adrenergic receptor-mediated lipolytic cascades through cAMP/PKA signaling.',
+    receptorTargets: ['Beta-3 adrenergic receptor', 'Hormone-sensitive lipase (HSL)'],
+    signalingPathways: ['cAMP/PKA', 'HSL activation', 'Lipolytic cascade'],
     stabilityNotes:
       'Store lyophilized at -20°C. Reconstituted peptide should be refrigerated at 2-8°C and used within 30 days. Susceptible to proteolytic degradation at room temperature.',
     molecularWeight: '1817.12 Da',
     sequenceLength: 16,
     halfLife: '~30 minutes',
     storageTemp: '-20°C',
+    pubmedLinks: [
+      'https://pubmed.ncbi.nlm.nih.gov/11146367/',
+      'https://pubmed.ncbi.nlm.nih.gov/11713213/',
+    ],
   },
   {
     id: '5-amino-1mq',
@@ -161,17 +168,25 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'BPC-157',
     categories: ['Recovery'],
     researchSummary:
-      'BPC-157 (Body Protection Compound-157) is a synthetic pentadecapeptide derived from a protective protein found in gastric juice, extensively studied in tissue repair and regeneration research. Animal model studies demonstrate accelerated healing of tendons, ligaments, muscles, and gastrointestinal tissue. Research also explores its cytoprotective effects on organ systems and its interaction with the nitric oxide system.',
+      'BPC-157 (Body Protection Compound-157) is a synthetic pentadecapeptide derived from a partial sequence of a naturally occurring peptide found in human gastric juice, first described in the early 1990s. It has been extensively investigated in preclinical research for cytoprotective, anti-inflammatory, angiogenic, and tissue-repair properties across musculoskeletal, gastrointestinal, neurologic, and cardiovascular injury models. A recent pilot human study evaluating intravenous administration reported no adverse effects in healthy volunteers, though robust human efficacy data remain limited.',
     mechanismOfAction:
-      'Modulates the nitric oxide (NO) system, upregulates growth factor expression (EGF, VEGF, FGF2), and promotes angiogenesis. Interacts with the dopaminergic system and may modulate FAK-paxillin signaling to promote cell migration and wound healing.',
-    receptorTargets: ['VEGFR2', 'PDGFR', 'Dopamine system modulator'],
-    signalingPathways: ['NO/NOS', 'VEGF/VEGFR2', 'FAK-paxillin', 'JAK-STAT3', 'EGF/EGFR'],
+      'Exerts effects through multiple overlapping biologic pathways: angiogenesis via VEGF upregulation; cell survival and migration through activation of ERK, FAK, and AKT pathways; nitric oxide modulation supporting vasodilation and endothelial integrity; inflammation downregulation including reductions in COX-2, IL-6, TNF-alpha, and myeloperoxidase activity; and neurotransmitter pathway modulation involving dopaminergic, serotonergic, GABAergic, and opioid systems. Primarily metabolized in the liver via cytochrome P450 pathways with renal excretion.',
+    receptorTargets: ['VEGFR2', 'PDGFR', 'Dopamine receptors', 'Serotonin receptors', 'GABA receptors', 'Opioid receptors'],
+    signalingPathways: ['NO/NOS', 'VEGF/VEGFR2', 'ERK/MAPK', 'FAK-paxillin', 'AKT/PI3K', 'JAK-STAT3', 'EGF/EGFR', 'COX-2 modulation'],
     stabilityNotes:
-      'Store lyophilized at -20°C. Reconstituted solution stable at 2-8°C for approximately 10 days. Peptide is stable in gastric acid conditions. Avoid repeated freeze-thaw.',
+      'Store lyophilized at -20°C. Reconstituted solution stable at 2-8°C for approximately 10 days. Notably stable across a wide pH range including gastric acid conditions. Avoid repeated freeze-thaw. Short plasma half-life (<30 min) following IM or IV administration; metabolites detectable in urine for up to four days.',
     molecularWeight: '1419.53 Da',
     sequenceLength: 15,
-    halfLife: '~4 hours (stable variant)',
+    halfLife: '<30 minutes (plasma); metabolites detectable ~4 days',
     storageTemp: '-20°C',
+    pubmedLinks: [
+      'https://pubmed.ncbi.nlm.nih.gov/11146367/',
+      'https://pubmed.ncbi.nlm.nih.gov/11713213/',
+      'https://pubmed.ncbi.nlm.nih.gov/40131143/',
+      'https://pubmed.ncbi.nlm.nih.gov/40789979/',
+      'https://pubmed.ncbi.nlm.nih.gov/40756949/',
+      'https://pubmed.ncbi.nlm.nih.gov/40005999/',
+    ],
   },
   {
     id: 'tb-500',
@@ -179,9 +194,9 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'TB-500',
     categories: ['Recovery'],
     researchSummary:
-      'TB-500 is a synthetic analog of thymosin beta-4, a 43-amino acid peptide naturally occurring in virtually all human and animal cells. Research in animal models demonstrates its role in promoting cell migration, angiogenesis, and tissue repair processes. Studies also investigate its effects on cardiac tissue repair, dermal wound healing, and reduction of fibrosis.',
+      'TB-500 is a synthetic analog of thymosin beta-4, a 43-amino acid peptide naturally occurring in virtually all human and animal cells. Research in animal models demonstrates its role in promoting cell migration, angiogenesis, and tissue repair processes. Studies also investigate its effects on cardiac tissue repair, dermal wound healing, and reduction of fibrosis. WADA S0 Prohibited substance. Recruits stem cells/progenitor cells to injury sites. Anti-fibrotic effects reducing excessive scarring. Research in cardiac protection, corneal repair, hair restoration, nerve regeneration. "Wolverine Stack": BPC-157 + TB-500 provides multi-pathway synergistic recovery.',
     mechanismOfAction:
-      'Sequesters G-actin monomers to regulate actin polymerization, promoting cell migration and reducing inflammation. Upregulates expression of anti-inflammatory cytokines while downregulating pro-inflammatory mediators. Promotes angiogenesis through VEGF-dependent and independent pathways.',
+      'Sequesters G-actin monomers to regulate actin polymerization, promoting cell migration and reducing inflammation. Upregulates expression of anti-inflammatory cytokines while downregulating pro-inflammatory mediators. Promotes angiogenesis through VEGF-dependent and independent pathways. Stem cell recruitment attracts progenitor cells to injury sites. Anti-fibrotic properties reduce excessive scar formation.',
     receptorTargets: ['G-actin', 'VEGFR'],
     signalingPathways: ['Actin polymerization', 'NF-kB modulation', 'Akt/mTOR', 'HIF-1 alpha'],
     stabilityNotes:
@@ -358,10 +373,10 @@ export const PEPTIDES: Peptide[] = [
     name: 'Semax',
     categories: ['Nootropic', 'Neuropeptide'],
     researchSummary:
-      'Semax is a synthetic heptapeptide analog of the ACTH(4-10) fragment, developed in Russia for neuroscience research. Extensive research explores its nootropic, neuroprotective, and neurotrophic properties. Studies demonstrate upregulation of BDNF and modulation of serotonergic and dopaminergic systems in brain tissue models.',
+      'Semax is a synthetic heptapeptide analog of the ACTH(4-10) fragment, developed in Russia for neuroscience research. Extensive research explores its nootropic, neuroprotective, and neurotrophic properties. Studies demonstrate upregulation of BDNF and modulation of serotonergic and dopaminergic systems in brain tissue models. Increases BDNF in hippocampus and prefrontal cortex. Improves cerebral blood flow and microcirculation. Clinical applications include cognitive decline, post-stroke/TBI recovery, ADHD adjunct, treatment-resistant depression, and optic nerve atrophy. N-Acetyl Semax variant provides 2-3x potency with longer half-life. Well tolerated; rare nasal irritation.',
     mechanismOfAction:
       'Stimulates expression of brain-derived neurotrophic factor (BDNF), nerve growth factor (NGF), and TrkB receptor signaling. Modulates melanocortin receptors (MC3R/MC4R) and enhances monoaminergic neurotransmission. May influence gene expression related to immune function and neuroplasticity.',
-    receptorTargets: ['MC3R', 'MC4R', 'TrkB'],
+    receptorTargets: ['MC3R', 'MC4R', 'TrkB', 'Dopamine receptors', 'Serotonin receptors', 'Cholinergic receptors'],
     signalingPathways: ['BDNF/TrkB', 'cAMP/PKA', 'MAPK/ERK', 'PI3K/Akt'],
     stabilityNotes:
       'Store lyophilized at -20°C. Nasal formulation stable at 2-8°C. Pro-Gly-Pro C-terminal modification confers resistance to proteolytic degradation. Short plasma half-life but prolonged central effects.',
@@ -375,9 +390,9 @@ export const PEPTIDES: Peptide[] = [
     name: 'Selank',
     categories: ['Nootropic', 'Neuropeptide', 'Immune'],
     researchSummary:
-      'Selank is a synthetic heptapeptide analog of the endogenous immunomodulatory peptide tuftsin, with an added Pro-Gly-Pro sequence for metabolic stability. Research investigates its anxiolytic and nootropic properties alongside immunomodulatory effects. Studies report modulation of IL-6 expression and GABAergic neurotransmission.',
+      'Selank is a synthetic heptapeptide analog of the endogenous immunomodulatory peptide tuftsin, with an added Pro-Gly-Pro sequence for metabolic stability. Research investigates its anxiolytic and nootropic properties alongside immunomodulatory effects. Studies report modulation of IL-6 expression and GABAergic neurotransmission. Produces anxiolysis WITHOUT sedation, cognitive impairment, tolerance, or dependence (key advantage over benzodiazepines). Extends endogenous enkephalin half-life via enkephalin stabilization. Tuftsin-derived immune regulatory effects (IL-6, TNF-alpha modulation). Clinical applications: GAD, stress-related disorders, ADHD with anxiety, benzodiazepine taper support, post-viral syndromes. N-Acetyl Selank provides 2-3x potency.',
     mechanismOfAction:
-      'Modulates GABAergic neurotransmission by allosterically influencing GABA-A receptor function. Affects serotonin metabolism by inhibiting enkephalin-degrading enzymes. Stimulates IL-6 and influences expression of 36+ genes related to immune and inflammatory responses.',
+      'Modulates GABAergic neurotransmission by allosterically influencing GABA-A receptor function. Affects serotonin metabolism by inhibiting enkephalin-degrading enzymes. Stimulates IL-6 and influences expression of 36+ genes related to immune and inflammatory responses. Enhances BDNF expression to support neuroplasticity and neuroprotection.',
     receptorTargets: ['GABA-A receptor (allosteric)', 'Tuftsin receptors'],
     signalingPathways: ['GABAergic', 'Serotonergic', 'Enkephalinase inhibition', 'IL-6/JAK-STAT'],
     stabilityNotes:
@@ -392,7 +407,7 @@ export const PEPTIDES: Peptide[] = [
     name: 'Dihexa',
     categories: ['Nootropic', 'Neuropeptide'],
     researchSummary:
-      'Dihexa (N-hexanoic-Tyr-Ile-(6) aminohexanoic amide) is a synthetic angiotensin IV analog with extraordinarily potent procognitive properties reported in animal research. Studies demonstrate it is approximately 10 million-fold more potent than BDNF at promoting hepatocyte growth factor (HGF)/c-Met signaling. Research focuses on synaptogenesis, memory consolidation, and potential applications in neurodegenerative disease models.',
+      'Dihexa (N-hexanoic-Tyr-Ile-(6) aminohexanoic amide) is a synthetic angiotensin IV analog with extraordinarily potent procognitive properties reported in animal research. 10 million times more potent than BDNF at promoting synaptogenesis via HGF potentiation. CAUTION: Limited human clinical data; theoretical oncogenic concern with HGF pathway; avoid in active malignancy. Clinical applications: Significant cognitive impairment, MCI, early dementia, TBI recovery. Research focuses on synaptogenesis, memory consolidation, and potential applications in neurodegenerative disease models.',
     mechanismOfAction:
       'Activates the hepatocyte growth factor (HGF)/c-Met receptor system, promoting dendritic spine formation and synaptogenesis. Functions as an allosteric potentiator of HGF by inhibiting HGF inactivation. Does not bind AT4 receptor directly like angiotensin IV but acts through distinct HGF-dependent mechanisms.',
     receptorTargets: ['c-Met (HGF receptor)'],
@@ -425,16 +440,22 @@ export const PEPTIDES: Peptide[] = [
     name: 'Cerebrolysin',
     categories: ['Nootropic', 'Neuropeptide'],
     researchSummary:
-      'Cerebrolysin is a mixture of low-molecular-weight neuropeptides and free amino acids derived from porcine brain tissue through controlled enzymatic proteolysis. Extensive research explores its neurotrophic, neuroprotective, and neuroplasticity-promoting properties. Clinical research has examined it in the context of stroke recovery, traumatic brain injury, and neurodegenerative disease models.',
+      'Cerebrolysin is a porcine-derived neurotrophic peptide complex composed of approximately 14,635 low-molecular-weight amino acid chains, specifically designed to cross the blood-brain barrier. Developed by neurologist Gerhart Harrer, it has been studied internationally in cognitive decline, traumatic brain injury, ischemic stroke rehabilitation, and neurodegenerative disorder models. It acts as a multi-pathway biological signal modulator rather than targeting a single receptor.',
     mechanismOfAction:
-      'Contains neurotrophic factor-like peptides that mimic the effects of BDNF, GDNF, NGF, and CNTF. Modulates GSK-3 beta activity, reduces tau hyperphosphorylation, and promotes synaptic plasticity. Enhances neuronal survival through multiple parallel neuroprotective cascades.',
-    receptorTargets: ['TrkA', 'TrkB', 'p75NTR', 'NMDA receptor (modulatory)'],
-    signalingPathways: ['BDNF/TrkB', 'PI3K/Akt', 'GSK-3 beta', 'MAPK/ERK', 'CREB'],
+      'Contains neurotrophic factor-like peptides that mimic and modulate hundreds of endogenous signaling pathways: BDNF, NGF, GDNF for neuronal survival and synaptic plasticity; IGF-1-like signaling for neuronal growth; VEGF modulation for cerebral microcirculation; GSK-3beta inhibition for anti-apoptotic signaling; TrkB and CREB phosphorylation for learning and memory consolidation; VIP, Galanin, and Orexin for neuroimmune balance and cognition; SOD and antioxidant peptides for oxidative stress reduction; and Histatins and Defensins for immune and neuroprotective modulation.',
+    receptorTargets: ['TrkA', 'TrkB', 'p75NTR', 'NMDA receptor (modulatory)', 'VIP receptors', 'Orexin receptors', 'Galanin receptors'],
+    signalingPathways: ['BDNF/TrkB', 'NGF/TrkA', 'GDNF', 'IGF-1-like', 'VEGF', 'PI3K/Akt', 'GSK-3 beta', 'MAPK/ERK', 'CREB', 'SOD/antioxidant'],
     stabilityNotes:
       'Store at 2-8°C protected from light. Amber-colored aqueous solution. Do not freeze. Contains a complex mixture so batch variability is a research consideration.',
-    molecularWeight: 'Mixture (<10,000 Da fragments)',
+    molecularWeight: 'Mixture (~14,635 peptide chains, <10,000 Da fragments)',
     halfLife: '~minutes for individual peptides; cumulative effects persist',
     storageTemp: '2-8°C',
+    pubmedLinks: [
+      'https://pubmed.ncbi.nlm.nih.gov/11561424/',
+      'https://pubmed.ncbi.nlm.nih.gov/19683614/',
+      'https://pubmed.ncbi.nlm.nih.gov/21659748/',
+      'https://pubmed.ncbi.nlm.nih.gov/29054302/',
+    ],
   },
 
   // ─── IMMUNE ───────────────────────────────────────────────────────────────────
@@ -444,7 +465,7 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'Ta1',
     categories: ['Immune'],
     researchSummary:
-      'Thymosin Alpha-1 is a 28-amino acid peptide originally isolated from thymic tissue, now produced synthetically. It is one of the most extensively researched immunomodulatory peptides with studies spanning decades. Research investigates its ability to modulate dendritic cell maturation, enhance T-cell function, and balance Th1/Th2 immune responses.',
+      'Thymosin Alpha-1 is a 28-amino acid peptide originally isolated from thymic tissue, now produced synthetically. Approved as Zadaxin in multiple countries. It is one of the most extensively researched immunomodulatory peptides with studies spanning decades. Enhances CD4+ and CD8+ T-cell maturation, differentiation, and function. Improves dendritic cell antigen presentation. Increases NK cell number and cytotoxicity. Optimizes Th1/Th2 balance. Research investigates its ability to modulate dendritic cell maturation, enhance T-cell function, and balance Th1/Th2 immune responses. Excellent long-term safety profile. Contraindicated in organ transplant patients on immunosuppression.',
     mechanismOfAction:
       'Activates Toll-like receptors TLR2 and TLR9 on dendritic cells, promoting maturation and cross-presentation of antigens. Enhances NK cell cytotoxicity, stimulates T-cell differentiation, and modulates the balance between pro-inflammatory and anti-inflammatory cytokine production.',
     receptorTargets: ['TLR2', 'TLR9'],
@@ -461,7 +482,7 @@ export const PEPTIDES: Peptide[] = [
     name: 'Thymalin',
     categories: ['Immune', 'Longevity'],
     researchSummary:
-      'Thymalin is a dipeptide (Glu-Trp) derived from thymic extract research, developed as part of the Khavinson peptide bioregulator paradigm. Geroprotective research examines its effects on immune reconstitution and longevity markers. Long-term observational studies in elderly populations have investigated correlations with improved immune function biomarkers and reduced morbidity.',
+      'Thymalin is a dipeptide (Glu-Trp) derived from thymic extract research, developed as part of the Khavinson peptide bioregulator paradigm. 30+ years of clinical use with documented safety. Geroprotective research examines its effects on immune reconstitution and longevity markers. Increases CD3+, CD4+, CD8+ maturation. Decreases IL-6, IL-1beta, TNF-alpha; increases IL-2. Reverses age-related thymic involution. Long-term observational studies in elderly populations have investigated correlations with improved immune function biomarkers and reduced morbidity. Classic Russian Longevity Protocol: Epitalon + Thymalin biannually.',
     mechanismOfAction:
       'Proposed to modulate thymic function by influencing thymocyte differentiation and T-cell maturation. May interact directly with DNA regulatory regions to modulate gene expression related to immune cell development. Influences the neuroendocrine-immune axis.',
     receptorTargets: ['Thymic epithelial cell receptors (proposed)'],
@@ -499,7 +520,7 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'KPV',
     categories: ['Anti-inflammatory'],
     researchSummary:
-      'KPV is a C-terminal tripeptide fragment (Lys-Pro-Val) of alpha-melanocyte-stimulating hormone (alpha-MSH) that retains potent anti-inflammatory activity. Research demonstrates it inhibits NF-kB nuclear translocation and reduces pro-inflammatory cytokine production in multiple cell types. Studies in intestinal inflammation models show reduced mucosal damage and inflammatory infiltration.',
+      'KPV is a C-terminal tripeptide fragment (Lys-Pro-Val) of alpha-melanocyte-stimulating hormone (alpha-MSH) that retains potent anti-inflammatory activity. Research demonstrates it inhibits NF-kB nuclear translocation and reduces pro-inflammatory cytokine production in multiple cell types. Studies in intestinal inflammation models show reduced mucosal damage and inflammatory infiltration. Gut mucosal healing - reduces intestinal inflammation, supports barrier integrity. Direct antimicrobial activity in addition to anti-inflammatory effects.',
     mechanismOfAction:
       'Enters cells and directly inhibits NF-kB activation by preventing IkB-alpha degradation and p65 nuclear translocation. Unlike full-length alpha-MSH, KPV may exert anti-inflammatory effects independently of melanocortin receptors, though some MC1R interaction has been reported.',
     receptorTargets: ['MC1R (partial)', 'Intracellular NF-kB pathway (direct)'],
@@ -519,7 +540,7 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'MOTS-c',
     categories: ['Mitochondrial', 'Metabolic'],
     researchSummary:
-      'MOTS-c (Mitochondrial Open Reading Frame of the 12S rRNA Type-c) is a mitochondria-derived peptide encoded within the 12S rRNA gene. Research reveals it as a mitochondrial-encoded signaling peptide that regulates metabolic homeostasis and insulin sensitivity. Studies demonstrate AMPK activation, enhanced glucose uptake, and exercise-mimetic effects in research models.',
+      'MOTS-c (Mitochondrial Open Reading Frame of the 12S rRNA Type-c) is a mitochondria-derived peptide encoded within the 12S rRNA gene. Research reveals it as a mitochondrial-encoded signaling peptide that regulates metabolic homeostasis and insulin sensitivity. Studies demonstrate AMPK activation, enhanced glucose uptake, and exercise-mimetic effects in research models. Direct AMPK activator via folate-AICAR-AMPK axis. Exercise mimetic effects including shifting muscle fiber composition toward Type I. Enhances skeletal muscle glucose uptake independently of insulin. Upregulates PGC-1alpha for mitochondrial biogenesis.',
     mechanismOfAction:
       'Activates AMPK by altering the folate cycle and de novo purine biosynthesis pathway, leading to accumulation of AICAR (an endogenous AMPK activator). Translocates to the nucleus under metabolic stress to regulate adaptive gene expression. Enhances skeletal muscle glucose uptake independently of insulin.',
     receptorTargets: ['Intracellular (AMPK pathway)', 'Nuclear translocation'],
@@ -537,7 +558,7 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'SS-31',
     categories: ['Mitochondrial'],
     researchSummary:
-      'SS-31 (Elamipretide/Bendavia) is a cell-permeable tetrapeptide (D-Arg-Dmt-Lys-Phe-NH2) that selectively concentrates in the inner mitochondrial membrane. Research demonstrates it stabilizes cardiolipin and optimizes electron transport chain function. Studies investigate its effects on mitochondrial bioenergetics, oxidative stress, and age-related mitochondrial dysfunction.',
+      'SS-31 (Elamipretide/Bendavia) is a cell-permeable tetrapeptide (D-Arg-Dmt-Lys-Phe-NH2) that selectively concentrates in the inner mitochondrial membrane at 1000-5000x enrichment over cytoplasm. Research demonstrates it stabilizes cardiolipin and optimizes electron transport chain function. Optimizes electron transport chain flow. Enhances ATP production while reducing ROS at source. Studies investigate its effects on mitochondrial bioenergetics, oxidative stress, and age-related mitochondrial dysfunction. Research in cardiac, renal, and neurological mitochondrial dysfunction.',
     mechanismOfAction:
       'Selectively binds cardiolipin in the inner mitochondrial membrane, stabilizing cytochrome c interaction and optimizing electron transfer between complexes III and IV. Reduces electron leak and ROS generation. Does not act as a conventional antioxidant but rather optimizes mitochondrial function at its source.',
     receptorTargets: ['Cardiolipin (inner mitochondrial membrane)'],
@@ -590,7 +611,7 @@ export const PEPTIDES: Peptide[] = [
     name: 'Epithalon',
     categories: ['Longevity'],
     researchSummary:
-      'Epithalon (Epitalon, Ala-Glu-Asp-Gly) is a synthetic tetrapeptide based on the natural pineal peptide epithalamin, developed by Professor Khavinson. Research explores its ability to activate telomerase and extend telomere length in human somatic cells. Studies in animal models and cell cultures investigate its geroprotective effects, including modulation of melatonin production and circadian rhythm regulation.',
+      'Epithalon (Epitalon, Ala-Glu-Asp-Gly) is a synthetic tetrapeptide based on the natural pineal peptide epithalamin, developed by Professor Khavinson. Research explores its ability to activate telomerase and extend telomere length in human somatic cells. Studies in animal models and cell cultures investigate its geroprotective effects, including modulation of melatonin production and circadian rhythm regulation. Restores melatonin synthesis capacity and circadian rhythm regulation. Reduces lipid peroxidation and oxidative damage. Modulates aging-related gene expression patterns. Classic Russian Longevity Protocol: Epitalon 10mg x 10-20 days + Thymalin 10mg x 10 days, biannually.',
     mechanismOfAction:
       'Activates telomerase reverse transcriptase (hTERT) catalytic subunit expression, promoting telomere elongation in somatic cells approaching replicative senescence. May also stimulate pineal melatonin production and modulate neuroendocrine regulation of aging through the pineal-hypothalamic axis.',
     receptorTargets: ['hTERT (transcriptional activation)', 'Pineal gland regulatory elements'],
@@ -610,7 +631,7 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'DSIP',
     categories: ['Sleep', 'Neuropeptide'],
     researchSummary:
-      'DSIP (Delta Sleep-Inducing Peptide) is a nonapeptide (Trp-Ala-Gly-Gly-Asp-Ala-Ser-Gly-Glu) originally isolated from cerebral venous blood of rabbits during electrically induced sleep. Research investigates its effects on sleep architecture, particularly delta wave (slow-wave) sleep promotion. Studies also explore its potential stress-modulatory, analgesic, and endocrine-regulating properties.',
+      'DSIP (Delta Sleep-Inducing Peptide) is a nonapeptide (Trp-Ala-Gly-Gly-Asp-Ala-Ser-Gly-Glu) originally isolated from cerebral venous blood of rabbits during electrically induced sleep. Research investigates its effects on sleep architecture, particularly delta wave (slow-wave) sleep promotion. Promotes delta wave (deep) sleep WITHOUT sedation. HPA axis modulation normalizes cortisol and enhances stress resilience. Pain modulation with opioid-like effects without addiction or tolerance. No next-day drowsiness; no tolerance or dependence development. Applications: primary insomnia, chronic stress, jet lag, chronic pain, substance withdrawal support. Studies also explore its potential stress-modulatory, analgesic, and endocrine-regulating properties.',
     mechanismOfAction:
       'Mechanism remains incompletely characterized. Proposed to modulate GABAergic and glutamatergic neurotransmission, influence cortisol and ACTH release, and interact with opioid systems. May affect serotonin and dopamine turnover in specific brain regions. Appears to act as a neuromodulator rather than through a single receptor target.',
     receptorTargets: ['GABA-A receptor (modulatory)', 'Opioid receptors (partial)', 'Serotonergic system'],
@@ -683,7 +704,7 @@ export const PEPTIDES: Peptide[] = [
     abbreviation: 'PT-141',
     categories: ['Sexual Health'],
     researchSummary:
-      'PT-141 (Bremelanotide) is a synthetic cyclic heptapeptide melanocortin receptor agonist originally derived from Melanotan-II research. It is the first melanocortin-based compound studied for its effects on central nervous system arousal and sexual response pathways. Research demonstrates it activates hypothalamic pathways distinct from peripheral vascular mechanisms.',
+      'PT-141 (Bremelanotide) is a synthetic cyclic heptapeptide melanocortin receptor agonist originally derived from Melanotan-II research. FDA-approved as Vyleesi for HSDD in premenopausal women. It is the first melanocortin-based compound studied for its effects on central nervous system arousal and sexual response pathways. Distinct from PDE5 inhibitors - works on desire/arousal through CNS, not erectile mechanics. Downstream dopaminergic and oxytocinergic signaling. Research demonstrates it activates hypothalamic pathways distinct from peripheral vascular mechanisms.',
     mechanismOfAction:
       'Selectively activates melanocortin-4 receptor (MC4R) in the hypothalamus and limbic system, stimulating central arousal pathways. Unlike PDE5 inhibitors, its mechanism is centrally mediated through dopaminergic and oxytocinergic downstream signaling. Also has affinity for MC1R and MC3R.',
     receptorTargets: ['MC4R (primary)', 'MC3R', 'MC1R'],
@@ -701,9 +722,9 @@ export const PEPTIDES: Peptide[] = [
     id: 'ghk-cu',
     name: 'GHK-Cu',
     abbreviation: 'GHK-Cu',
-    categories: ['Cosmetic', 'Recovery'],
+    categories: ['Cosmetic', 'Recovery', 'Anti-inflammatory', 'Neuropeptide'],
     researchSummary:
-      'GHK-Cu (Glycyl-L-Histidyl-L-Lysine copper complex) is a naturally occurring copper-binding tripeptide found in human plasma, saliva, and urine. Research demonstrates it modulates expression of over 4,000 genes, with effects on collagen synthesis, wound repair, and anti-inflammatory signaling. Studies investigate its role in skin remodeling, hair follicle biology, and tissue regeneration models.',
+      'GHK-Cu (Glycyl-L-Histidyl-L-Lysine copper complex) is a naturally occurring copper-binding tripeptide found in human plasma, saliva, and urine. Research demonstrates it modulates expression of over 4,000 genes, with effects on collagen synthesis, wound repair, and anti-inflammatory signaling. Studies investigate its role in skin remodeling, hair follicle biology, and tissue regeneration models. Neuroprotective and anti-inflammatory for brain health. Reduces neuroinflammation via NF-kB modulation. Activates SOD for antioxidant protection. Regulates MMP/TIMP balance for controlled tissue remodeling. Recruits mesenchymal stem cells. Clinical apps: Post-procedure recovery, anti-aging skincare, hair restoration, scalp mesotherapy. Used in Alzheimer\'s research formulations.',
     mechanismOfAction:
       'The GHK tripeptide chelates copper(II) ions, and this complex activates intracellular signaling cascades promoting collagen I and III synthesis, glycosaminoglycan production, and decorin expression. Upregulates metalloproteinases for tissue remodeling while stimulating TGF-beta, VEGF, and FGF2 expression. Modulates Wnt signaling in hair follicle stem cells.',
     receptorTargets: ['Integrin receptors', 'Copper transporters (CTR1)', 'TGF-beta receptors'],
@@ -769,6 +790,199 @@ export const PEPTIDES: Peptide[] = [
     molecularWeight: '1024.18 Da',
     sequenceLength: 7,
     halfLife: '~1-2 hours',
+    storageTemp: '-20°C',
+  },
+
+  // ─── NEUROPEPTIDE ─────────────────────────────────────────────────────────────
+  {
+    id: 'oxytocin',
+    name: 'Oxytocin',
+    abbreviation: 'OXT',
+    categories: ['Neuropeptide', 'Reproductive'],
+    researchSummary: 'Oxytocin is a 9-amino acid cyclic peptide hormone produced in the hypothalamus and released by the posterior pituitary. Research investigates its role in social bonding, trust, empathy, and pair bonding. Studies also explore its effects on uterine contraction, lactation, and modulation of stress and anxiety responses. Emerging research examines its role in autism spectrum disorder models and PTSD.',
+    mechanismOfAction: 'Binds the oxytocin receptor (OXTR), a Gq-coupled GPCR, activating phospholipase C and increasing intracellular calcium. In the brain, modulates GABAergic and serotonergic neurotransmission in amygdala and prefrontal circuits. Peripheral effects include uterine smooth muscle contraction and myoepithelial cell contraction in mammary glands.',
+    receptorTargets: ['OXTR (oxytocin receptor)', 'V1a vasopressin receptor (partial)'],
+    signalingPathways: ['Gq/PLC/IP3/Ca2+', 'GABAergic modulation', 'Serotonergic modulation', 'MAPK/ERK'],
+    stabilityNotes: 'Store lyophilized at -20°C. Disulfide bridge critical for bioactivity. Reconstitute with sterile water. Sensitive to reductive conditions. Intranasal delivery common for CNS research.',
+    molecularWeight: '1007.19 Da',
+    sequenceLength: 9,
+    halfLife: '~3-5 minutes (plasma)',
+    storageTemp: '-20°C',
+  },
+  {
+    id: 'vip',
+    name: 'VIP',
+    abbreviation: 'VIP',
+    categories: ['Neuropeptide', 'Immune', 'Anti-inflammatory'],
+    researchSummary: 'Vasoactive Intestinal Peptide is a 28-amino acid regulatory neuropeptide with broad physiological roles in vasodilation, immune modulation, and circadian rhythm regulation. Research investigates its potent anti-inflammatory effects, including inhibition of TNF-alpha, IL-6, and other pro-inflammatory cytokines. Studies in chronic inflammatory respiratory disease (CIRS), mold-related illness, and neurodegenerative models show promising immune-modulatory outcomes.',
+    mechanismOfAction: 'Binds VPAC1 and VPAC2 G-protein coupled receptors, activating adenylyl cyclase and increasing intracellular cAMP. Promotes Th2 anti-inflammatory immune bias, inhibits NF-kB-mediated pro-inflammatory gene transcription, and supports regulatory T-cell differentiation. Also modulates PACAP signaling.',
+    receptorTargets: ['VPAC1', 'VPAC2', 'PAC1 (low affinity)'],
+    signalingPathways: ['cAMP/PKA', 'NF-kB inhibition', 'JAK/STAT (Th2 bias)', 'CREB transcription'],
+    stabilityNotes: 'Store lyophilized at -20°C. Sensitive to proteolytic degradation; short plasma half-life. Reconstitute with bacteriostatic water. Intranasal administration studied for CIRS applications.',
+    molecularWeight: '3326.26 Da',
+    sequenceLength: 28,
+    halfLife: '~1-2 minutes (plasma)',
+    storageTemp: '-20°C',
+  },
+
+  // ─── ANTIOXIDANT ──────────────────────────────────────────────────────────────
+  {
+    id: 'glutathione',
+    name: 'Glutathione',
+    abbreviation: 'GSH',
+    categories: ['Anti-inflammatory', 'Longevity'],
+    researchSummary: 'Glutathione is a tripeptide (gamma-L-glutamyl-L-cysteinyl-glycine) and the most abundant intracellular antioxidant in human cells. Research investigates its critical role in detoxification, free radical scavenging, immune function, and cellular redox homeostasis. Studies examine its depletion in chronic disease, neurodegeneration, and aging models, and the effects of exogenous supplementation on oxidative stress biomarkers.',
+    mechanismOfAction: 'Functions as a substrate for glutathione peroxidase (GPx) enzymes, reducing hydrogen peroxide and lipid hydroperoxides. Conjugates xenobiotics and endotoxins via glutathione S-transferase (GST) for Phase II detoxification. Maintains thiol-disulfide balance critical for protein function. Recycles vitamins C and E.',
+    receptorTargets: ['GPx (glutathione peroxidase)', 'GST (glutathione S-transferase)', 'GR (glutathione reductase)'],
+    signalingPathways: ['GSH/GSSG redox cycle', 'Phase II detoxification', 'NRF2/ARE antioxidant defense', 'Thioredoxin system'],
+    stabilityNotes: 'Store lyophilized at -20°C protected from light. Reduced form (GSH) is easily oxidized to GSSG. Liposomal and S-acetyl forms offer improved oral bioavailability. IV glutathione requires immediate use.',
+    molecularWeight: '307.32 Da',
+    sequenceLength: 3,
+    halfLife: '~minutes (rapidly consumed by enzymatic reactions)',
+    storageTemp: '-20°C',
+  },
+
+  // ─── NEUROPROTECTIVE ──────────────────────────────────────────────────────────
+  {
+    id: 'ara-290',
+    name: 'ARA-290',
+    abbreviation: 'ARA-290',
+    categories: ['Neuropeptide', 'Anti-inflammatory'],
+    researchSummary: 'ARA-290 is an 11-amino acid peptide derived from the B-helix of erythropoietin (EPO), specifically engineered to activate the innate repair receptor (IRR) without erythropoietic activity. Research investigates its neuroprotective, anti-inflammatory, and tissue-repair properties. Studies in diabetic neuropathy, sarcoidosis, and chronic inflammatory conditions demonstrate improvements in nerve fiber density and pain biomarkers.',
+    mechanismOfAction: 'Selectively binds the innate repair receptor (IRR), a heterodimer of EPO receptor and beta common receptor (CD131), distinct from the classical EPO receptor homodimer. Activates anti-apoptotic JAK2/STAT5 signaling, reduces NF-kB-mediated inflammation, and promotes Schwann cell migration and nerve repair.',
+    receptorTargets: ['Innate Repair Receptor (EPOR/CD131 heterodimer)'],
+    signalingPathways: ['JAK2/STAT5', 'NF-kB inhibition', 'PI3K/Akt', 'Anti-apoptotic signaling'],
+    stabilityNotes: 'Store lyophilized at -20°C. Reconstitute with sterile water. Does not stimulate erythropoiesis, eliminating hematologic concerns of EPO. Stable synthetic peptide.',
+    molecularWeight: '~1250 Da',
+    sequenceLength: 11,
+    halfLife: '~2-4 hours',
+    storageTemp: '-20°C',
+  },
+  {
+    id: 'dermorphin',
+    name: 'Dermorphin',
+    categories: ['Neuropeptide'],
+    researchSummary: 'Dermorphin is a 7-amino acid opioid peptide originally isolated from the skin of South American tree frogs (Phyllomedusa). It is approximately 30-40 times more potent than morphine as a mu-opioid receptor agonist. Research investigates its analgesic properties, opioid receptor pharmacology, and potential applications in pain research models. Contains a D-alanine residue conferring enhanced enzymatic stability.',
+    mechanismOfAction: 'Highly selective agonist of the mu-opioid receptor (MOR/OPRM1). Binding activates Gi/Go-mediated signaling, reducing adenylyl cyclase activity and cAMP production, activating GIRK potassium channels, and inhibiting voltage-gated calcium channels. D-Ala2 residue provides resistance to aminopeptidase degradation.',
+    receptorTargets: ['MOR/OPRM1 (mu-opioid receptor)'],
+    signalingPathways: ['Gi/Go inhibition of cAMP', 'GIRK activation', 'Ca2+ channel inhibition', 'Beta-arrestin signaling'],
+    stabilityNotes: 'Store lyophilized at -20°C. D-alanine at position 2 significantly enhances metabolic stability compared to endogenous opioid peptides. Reconstitute in sterile water.',
+    molecularWeight: '803.93 Da',
+    sequenceLength: 7,
+    halfLife: '~hours (enhanced by D-Ala)',
+    storageTemp: '-20°C',
+  },
+
+  // ─── ONCOLOGY RESEARCH ────────────────────────────────────────────────────────
+  {
+    id: 'pnc-27',
+    name: 'PNC-27',
+    abbreviation: 'PNC-27',
+    categories: ['Immune'],
+    researchSummary: 'PNC-27 is a synthetic peptide containing an HDM-2-binding domain linked to a membrane-active penetration sequence. Research investigates its ability to selectively target cancer cells expressing surface HDM-2 (MDM-2) protein while sparing normal cells. Preclinical studies demonstrate selective membranolytic activity against various cancer cell lines. It remains an early-stage research compound.',
+    mechanismOfAction: 'Binds surface-expressed HDM-2 protein on transformed cells. Upon binding, the penetrating peptide domain inserts into the cell membrane, forming pores that disrupt membrane integrity and induce necrosis. Normal cells without surface HDM-2 expression are not affected, providing selectivity.',
+    receptorTargets: ['HDM-2/MDM-2 (surface-expressed on cancer cells)'],
+    signalingPathways: ['Membrane disruption/pore formation', 'Necrotic cell death', 'p53-independent mechanism'],
+    stabilityNotes: 'Store lyophilized at -20°C. Synthetic peptide with moderate stability. Reconstitute in sterile water. Research-stage compound with limited clinical data.',
+    molecularWeight: '~3200 Da',
+    halfLife: 'Under investigation',
+    storageTemp: '-20°C',
+  },
+
+  // ─── NOOTROPIC ──────────────────────────────────────────────────────────────────
+  {
+    id: 'noopept',
+    name: 'Noopept',
+    abbreviation: 'GVS-111',
+    categories: ['Nootropic'],
+    researchSummary: 'Noopept (N-phenylacetyl-L-prolylglycine ethyl ester) is a synthetic dipeptide-derived nootropic compound developed at the Russian Academy of Medical Sciences. Research demonstrates it enhances neuroplasticity and BDNF expression at concentrations 1000x lower than piracetam. Studies investigate its neuroprotective effects against oxidative stress, amyloid-beta toxicity, and glutamate excitotoxicity. It has been studied in Alzheimer\'s formulations alongside Semax, Cerebrolysin, GHK-Cu, and IGF-1.',
+    mechanismOfAction: 'Modulates AMPA and NMDA receptor-mediated neurotransmission, enhancing long-term potentiation (LTP). Increases BDNF and NGF expression in hippocampus. Active metabolite cycloprolylglycine (CPG) interacts with AMPA receptors. Also demonstrates anti-inflammatory and antioxidant properties in neural tissue.',
+    receptorTargets: ['AMPA receptors', 'NMDA receptors', 'BDNF receptors (TrkB)'],
+    signalingPathways: ['BDNF/TrkB signaling', 'AMPA receptor potentiation', 'NMDA receptor modulation', 'NGF upregulation', 'Antioxidant defense'],
+    stabilityNotes: 'Store at -20°C. Small molecule with good oral bioavailability. Soluble in water. Rapidly absorbed and metabolized to active metabolite cycloprolylglycine. Protect from moisture.',
+    molecularWeight: '318.37 Da',
+    halfLife: '~30-60 minutes (prodrug; active metabolite persists longer)',
+    storageTemp: '-20°C',
+  },
+
+  // ─── MITOCHONDRIAL-DERIVED ────────────────────────────────────────────────────
+  {
+    id: 'humanin',
+    name: 'Humanin',
+    abbreviation: 'HN',
+    categories: ['Mitochondrial', 'Longevity', 'Neuropeptide'],
+    researchSummary: 'Humanin is a 24-amino acid mitochondrial-derived peptide (MDP) encoded within the 16S rRNA gene, first identified in 2001 from surviving neurons in Alzheimer\'s disease brains. Research demonstrates potent cytoprotective, anti-apoptotic, and metabolic regulatory properties. Studies investigate its neuroprotection against amyloid-beta toxicity, cardiovascular protection, and insulin-sensitizing effects across multiple disease models.',
+    mechanismOfAction: 'Inhibits pro-apoptotic proteins Bax, tBid, and IGFBP3, preventing mitochondrial permeability transition pore opening. Improves mitochondrial respiratory chain efficiency, increasing ATP production while reducing ROS generation. Activates PI3K/Akt pathway improving insulin sensitization and glucose metabolism. Protects against amyloid-beta-induced neurodegeneration and reduces ischemia-reperfusion injury.',
+    receptorTargets: ['FPRL1/FPR2', 'CNTFR/WSX-1/gp130 tripartite receptor', 'IGFBP3 (inhibition)', 'Bax/tBid (inhibition)'],
+    signalingPathways: ['PI3K/Akt', 'JAK/STAT3', 'Anti-apoptotic (Bax/tBid inhibition)', 'Mitochondrial ETC optimization', 'AMPK'],
+    stabilityNotes: 'Store lyophilized at -20°C. Mitochondrial-derived peptide with moderate stability. S14G substitution (HNG) creates a more potent analog. Reconstitute in sterile water.',
+    molecularWeight: '~2687 Da',
+    sequenceLength: 24,
+    halfLife: '~hours (under investigation)',
+    storageTemp: '-20°C',
+  },
+
+  // ─── SENOLYTIC ────────────────────────────────────────────────────────────────
+  {
+    id: 'foxo4-dri',
+    name: 'FOXO4-DRI',
+    abbreviation: 'FOXO4-DRI',
+    categories: ['Longevity'],
+    researchSummary: 'FOXO4-DRI is a D-retro-inverso peptide designed to selectively induce apoptosis in senescent cells while sparing healthy cells. Research demonstrates it disrupts the FOXO4-p53 interaction that normally protects senescent cells from programmed cell death. Studies in aged mice show restoration of fur density, renal function, and fitness following treatment. It represents one of the most targeted senolytic approaches in research.',
+    mechanismOfAction: 'Displaces endogenous FOXO4 from p53 in senescent cells, triggering p53-mediated apoptosis specifically in cells that have entered irreversible growth arrest. Clears cells producing the senescence-associated secretory phenotype (SASP) - inflammatory factors including IL-6, IL-1beta, TNF-alpha, and MMPs. The D-retro-inverso modification provides resistance to proteolytic degradation while maintaining binding specificity.',
+    receptorTargets: ['FOXO4/p53 interaction (disruption target)'],
+    signalingPathways: ['p53-mediated apoptosis (senescent cell selective)', 'SASP reduction (IL-6, IL-1beta, TNF-alpha, MMPs)', 'Caspase cascade'],
+    stabilityNotes: 'Store lyophilized at -20°C. D-retro-inverso modification confers strong resistance to proteolytic degradation. Reconstitute with sterile water. Enhanced bioavailability compared to L-amino acid analogs.',
+    molecularWeight: '~4800 Da',
+    halfLife: 'Extended (D-retro-inverso resistant to proteases)',
+    storageTemp: '-20°C',
+  },
+
+  // ─── EXERCISE MIMETIC ─────────────────────────────────────────────────────────
+  {
+    id: 'aicar',
+    name: 'AICAR',
+    abbreviation: 'AICAR',
+    categories: ['Mitochondrial', 'Metabolic'],
+    researchSummary: 'AICAR (5-Aminoimidazole-4-carboxamide ribonucleotide) is an AMP analog and direct AMPK activator classified as an exercise mimetic. WADA S4 Prohibited substance. Research demonstrates it shifts muscle fiber composition toward oxidative Type I fibers, enhances fat oxidation, and promotes mitochondrial biogenesis. Studies in sedentary mice showed significant endurance improvements without exercise training.',
+    mechanismOfAction: 'Metabolized intracellularly to ZMP, which allosterically activates AMP-activated protein kinase (AMPK) by mimicking AMP binding. Downstream AMPK activation promotes glucose uptake, fatty acid oxidation, mitochondrial biogenesis via PGC-1alpha, and shifts muscle fiber composition toward oxidative Type I phenotype.',
+    receptorTargets: ['AMPK (allosteric activation via ZMP metabolite)'],
+    signalingPathways: ['AMPK', 'PGC-1alpha/mitochondrial biogenesis', 'ACC inhibition (fat oxidation)', 'GLUT4 translocation', 'Muscle fiber type switching'],
+    stabilityNotes: 'Store lyophilized at -20°C. Purine analog with moderate aqueous stability. Reconstitute in sterile water. Protect from repeated freeze-thaw cycles.',
+    molecularWeight: '338.21 Da',
+    halfLife: '~2-3 hours',
+    storageTemp: '-20°C',
+  },
+
+  // ─── GROWTH HORMONE (RECOMBINANT) ────────────────────────────────────────────
+  {
+    id: 'somatropin',
+    name: 'Somatropin',
+    abbreviation: 'rHGH',
+    categories: ['Growth Hormone'],
+    researchSummary: 'Somatropin is recombinant human growth hormone, a 191-amino acid single-chain polypeptide produced by recombinant DNA technology. It is FDA-approved for multiple indications including pediatric growth hormone deficiency, adult GHD, Turner syndrome, and HIV wasting. Research investigates its effects on body composition, bone density, exercise capacity, and quality of life. It serves as the reference standard for all growth hormone research.',
+    mechanismOfAction: 'Binds the growth hormone receptor (GHR), a type I cytokine receptor, inducing receptor dimerization and JAK2 tyrosine kinase activation. Downstream signaling through STAT5, MAPK, and PI3K pathways stimulates IGF-1 production in the liver, promotes linear growth, protein synthesis, lipolysis, and glucose mobilization.',
+    receptorTargets: ['GHR (growth hormone receptor)', 'JAK2 tyrosine kinase'],
+    signalingPathways: ['JAK2/STAT5', 'MAPK/ERK', 'PI3K/Akt', 'GH/IGF-1 axis', 'mTOR'],
+    stabilityNotes: 'Store lyophilized at 2-8°C. Reconstituted solution refrigerate and use within 14-28 days. Do not freeze reconstituted. 191-amino acid sequence identical to endogenous hGH. Sensitive to shearing forces.',
+    molecularWeight: '22,124 Da',
+    sequenceLength: 191,
+    halfLife: '~2-4 hours (SC injection)',
+    storageTemp: '2-8°C',
+  },
+  {
+    id: 'follistatin-344',
+    name: 'Follistatin-344',
+    abbreviation: 'FS-344',
+    categories: ['Growth Hormone', 'Recovery'],
+    researchSummary: 'Follistatin-344 is a naturally occurring glycoprotein that functions as a potent activin and myostatin antagonist. Research investigates its role in promoting skeletal muscle growth and inhibiting muscle atrophy by neutralizing the growth-suppressive effects of myostatin and activin A. Studies in animal models demonstrate significant increases in muscle mass. The 344-amino acid isoform is the most commonly studied variant in research settings.',
+    mechanismOfAction: 'Binds and neutralizes activin A, myostatin (GDF-8), and other TGF-beta superfamily ligands with high affinity, preventing their interaction with activin type II receptors (ActRIIA/ActRIIB). This releases the inhibitory brake on muscle protein synthesis mediated by the Smad2/3 pathway, allowing enhanced mTOR-driven muscle growth.',
+    receptorTargets: ['Myostatin/GDF-8 (neutralization)', 'Activin A (neutralization)', 'ActRIIA/ActRIIB (indirect)'],
+    signalingPathways: ['Smad2/3 inhibition', 'mTOR/S6K activation', 'TGF-beta superfamily antagonism', 'Muscle protein synthesis'],
+    stabilityNotes: 'Store lyophilized at -20°C. Glycoprotein requiring careful reconstitution. Sensitive to denaturation. Reconstitute slowly with sterile water. Store reconstituted at 2-8°C, use within days.',
+    molecularWeight: '~38,000 Da',
+    sequenceLength: 344,
+    halfLife: '~hours',
     storageTemp: '-20°C',
   },
 ];
