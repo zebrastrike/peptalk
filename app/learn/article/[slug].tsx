@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { GlassCard } from '../../../src/components/GlassCard';
 import { getArticleBySlug } from '../../../src/data/educationalArticles';
+import { useAchievementStore } from '../../../src/store/useAchievementStore';
 import { ArticleCategory } from '../../../src/types';
 
 // ── Helpers ──────────────────────────────────────────────────────
@@ -45,6 +46,15 @@ export default function ArticleDetailScreen() {
   const router = useRouter();
 
   const article = getArticleBySlug(slug ?? '');
+  const tracked = useRef(false);
+  const trackArticleRead = useAchievementStore((s) => s.trackArticleRead);
+
+  useEffect(() => {
+    if (article && !tracked.current) {
+      tracked.current = true;
+      trackArticleRead();
+    }
+  }, [article, trackArticleRead]);
 
   if (!article) {
     return (

@@ -328,7 +328,7 @@ export const KNOWN_INTERACTIONS: Map<string, PeptideInteraction> = new Map([
       chemicalCompatibility:
         'No reported chemical incompatibility. Separate reconstitution recommended as a general best practice.',
       researchPrecedent:
-        "Both have independent research profiles in gastrointestinal inflammation models. This combination is used in SBB's Gut Health Stack product.",
+        "Both have independent research profiles in gastrointestinal inflammation models. This combination is featured in the PepTalk Gut Health Stack.",
     },
   ],
 
@@ -404,7 +404,7 @@ export const KNOWN_INTERACTIONS: Map<string, PeptideInteraction> = new Map([
       chemicalCompatibility:
         'Copper ion interaction potential — separate reconstitution and storage required. Stagger administration timing.',
       researchPrecedent:
-        "Both have extensive individual research profiles in wound healing and tissue regeneration. Used in SBB's GLOW and Recovery Stack products.",
+        "Both have extensive individual research profiles in wound healing and tissue regeneration. Featured in the PepTalk GLOW and Recovery Stacks.",
     },
   ],
 
@@ -423,7 +423,7 @@ export const KNOWN_INTERACTIONS: Map<string, PeptideInteraction> = new Map([
       chemicalCompatibility:
         'No known chemical incompatibility. Distinct molecular targets and mechanisms.',
       researchPrecedent:
-        "Both are prominent in mitochondrial aging research. Used in SBB's Energy Stack product.",
+        "Both are prominent in mitochondrial aging research. Featured in the PepTalk Energy Stack.",
     },
   ],
 
@@ -442,7 +442,7 @@ export const KNOWN_INTERACTIONS: Map<string, PeptideInteraction> = new Map([
       chemicalCompatibility:
         'Compatible chemistry with no known interactions.',
       researchPrecedent:
-        "Used in SBB's Immune Support Stack. Both have extensive individual immunology research profiles.",
+        "Both have extensive individual immunology research profiles. Featured in the PepTalk Immune Support Stack.",
     },
   ],
 
@@ -461,7 +461,7 @@ export const KNOWN_INTERACTIONS: Map<string, PeptideInteraction> = new Map([
       chemicalCompatibility:
         'No known chemical incompatibility between these nootropic peptides.',
       researchPrecedent:
-        "Both developed within the Russian bioregulator peptide research paradigm. Used in SBB's Cognitive Stack product.",
+        "Both developed within the Russian bioregulator peptide research paradigm. Featured in the PepTalk Cognitive Stack.",
     },
   ],
 

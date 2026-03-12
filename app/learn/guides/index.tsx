@@ -106,7 +106,7 @@ export default function AllGuidesScreen() {
           })}
         </ScrollView>
 
-        {/* Guide Cards */}
+        {/* Guide Cards — 2-column grid */}
         {filteredGuides.length === 0 ? (
           <GlassCard style={styles.emptyCard}>
             <Ionicons name="list-outline" size={32} color="#9ca3af" />
@@ -115,16 +115,17 @@ export default function AllGuidesScreen() {
             </Text>
           </GlassCard>
         ) : (
-          filteredGuides.map((guide) => {
-            const color = getCategoryColor(guide.category);
-            return (
-              <TouchableOpacity
-                key={guide.id}
-                activeOpacity={0.8}
-                onPress={() => router.push(`/learn/guides/${guide.slug}`)}
-              >
-                <GlassCard style={styles.guideCard}>
-                  <View style={styles.guideCardHeader}>
+          <View style={styles.gridContainer}>
+            {filteredGuides.map((guide) => {
+              const color = getCategoryColor(guide.category);
+              return (
+                <TouchableOpacity
+                  key={guide.id}
+                  activeOpacity={0.8}
+                  onPress={() => router.push(`/learn/guides/${guide.slug}`)}
+                  style={styles.gridItem}
+                >
+                  <GlassCard style={styles.guideCard}>
                     <View
                       style={[
                         styles.categoryBadge,
@@ -135,27 +136,28 @@ export default function AllGuidesScreen() {
                         {guide.category}
                       </Text>
                     </View>
-                    <View style={styles.stepCountBadge}>
-                      <Ionicons name="footsteps-outline" size={12} color="#9ca3af" />
-                      <Text style={styles.stepCountText}>
-                        {guide.steps.length} steps
-                      </Text>
+
+                    <Text style={styles.guideTitle} numberOfLines={2}>
+                      {guide.title}
+                    </Text>
+                    <Text style={styles.guideSummary} numberOfLines={3}>
+                      {guide.summary}
+                    </Text>
+
+                    <View style={styles.guideFooter}>
+                      <View style={styles.stepCountBadge}>
+                        <Ionicons name="footsteps-outline" size={12} color="#9ca3af" />
+                        <Text style={styles.stepCountText}>
+                          {guide.steps.length} steps
+                        </Text>
+                      </View>
+                      <Ionicons name="chevron-forward" size={14} color={color} />
                     </View>
-                  </View>
-
-                  <Text style={styles.guideTitle}>{guide.title}</Text>
-                  <Text style={styles.guideSummary} numberOfLines={2}>
-                    {guide.summary}
-                  </Text>
-
-                  <View style={styles.guideFooter}>
-                    <Ionicons name="arrow-forward" size={14} color="#b9cbb6" />
-                    <Text style={styles.guideAction}>View guide</Text>
-                  </View>
-                </GlassCard>
-              </TouchableOpacity>
-            );
-          })
+                  </GlassCard>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -240,15 +242,17 @@ const styles = StyleSheet.create({
     color: '#e3a7a1',
   },
 
-  // ── Guide Cards ────────────────────────────────────────────
-  guideCard: {
-    marginBottom: 14,
-  },
-  guideCardHeader: {
+  // ── Guide Grid ─────────────────────────────────────────────
+  gridContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  gridItem: {
+    width: '47.5%' as any,
+  },
+  guideCard: {
+    minHeight: 170,
   },
   categoryBadge: {
     borderRadius: 10,
@@ -271,27 +275,23 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
   },
   guideTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
     color: '#f7f2ec',
     marginBottom: 6,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   guideSummary: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#9ca3af',
-    lineHeight: 19,
+    lineHeight: 18,
+    flex: 1,
   },
   guideFooter: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginTop: 12,
-  },
-  guideAction: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#b9cbb6',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
 
   // ── Empty State ────────────────────────────────────────────

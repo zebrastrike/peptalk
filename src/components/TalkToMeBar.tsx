@@ -1,6 +1,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import {
+  Colors,
+  Gradients,
+  FontSizes,
+  Spacing,
+  BorderRadius,
+} from '../constants/theme';
 
 interface TalkToMeBarProps {
   onPress?: () => void;
@@ -11,7 +19,7 @@ interface TalkToMeBarProps {
 export const TalkToMeBar: React.FC<TalkToMeBarProps> = ({
   onPress,
   label = 'Talk to me',
-  helperText = 'Research assistant • no medical recommendations',
+  helperText = 'Your peptide companion',
 }) => {
   return (
     <TouchableOpacity
@@ -19,53 +27,87 @@ export const TalkToMeBar: React.FC<TalkToMeBarProps> = ({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <View style={styles.iconContainer}>
-        <Ionicons name="chatbubbles-outline" size={20} color="#0f1720" />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.label}>{label}</Text>
-        <Text style={styles.helper}>{helperText}</Text>
-      </View>
-      <Ionicons name="arrow-forward" size={18} color="#e3a7a1" />
+      {/* Gradient border wrapper */}
+      <LinearGradient
+        colors={['rgba(59,130,246,0.30)', 'rgba(6,182,212,0.15)', 'rgba(255,255,255,0.06)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.borderGradient}
+      >
+        <View style={styles.inner}>
+          <LinearGradient
+            colors={[...Gradients.primary]}
+            style={styles.iconContainer}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Ionicons name="chatbubbles-outline" size={18} color="#fff" />
+          </LinearGradient>
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>{label}</Text>
+            <Text style={styles.helper}>{helperText}</Text>
+          </View>
+          <View style={styles.arrowWrap}>
+            <Ionicons
+              name="arrow-forward"
+              size={16}
+              color={Colors.pepBlueLight}
+            />
+          </View>
+        </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f7f2ec',
-    borderRadius: 18,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    gap: 12,
-    shadowColor: '#000',
+    shadowColor: Colors.pepBlue,
     shadowOpacity: 0.2,
     shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: { width: 0, height: 6 },
     elevation: 8,
   },
+  borderGradient: {
+    borderRadius: BorderRadius.lg,
+    padding: 1,
+  },
+  inner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.darkCard,
+    borderRadius: BorderRadius.lg - 1,
+    paddingVertical: 14,
+    paddingHorizontal: Spacing.md,
+    gap: 12,
+  },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e3a7a1',
   },
   textContainer: {
     flex: 1,
   },
   label: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#0f1720',
+    fontSize: FontSizes.lg,
+    fontWeight: '700',
+    color: Colors.darkText,
   },
   helper: {
-    fontSize: 11,
-    color: '#6b7280',
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
     marginTop: 2,
+  },
+  arrowWrap: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(59,130,246,0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

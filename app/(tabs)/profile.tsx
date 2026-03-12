@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,17 +9,143 @@ import {
   Alert,
   Switch,
   StyleSheet,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/useAuthStore';
 import { useOnboardingStore } from '../../src/store/useOnboardingStore';
 import { useHealthProfileStore } from '../../src/store/useHealthProfileStore';
+import { useSubscriptionStore } from '../../src/store/useSubscriptionStore';
 import { GlassCard } from '../../src/components/GlassCard';
 import { Disclaimer } from '../../src/components/Disclaimer';
-import { trackConsentUpdated } from '../../src/services/sbbEvents';
+import { trackConsentUpdated } from '../../src/services/analyticsEvents';
+import { useNotificationStore } from '../../src/store/useNotificationStore';
+import {
+  scheduleDailyCheckInReminder,
+  cancelAllReminders,
+  scheduleWorkoutReminder,
+  scheduleMealReminder,
+  scheduleWeeklyReport,
+  cancelRemindersByTag,
+} from '../../src/services/notificationService';
+import {
+  Colors,
+  FontSizes,
+  Spacing,
+  BorderRadius,
+  Gradients,
+} from '../../src/constants/theme';
 
+// ---------------------------------------------------------------------------
+// Progress Ring Component
+// ---------------------------------------------------------------------------
+function ProgressRing({
+  progress,
+  size = 64,
+  strokeWidth = 5,
+  color = Colors.sage,
+}: {
+  progress: number;
+  size?: number;
+  strokeWidth?: number;
+  color?: string;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animValue, {
+      toValue: progress / 100,
+      duration: 800,
+      useNativeDriver: false,
+    }).start();
+  }, [progress]);
+
+  return (
+    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+      {/* Background track */}
+      <View
+        style={{
+          position: 'absolute',
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: strokeWidth,
+          borderColor: 'rgba(255,255,255,0.06)',
+        }}
+      />
+      {/* Filled portion - simplified arc using border trick */}
+      <View
+        style={{
+          position: 'absolute',
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: strokeWidth,
+          borderColor: color,
+          borderTopColor: progress > 75 ? color : 'transparent',
+          borderRightColor: progress > 50 ? color : 'transparent',
+          borderBottomColor: progress > 25 ? color : 'transparent',
+          borderLeftColor: progress > 0 ? color : 'transparent',
+          transform: [{ rotate: '-90deg' }],
+          opacity: 0.8,
+        }}
+      />
+      <Text style={{ fontSize: FontSizes.sm, fontWeight: '800', color }}>{progress}%</Text>
+    </View>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tier Badge
+// ---------------------------------------------------------------------------
+const TIER_CONFIG: Record<string, { label: string; colors: [string, string]; icon: string }> = {
+  free: { label: 'Free', colors: ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)'], icon: 'person-outline' },
+  starter: { label: 'Starter', colors: ['#3B82F6', '#06B6D4'], icon: 'rocket-outline' },
+  pro: { label: 'Pro', colors: [Colors.rose, Colors.roseDark], icon: 'star' },
+  elite: { label: 'Elite', colors: ['#8B5CF6', '#EC4899'], icon: 'diamond' },
+};
+
+function TierBadge({ tier }: { tier: string }) {
+  const config = TIER_CONFIG[tier] ?? TIER_CONFIG.free;
+  return (
+    <LinearGradient
+      colors={config.colors}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={tierStyles.badge}
+    >
+      <Ionicons name={config.icon as any} size={12} color="#fff" />
+      <Text style={tierStyles.text}>{config.label}</Text>
+    </LinearGradient>
+  );
+}
+
+const tierStyles = StyleSheet.create({
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: BorderRadius.full,
+  },
+  text: {
+    fontSize: FontSizes.xs,
+    fontWeight: '800',
+    color: '#fff',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+});
+
+// ---------------------------------------------------------------------------
+// Login Form
+// ---------------------------------------------------------------------------
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,19 +158,24 @@ function LoginForm() {
 
   return (
     <View style={styles.loginContainer}>
-      {/* SBB Branding */}
+      {/* Branding */}
       <View style={styles.brandingSection}>
-        <View style={styles.brandIconContainer}>
-          <Ionicons name="flask" size={40} color="#e3a7a1" />
-        </View>
-        <Text style={styles.brandTitle}>Science Based Body</Text>
+        <LinearGradient
+          colors={[Colors.rose, Colors.roseDark]}
+          style={styles.brandIconGradient}
+        >
+          <View style={styles.brandIconInner}>
+            <Ionicons name="flask" size={36} color={Colors.rose} />
+          </View>
+        </LinearGradient>
+        <Text style={styles.brandTitle}>PepTalk</Text>
         <Text style={styles.brandSubtitle}>
           Sign in to save your stacks, sync favorites, and access Pro features
         </Text>
       </View>
 
       {/* Login Form */}
-      <GlassCard style={styles.formCard}>
+      <GlassCard variant="elevated" style={styles.formCard}>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Email</Text>
           <View style={styles.inputContainer}>
@@ -80,27 +211,38 @@ function LoginForm() {
         </View>
 
         <TouchableOpacity
-          style={[
-            styles.loginButton,
-            (!email.trim() || !password.trim()) && styles.loginButtonDisabled,
-          ]}
           onPress={handleLogin}
           disabled={isLoading || !email.trim() || !password.trim()}
           activeOpacity={0.8}
         >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="#0f1720" />
-          ) : (
-            <Text style={styles.loginButtonText}>Sign In</Text>
-          )}
+          <LinearGradient
+            colors={
+              (!email.trim() || !password.trim())
+                ? ['rgba(227, 167, 161, 0.3)', 'rgba(201, 138, 132, 0.3)']
+                : [Colors.rose, Colors.roseDark]
+            }
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.loginButton}
+          >
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.loginButtonText}>Sign In</Text>
+            )}
+          </LinearGradient>
         </TouchableOpacity>
       </GlassCard>
     </View>
   );
 }
 
+// ---------------------------------------------------------------------------
+// User Profile
+// ---------------------------------------------------------------------------
 function UserProfile() {
   const { user, logout, togglePro } = useAuthStore();
+  const { tier } = useSubscriptionStore();
   const [darkMode, setDarkMode] = useState(true);
 
   if (!user) return null;
@@ -109,20 +251,39 @@ function UserProfile() {
     <View>
       {/* User Info Card */}
       <GlassCard variant="elevated" style={styles.profileCard}>
+        {/* Avatar with gradient border */}
         <View style={styles.avatarContainer}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {(user.name ?? user.email)[0].toUpperCase()}
-            </Text>
-          </View>
+          <LinearGradient
+            colors={[Colors.rose, '#c98a84', Colors.pepTeal]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.avatarGradientRing}
+          >
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {(user.name ?? user.email)[0].toUpperCase()}
+              </Text>
+            </View>
+          </LinearGradient>
           {user.isPro && (
-            <View style={styles.proBadge}>
-              <Text style={styles.proText}>PRO</Text>
+            <View style={styles.proBadgeWrap}>
+              <LinearGradient
+                colors={[Colors.rose, Colors.roseDark]}
+                style={styles.proBadge}
+              >
+                <Text style={styles.proText}>PRO</Text>
+              </LinearGradient>
             </View>
           )}
         </View>
+
         <Text style={styles.userName}>{user.name ?? 'Researcher'}</Text>
         <Text style={styles.userEmail}>{user.email}</Text>
+
+        {/* Subscription Badge */}
+        <View style={{ marginTop: Spacing.sm }}>
+          <TierBadge tier={tier} />
+        </View>
 
         {/* Stats */}
         <View style={styles.statsRow}>
@@ -154,47 +315,55 @@ function UserProfile() {
         <Text style={styles.settingsSectionTitle}>Settings</Text>
 
         {/* Pro Status Toggle */}
-        <GlassCard style={styles.settingRow}>
-          <View style={styles.settingInfo}>
-            <Ionicons name="star-outline" size={20} color="#e3a7a1" />
-            <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Pro Status</Text>
-              <Text style={styles.settingDescription}>
-                Access advanced analysis features
-              </Text>
+        <GlassCard style={styles.settingCard}>
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(227, 167, 161, 0.12)' }]}>
+                <Ionicons name="star-outline" size={18} color="#e3a7a1" />
+              </View>
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Pro Status</Text>
+                <Text style={styles.settingDescription}>
+                  Access advanced analysis features
+                </Text>
+              </View>
             </View>
+            <Switch
+              value={user.isPro}
+              onValueChange={togglePro}
+              trackColor={{
+                false: 'rgba(255,255,255,0.12)',
+                true: 'rgba(227, 167, 161, 0.4)',
+              }}
+              thumbColor={user.isPro ? '#e3a7a1' : '#9ca3af'}
+            />
           </View>
-          <Switch
-            value={user.isPro}
-            onValueChange={togglePro}
-            trackColor={{
-              false: 'rgba(255,255,255,0.12)',
-              true: 'rgba(227, 167, 161, 0.4)',
-            }}
-            thumbColor={user.isPro ? '#e3a7a1' : '#9ca3af'}
-          />
         </GlassCard>
 
-        {/* Dark Mode Toggle (placeholder) */}
-        <GlassCard style={styles.settingRow}>
-          <View style={styles.settingInfo}>
-            <Ionicons name="moon-outline" size={20} color="#c7d7e6" />
-            <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Dark Mode</Text>
-              <Text style={styles.settingDescription}>
-                Toggle dark/light appearance
-              </Text>
+        {/* Dark Mode Toggle */}
+        <GlassCard style={styles.settingCard}>
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(199, 215, 230, 0.12)' }]}>
+                <Ionicons name="moon-outline" size={18} color="#c7d7e6" />
+              </View>
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Dark Mode</Text>
+                <Text style={styles.settingDescription}>
+                  Toggle dark/light appearance
+                </Text>
+              </View>
             </View>
+            <Switch
+              value={darkMode}
+              onValueChange={setDarkMode}
+              trackColor={{
+                false: 'rgba(255,255,255,0.12)',
+                true: 'rgba(199, 215, 230, 0.4)',
+              }}
+              thumbColor={darkMode ? '#c7d7e6' : '#9ca3af'}
+            />
           </View>
-          <Switch
-            value={darkMode}
-            onValueChange={setDarkMode}
-            trackColor={{
-              false: 'rgba(255,255,255,0.12)',
-              true: 'rgba(199, 215, 230, 0.4)',
-            }}
-            thumbColor={darkMode ? '#c7d7e6' : '#9ca3af'}
-          />
         </GlassCard>
       </View>
 
@@ -211,6 +380,9 @@ function UserProfile() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Research Profile Card
+// ---------------------------------------------------------------------------
 function ResearchProfileCard() {
   const router = useRouter();
   const {
@@ -254,10 +426,13 @@ function ResearchProfileCard() {
       <View style={styles.sectionHeaderRow}>
         <Text style={styles.settingsSectionTitle}>Research Profile</Text>
         {!isComplete && (
-          <Text style={styles.incompleteBadge}>Incomplete</Text>
+          <View style={styles.incompleteBadgeWrap}>
+            <Ionicons name="alert-circle" size={12} color="#f0d68a" />
+            <Text style={styles.incompleteBadge}>Incomplete</Text>
+          </View>
         )}
       </View>
-      <GlassCard style={styles.researchCard}>
+      <GlassCard variant="elevated" style={styles.researchCard}>
         <View style={styles.profileRow}>
           <Text style={styles.profileLabel}>Gender</Text>
           <Text style={styles.profileValue}>
@@ -270,7 +445,7 @@ function ResearchProfileCard() {
             {profile.ageRange ?? 'Not set'}
           </Text>
         </View>
-        <View style={styles.profileRow}>
+        <View style={[styles.profileRow, { borderBottomWidth: 0 }]}>
           <Text style={styles.profileLabel}>Interests</Text>
           <Text style={styles.profileValue}>
             {profile.interestCategories.length > 0
@@ -279,9 +454,13 @@ function ResearchProfileCard() {
           </Text>
         </View>
 
+        <View style={styles.consentDivider} />
+
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
-            <Ionicons name="shield-outline" size={20} color="#f0d68a" />
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(240, 214, 138, 0.12)' }]}>
+              <Ionicons name="shield-outline" size={18} color="#f0d68a" />
+            </View>
             <View style={styles.settingTextContainer}>
               <Text style={styles.settingTitle}>Safety Acknowledgement</Text>
               <Text style={styles.settingDescription}>
@@ -302,7 +481,9 @@ function ResearchProfileCard() {
 
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
-            <Ionicons name="analytics-outline" size={20} color="#c7d7e6" />
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(199, 215, 230, 0.12)' }]}>
+              <Ionicons name="analytics-outline" size={18} color="#c7d7e6" />
+            </View>
             <View style={styles.settingTextContainer}>
               <Text style={styles.settingTitle}>Data Sharing</Text>
               <Text style={styles.settingDescription}>
@@ -337,13 +518,16 @@ function ResearchProfileCard() {
           activeOpacity={0.7}
         >
           <Ionicons name="refresh-outline" size={16} color="#e3a7a1" />
-          <Text style={styles.profileActionText}>Restart Onboarding</Text>
+          <Text style={[styles.profileActionText, { color: '#e3a7a1' }]}>Restart</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Health Profile Card
+// ---------------------------------------------------------------------------
 function HealthProfileCard() {
   const router = useRouter();
   const { profile, getBMI } = useHealthProfileStore();
@@ -355,23 +539,37 @@ function HealthProfileCard() {
       <View style={styles.sectionHeaderRow}>
         <Text style={styles.settingsSectionTitle}>Health Profile</Text>
         {!profile.setupComplete && (
-          <Text style={styles.incompleteBadge}>
-            {completeness > 0 ? `${completeness}%` : 'Not Started'}
-          </Text>
+          <View style={styles.incompleteBadgeWrap}>
+            <Ionicons name="alert-circle" size={12} color="#f0d68a" />
+            <Text style={styles.incompleteBadge}>
+              {completeness > 0 ? `${completeness}%` : 'Not Started'}
+            </Text>
+          </View>
         )}
       </View>
-      <GlassCard style={styles.researchCard}>
-        {/* Completeness bar */}
-        <View style={healthStyles.progressRow}>
-          <View style={healthStyles.progressTrack}>
-            <View
-              style={[
-                healthStyles.progressFill,
-                { width: `${Math.max(completeness, 2)}%` },
-              ]}
-            />
+      <GlassCard variant="elevated" style={styles.researchCard}>
+        {/* Completeness Ring + Progress */}
+        <View style={healthStyles.progressSection}>
+          <ProgressRing progress={completeness} size={60} strokeWidth={4} color={Colors.sage} />
+          <View style={healthStyles.progressInfo}>
+            <Text style={healthStyles.progressTitle}>Profile Completion</Text>
+            <View style={healthStyles.progressTrack}>
+              <LinearGradient
+                colors={[Colors.sage, Colors.sageDark]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={[
+                  healthStyles.progressFill,
+                  { width: `${Math.max(completeness, 2)}%` },
+                ]}
+              />
+            </View>
+            <Text style={healthStyles.progressHint}>
+              {completeness === 100
+                ? 'Your health profile is complete'
+                : `${100 - completeness}% remaining to complete`}
+            </Text>
           </View>
-          <Text style={healthStyles.progressLabel}>{completeness}%</Text>
         </View>
 
         {/* Quick stats */}
@@ -419,7 +617,7 @@ function HealthProfileCard() {
         )}
 
         {profile.peptideExperience !== 'none' && (
-          <View style={styles.profileRow}>
+          <View style={[styles.profileRow, { borderBottomWidth: 0 }]}>
             <Text style={styles.profileLabel}>Experience</Text>
             <Text style={styles.profileValue}>
               {profile.peptideExperience.charAt(0).toUpperCase() +
@@ -430,23 +628,543 @@ function HealthProfileCard() {
       </GlassCard>
 
       <TouchableOpacity
-        style={healthStyles.editButton}
         onPress={() => router.push('/health-profile')}
-        activeOpacity={0.7}
+        activeOpacity={0.8}
       >
-        <Ionicons
-          name={profile.setupComplete ? 'create-outline' : 'add-circle-outline'}
-          size={16}
-          color="#c7d7e6"
-        />
-        <Text style={styles.profileActionText}>
-          {profile.setupComplete ? 'Edit Health Profile' : 'Set Up Health Profile'}
-        </Text>
+        <LinearGradient
+          colors={profile.setupComplete ? ['rgba(199, 215, 230, 0.15)', 'rgba(199, 215, 230, 0.05)'] : Gradients.primary}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={healthStyles.editButton}
+        >
+          <Ionicons
+            name={profile.setupComplete ? 'create-outline' : 'add-circle-outline'}
+            size={16}
+            color={profile.setupComplete ? '#c7d7e6' : '#fff'}
+          />
+          <Text style={[healthStyles.editButtonText, !profile.setupComplete && { color: '#fff' }]}>
+            {profile.setupComplete ? 'Edit Health Profile' : 'Set Up Health Profile'}
+          </Text>
+        </LinearGradient>
       </TouchableOpacity>
     </View>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Quick Links Section
+// ---------------------------------------------------------------------------
+function QuickLinksSection() {
+  const router = useRouter();
+
+  const links = [
+    { icon: 'document-text-outline' as const, label: 'Share Health Report', route: '/health-report' as const, color: '#3b82f6', desc: 'Generate and share with your provider' },
+    { icon: 'download-outline' as const, label: 'Export My Data', route: '/health-report' as const, color: Colors.pepTeal, desc: 'Download your wellness journal' },
+    { icon: 'book-outline' as const, label: 'My Journal', route: '/journal' as const, color: '#f59e0b', desc: 'View and manage journal entries' },
+    { icon: 'nutrition-outline' as const, label: 'Nutritionist Consultation', route: '/nutritionist' as const, color: '#10b981', desc: 'Connect with a nutrition expert' },
+  ];
+
+  return (
+    <View style={styles.researchSection}>
+      <Text style={styles.settingsSectionTitle}>Quick Actions</Text>
+
+      {/* Gradient action buttons for share/export */}
+      <View style={actionStyles.row}>
+        <TouchableOpacity
+          style={actionStyles.btn}
+          activeOpacity={0.8}
+          onPress={() => router.push(links[0].route)}
+        >
+          <LinearGradient
+            colors={['#3b82f6', '#2563eb']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={actionStyles.gradient}
+          >
+            <Ionicons name="share-outline" size={22} color="#fff" />
+            <Text style={actionStyles.label}>Share Health{'\n'}Report</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={actionStyles.btn}
+          activeOpacity={0.8}
+          onPress={() => router.push(links[1].route)}
+        >
+          <LinearGradient
+            colors={[Colors.pepTeal, '#0891b2']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={actionStyles.gradient}
+          >
+            <Ionicons name="download-outline" size={22} color="#fff" />
+            <Text style={actionStyles.label}>Export{'\n'}My Data</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+
+      {/* Link rows */}
+      {links.slice(2).map((link) => (
+        <TouchableOpacity
+          key={link.route + link.label}
+          activeOpacity={0.7}
+          onPress={() => router.push(link.route)}
+        >
+          <GlassCard style={linkStyles.row}>
+            <View style={[linkStyles.iconWrap, { backgroundColor: `${link.color}15` }]}>
+              <Ionicons name={link.icon} size={18} color={link.color} />
+            </View>
+            <View style={linkStyles.textWrap}>
+              <Text style={linkStyles.label}>{link.label}</Text>
+              <Text style={linkStyles.desc}>{link.desc}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#9ca3af" />
+          </GlassCard>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
+const actionStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+    marginBottom: Spacing.sm,
+  },
+  btn: { flex: 1 },
+  gradient: {
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    height: 100,
+    justifyContent: 'space-between',
+  },
+  label: {
+    fontSize: FontSizes.sm,
+    fontWeight: '700',
+    color: '#fff',
+    lineHeight: 18,
+  },
+});
+
+// ---------------------------------------------------------------------------
+// Notification Settings
+// ---------------------------------------------------------------------------
+const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAY_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
+
+function weekdayNumberToLabel(n: number): string {
+  return DAY_LABELS[n - 1] ?? '';
+}
+
+function NotificationSettings() {
+  const {
+    preferences,
+    setDailyCheckInReminder,
+    setDoseReminders,
+    setEnabled,
+    setWorkoutReminderEnabled,
+    setWorkoutReminder,
+    setMealRemindersEnabled,
+    setMealReminderTime,
+    toggleWeeklyReport,
+  } = useNotificationStore();
+
+  const notifEnabled = preferences.enabled;
+
+  const handleToggleEnabled = async (value: boolean) => {
+    setEnabled(value);
+    if (!value) {
+      await cancelAllReminders();
+    } else {
+      if (preferences.dailyCheckInReminder) {
+        await scheduleDailyCheckInReminder(preferences.checkInReminderTime);
+      }
+      if (preferences.workoutReminderEnabled) {
+        await rescheduleWorkouts(preferences.workoutReminderTime, preferences.workoutReminderDays);
+      }
+      if (preferences.mealRemindersEnabled) {
+        await rescheduleAllMeals(preferences.mealReminderTimes);
+      }
+      if (preferences.weeklyReportEnabled) {
+        await scheduleWeeklyReport();
+      }
+    }
+  };
+
+  const handleToggleCheckIn = async (value: boolean) => {
+    setDailyCheckInReminder(value);
+    if (value && notifEnabled) {
+      await scheduleDailyCheckInReminder(preferences.checkInReminderTime);
+    } else {
+      await cancelRemindersByTag('checkin');
+    }
+  };
+
+  const handleToggleWorkout = async (value: boolean) => {
+    setWorkoutReminderEnabled(value);
+    if (value && notifEnabled) {
+      await rescheduleWorkouts(preferences.workoutReminderTime, preferences.workoutReminderDays);
+    } else {
+      await cancelRemindersByTag('workout');
+    }
+  };
+
+  const handleToggleWorkoutDay = async (day: number) => {
+    const days = preferences.workoutReminderDays.includes(day)
+      ? preferences.workoutReminderDays.filter((d) => d !== day)
+      : [...preferences.workoutReminderDays, day].sort();
+    setWorkoutReminder(preferences.workoutReminderTime, days);
+    if (preferences.workoutReminderEnabled && notifEnabled) {
+      await cancelRemindersByTag('workout');
+      await rescheduleWorkouts(preferences.workoutReminderTime, days);
+    }
+  };
+
+  const handleToggleMeals = async (value: boolean) => {
+    setMealRemindersEnabled(value);
+    if (value && notifEnabled) {
+      await rescheduleAllMeals(preferences.mealReminderTimes);
+    } else {
+      await cancelRemindersByTag('meal');
+    }
+  };
+
+  const handleToggleWeeklyReport = async () => {
+    const willEnable = !preferences.weeklyReportEnabled;
+    toggleWeeklyReport();
+    if (willEnable && notifEnabled) {
+      await scheduleWeeklyReport();
+    } else {
+      await cancelRemindersByTag('weekly-report');
+    }
+  };
+
+  return (
+    <View style={styles.researchSection}>
+      <Text style={styles.settingsSectionTitle}>Notifications</Text>
+
+      {/* Master + Check-in + Dose */}
+      <GlassCard variant="elevated" style={notifStyles.card}>
+        {/* Master toggle */}
+        <View style={styles.settingRow}>
+          <View style={styles.settingInfo}>
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(199, 215, 230, 0.12)' }]}>
+              <Ionicons name="notifications-outline" size={18} color="#c7d7e6" />
+            </View>
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Enable Notifications</Text>
+              <Text style={styles.settingDescription}>Reminders and alerts</Text>
+            </View>
+          </View>
+          <Switch
+            value={notifEnabled}
+            onValueChange={handleToggleEnabled}
+            trackColor={{ false: 'rgba(255,255,255,0.12)', true: 'rgba(199, 215, 230, 0.4)' }}
+            thumbColor={notifEnabled ? '#c7d7e6' : '#9ca3af'}
+          />
+        </View>
+
+        {/* Daily check-in */}
+        <View style={styles.settingRow}>
+          <View style={styles.settingInfo}>
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(185, 203, 182, 0.12)' }]}>
+              <Ionicons name="today-outline" size={18} color="#b9cbb6" />
+            </View>
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Daily Check-In Reminder</Text>
+              <Text style={styles.settingDescription}>
+                Remind at {preferences.checkInReminderTime}
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={preferences.dailyCheckInReminder && notifEnabled}
+            onValueChange={handleToggleCheckIn}
+            disabled={!notifEnabled}
+            trackColor={{ false: 'rgba(255,255,255,0.12)', true: 'rgba(185, 203, 182, 0.4)' }}
+            thumbColor={
+              preferences.dailyCheckInReminder && notifEnabled ? '#b9cbb6' : '#9ca3af'
+            }
+          />
+        </View>
+
+        {/* Dose reminders */}
+        <View style={[styles.settingRow, { marginBottom: 0 }]}>
+          <View style={styles.settingInfo}>
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(227, 167, 161, 0.12)' }]}>
+              <Ionicons name="alarm-outline" size={18} color="#e3a7a1" />
+            </View>
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Dose Reminders</Text>
+              <Text style={styles.settingDescription}>
+                Reminders for active protocols
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={preferences.doseReminders && notifEnabled}
+            onValueChange={setDoseReminders}
+            disabled={!notifEnabled}
+            trackColor={{ false: 'rgba(255,255,255,0.12)', true: 'rgba(227, 167, 161, 0.4)' }}
+            thumbColor={
+              preferences.doseReminders && notifEnabled ? '#e3a7a1' : '#9ca3af'
+            }
+          />
+        </View>
+      </GlassCard>
+
+      {/* Workout Reminders */}
+      <GlassCard variant="elevated" style={notifStyles.card}>
+        <View style={styles.settingRow}>
+          <View style={styles.settingInfo}>
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(245, 158, 11, 0.12)' }]}>
+              <Ionicons name="barbell-outline" size={18} color="#f59e0b" />
+            </View>
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Workout Reminders</Text>
+              <Text style={styles.settingDescription}>
+                Daily at {preferences.workoutReminderTime}
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={preferences.workoutReminderEnabled && notifEnabled}
+            onValueChange={handleToggleWorkout}
+            disabled={!notifEnabled}
+            trackColor={{ false: 'rgba(255,255,255,0.12)', true: 'rgba(245, 158, 11, 0.4)' }}
+            thumbColor={
+              preferences.workoutReminderEnabled && notifEnabled ? '#f59e0b' : '#9ca3af'
+            }
+          />
+        </View>
+
+        {/* Day picker chips */}
+        {preferences.workoutReminderEnabled && notifEnabled && (
+          <View style={notifStyles.dayRow}>
+            {WEEKDAY_NUMBERS.map((day) => {
+              const active = preferences.workoutReminderDays.includes(day);
+              return (
+                <TouchableOpacity
+                  key={day}
+                  style={[notifStyles.dayChip, active && notifStyles.dayChipActive]}
+                  onPress={() => handleToggleWorkoutDay(day)}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[notifStyles.dayChipText, active && notifStyles.dayChipTextActive]}
+                  >
+                    {weekdayNumberToLabel(day)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+      </GlassCard>
+
+      {/* Meal Reminders */}
+      <GlassCard variant="elevated" style={notifStyles.card}>
+        <View style={styles.settingRow}>
+          <View style={styles.settingInfo}>
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
+              <Ionicons name="nutrition-outline" size={18} color="#10b981" />
+            </View>
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Meal Reminders</Text>
+              <Text style={styles.settingDescription}>
+                Breakfast, lunch, and dinner
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={preferences.mealRemindersEnabled && notifEnabled}
+            onValueChange={handleToggleMeals}
+            disabled={!notifEnabled}
+            trackColor={{ false: 'rgba(255,255,255,0.12)', true: 'rgba(16, 185, 129, 0.4)' }}
+            thumbColor={
+              preferences.mealRemindersEnabled && notifEnabled ? '#10b981' : '#9ca3af'
+            }
+          />
+        </View>
+
+        {/* Per-meal time display */}
+        {preferences.mealRemindersEnabled && notifEnabled && (
+          <View style={notifStyles.mealList}>
+            {(['breakfast', 'lunch', 'dinner'] as const).map((meal) => (
+              <View key={meal} style={notifStyles.mealRow}>
+                <Ionicons
+                  name={
+                    meal === 'breakfast'
+                      ? 'sunny-outline'
+                      : meal === 'lunch'
+                        ? 'partly-sunny-outline'
+                        : 'moon-outline'
+                  }
+                  size={16}
+                  color="#9ca3af"
+                />
+                <Text style={notifStyles.mealLabel}>
+                  {meal.charAt(0).toUpperCase() + meal.slice(1)}
+                </Text>
+                <Text style={notifStyles.mealTime}>
+                  {preferences.mealReminderTimes[meal] ?? '--:--'}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </GlassCard>
+
+      {/* Weekly Health Report */}
+      <GlassCard variant="elevated" style={notifStyles.card}>
+        <View style={[styles.settingRow, { marginBottom: 0 }]}>
+          <View style={styles.settingInfo}>
+            <View style={[styles.settingIconWrap, { backgroundColor: 'rgba(59, 130, 246, 0.12)' }]}>
+              <Ionicons name="stats-chart-outline" size={18} color="#3b82f6" />
+            </View>
+            <View style={styles.settingTextContainer}>
+              <Text style={styles.settingTitle}>Weekly Health Report</Text>
+              <Text style={styles.settingDescription}>
+                Summary every Sunday at 7:00 PM
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={preferences.weeklyReportEnabled && notifEnabled}
+            onValueChange={handleToggleWeeklyReport}
+            disabled={!notifEnabled}
+            trackColor={{ false: 'rgba(255,255,255,0.12)', true: 'rgba(59, 130, 246, 0.4)' }}
+            thumbColor={
+              preferences.weeklyReportEnabled && notifEnabled ? '#3b82f6' : '#9ca3af'
+            }
+          />
+        </View>
+      </GlassCard>
+    </View>
+  );
+}
+
+/** Schedule workout reminders for the given days. */
+async function rescheduleWorkouts(time: string, days: number[]): Promise<void> {
+  for (const day of days) {
+    const dayLabel = DAY_LABELS[day - 1] ?? 'Workout';
+    await scheduleWorkoutReminder(dayLabel, time);
+  }
+}
+
+/** Schedule meal reminders for all meal types. */
+async function rescheduleAllMeals(mealTimes: Record<string, string>): Promise<void> {
+  for (const [meal, time] of Object.entries(mealTimes)) {
+    await scheduleMealReminder(meal, time);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Legal Links
+// ---------------------------------------------------------------------------
+function LegalLinks() {
+  const router = useRouter();
+
+  return (
+    <View style={linkStyles.legalSection}>
+      <View style={linkStyles.legalRow}>
+        <TouchableOpacity
+          style={linkStyles.legalLink}
+          onPress={() => router.push('/privacy')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="shield-checkmark-outline" size={14} color="#9ca3af" />
+          <Text style={linkStyles.privacyText}>Privacy Policy</Text>
+        </TouchableOpacity>
+        <Text style={linkStyles.legalDivider}>|</Text>
+        <TouchableOpacity
+          style={linkStyles.legalLink}
+          onPress={() => router.push('/terms')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="document-text-outline" size={14} color="#9ca3af" />
+          <Text style={linkStyles.privacyText}>Terms of Service</Text>
+        </TouchableOpacity>
+        <Text style={linkStyles.legalDivider}>|</Text>
+        <TouchableOpacity
+          style={linkStyles.legalLink}
+          onPress={() => router.push('/subscription')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="card-outline" size={14} color="#9ca3af" />
+          <Text style={linkStyles.privacyText}>Subscription</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={linkStyles.versionText}>PepTalk v1.0.0 (Beta)</Text>
+    </View>
+  );
+}
+
+const linkStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  iconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  textWrap: { flex: 1 },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#e8e6e3',
+  },
+  desc: {
+    fontSize: 11,
+    color: '#9ca3af',
+    marginTop: 1,
+  },
+  legalSection: {
+    marginTop: Spacing.lg,
+    paddingTop: Spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.06)',
+    alignItems: 'center',
+  },
+  legalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    flexWrap: 'wrap',
+  },
+  legalLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  legalDivider: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.15)',
+  },
+  privacyText: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+  versionText: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.2)',
+    marginTop: 10,
+    letterSpacing: 0.5,
+  },
+});
+
+// ---------------------------------------------------------------------------
+// Delete Data Section
+// ---------------------------------------------------------------------------
 function DeleteDataSection() {
   const { deleteAllHealthData } = useHealthProfileStore();
 
@@ -469,7 +1187,7 @@ function DeleteDataSection() {
   };
 
   return (
-    <View style={{ marginTop: 24 }}>
+    <View style={{ marginTop: Spacing.lg }}>
       <TouchableOpacity
         style={deleteStyles.button}
         onPress={handleDelete}
@@ -492,10 +1210,10 @@ const deleteStyles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: BorderRadius.md,
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.3)',
-    backgroundColor: 'rgba(239, 68, 68, 0.08)',
+    borderColor: 'rgba(239, 68, 68, 0.25)',
+    backgroundColor: 'rgba(239, 68, 68, 0.06)',
   },
   text: {
     fontSize: 14,
@@ -511,6 +1229,9 @@ const deleteStyles = StyleSheet.create({
   },
 });
 
+// ---------------------------------------------------------------------------
+// Main Screen
+// ---------------------------------------------------------------------------
 export default function ProfileScreen() {
   const { isAuthenticated } = useAuthStore();
 
@@ -524,7 +1245,12 @@ export default function ProfileScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Profile</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>Profile</Text>
+            <View style={styles.headerIconWrap}>
+              <Ionicons name="person" size={20} color={Colors.rose} />
+            </View>
+          </View>
         </View>
 
         {/* Content */}
@@ -534,16 +1260,25 @@ export default function ProfileScreen() {
 
         <HealthProfileCard />
 
+        <QuickLinksSection />
+
+        <NotificationSettings />
+
         {/* Delete My Data */}
         <DeleteDataSection />
+
+        <LegalLinks />
 
         {/* Disclaimer and Branding */}
         <View style={styles.footerBranding}>
           <GlassCard style={styles.brandFooterCard}>
-            <View style={styles.brandFooterRow}>
-              <Ionicons name="flask" size={20} color="#e3a7a1" />
-              <Text style={styles.brandFooterName}>Science Based Body</Text>
-            </View>
+            <LinearGradient
+              colors={[Colors.rose, Colors.roseDark]}
+              style={styles.brandFooterIcon}
+            >
+              <Ionicons name="flask" size={18} color="#fff" />
+            </LinearGradient>
+            <Text style={styles.brandFooterName}>PepTalk</Text>
             <Text style={styles.brandFooterTagline}>
               Evidence-driven peptide research tools
             </Text>
@@ -556,10 +1291,13 @@ export default function ProfileScreen() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f1720',
+    backgroundColor: Colors.darkBg,
   },
   scrollView: {
     flex: 1,
@@ -569,42 +1307,62 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   header: {
-    paddingTop: 16,
-    paddingBottom: 8,
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.sm,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#f7f2ec',
-    letterSpacing: -0.5,
-  },
-
-  // ── Login Form ──────────────────────────────────────────────
-  loginContainer: {
-    marginTop: 16,
-  },
-  brandingSection: {
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 32,
   },
-  brandIconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+  headerIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: 'rgba(227, 167, 161, 0.12)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+  },
+  title: {
+    fontSize: FontSizes.xxl,
+    fontWeight: '800',
+    color: Colors.bone,
+    letterSpacing: -0.5,
+  },
+
+  // -- Login Form
+  loginContainer: {
+    marginTop: Spacing.md,
+  },
+  brandingSection: {
+    alignItems: 'center',
+    marginBottom: Spacing.xl,
+  },
+  brandIconGradient: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.md,
+  },
+  brandIconInner: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: Colors.darkBg,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   brandTitle: {
-    fontSize: 22,
+    fontSize: FontSizes.xl,
     fontWeight: '800',
-    color: '#f7f2ec',
+    color: Colors.bone,
     marginBottom: 6,
   },
   brandSubtitle: {
-    fontSize: 13,
-    color: '#9ca3af',
+    fontSize: FontSizes.sm,
+    color: Colors.darkTextSecondary,
     textAlign: 'center',
     lineHeight: 18,
     paddingHorizontal: 20,
@@ -616,9 +1374,9 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   inputLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#9ca3af',
+    fontSize: 11,
+    fontWeight: '700',
+    color: Colors.darkTextSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 8,
@@ -627,7 +1385,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    borderRadius: 12,
+    borderRadius: BorderRadius.md,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
     paddingHorizontal: 14,
@@ -636,80 +1394,82 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 15,
-    color: '#e8e6e3',
+    fontSize: FontSizes.md,
+    color: Colors.darkText,
     padding: 0,
   },
   loginButton: {
-    backgroundColor: '#e3a7a1',
-    borderRadius: 14,
+    borderRadius: BorderRadius.md,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 8,
   },
-  loginButtonDisabled: {
-    backgroundColor: 'rgba(227, 167, 161, 0.3)',
-  },
   loginButtonText: {
-    fontSize: 16,
+    fontSize: FontSizes.lg,
     fontWeight: '700',
-    color: '#0f1720',
+    color: '#fff',
   },
 
-  // ── User Profile ────────────────────────────────────────────
+  // -- User Profile
   profileCard: {
     alignItems: 'center',
-    paddingVertical: 28,
-    marginTop: 16,
+    paddingVertical: Spacing.xl,
+    marginTop: Spacing.md,
   },
   avatarContainer: {
     position: 'relative',
-    marginBottom: 12,
+    marginBottom: 14,
+  },
+  avatarGradientRing: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: 'rgba(227, 167, 161, 0.2)',
-    borderWidth: 2,
-    borderColor: '#e3a7a1',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Colors.darkBg,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '800',
-    color: '#e3a7a1',
+    color: Colors.rose,
+  },
+  proBadgeWrap: {
+    position: 'absolute',
+    bottom: 0,
+    right: -2,
   },
   proBadge: {
-    position: 'absolute',
-    bottom: -2,
-    right: -2,
-    backgroundColor: '#e3a7a1',
     borderRadius: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
   },
   proText: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#0f1720',
+    color: '#fff',
     letterSpacing: 0.5,
   },
   userName: {
-    fontSize: 20,
+    fontSize: FontSizes.xl,
     fontWeight: '700',
-    color: '#f7f2ec',
+    color: Colors.bone,
   },
   userEmail: {
-    fontSize: 13,
-    color: '#9ca3af',
+    fontSize: FontSizes.sm,
+    color: Colors.darkTextSecondary,
     marginTop: 2,
   },
   statsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: Spacing.lg,
     paddingTop: 18,
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.08)',
@@ -721,16 +1481,17 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#f7f2ec',
+    fontWeight: '800',
+    color: Colors.bone,
   },
   proActive: {
-    color: '#b9cbb6',
+    color: Colors.sage,
   },
   statLabel: {
-    fontSize: 11,
-    color: '#9ca3af',
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
     marginTop: 2,
+    fontWeight: '500',
   },
   statDivider: {
     width: 1,
@@ -738,24 +1499,34 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
 
-  // ── Settings ────────────────────────────────────────────────
+  // -- Settings
   settingsSection: {
-    marginTop: 28,
+    marginTop: Spacing.xl,
   },
   settingsSectionTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#e8e6e3',
+    fontSize: FontSizes.lg,
+    fontWeight: '800',
+    color: Colors.darkText,
     marginBottom: 14,
+    letterSpacing: -0.3,
   },
   researchSection: {
-    marginTop: 28,
+    marginTop: Spacing.xl,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 12,
+  },
+  incompleteBadgeWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(240, 214, 138, 0.1)',
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: BorderRadius.full,
   },
   incompleteBadge: {
     fontSize: 11,
@@ -765,22 +1536,28 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   researchCard: {
-    paddingVertical: 6,
+    paddingVertical: Spacing.sm,
+  },
+  consentDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    marginVertical: Spacing.sm,
   },
   profileRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.06)',
   },
   profileLabel: {
-    fontSize: 12,
-    color: '#9ca3af',
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    fontWeight: '500',
   },
   profileValue: {
-    fontSize: 12,
-    color: '#e8e6e3',
+    fontSize: FontSizes.xs,
+    color: Colors.darkText,
     fontWeight: '600',
     flex: 1,
     textAlign: 'right',
@@ -796,16 +1573,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: BorderRadius.md,
     borderWidth: 1,
-    borderColor: 'rgba(199, 215, 230, 0.25)',
+    borderColor: 'rgba(199, 215, 230, 0.2)',
     paddingVertical: 10,
     gap: 6,
+    backgroundColor: 'rgba(255,255,255,0.03)',
   },
   profileActionText: {
-    fontSize: 12,
+    fontSize: FontSizes.xs,
     fontWeight: '600',
     color: '#c7d7e6',
+  },
+  settingCard: {
+    marginBottom: Spacing.sm,
+    paddingVertical: Spacing.xs,
   },
   settingRow: {
     flexDirection: 'row',
@@ -820,30 +1602,38 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 12,
   },
+  settingIconWrap: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   settingTextContainer: {
     flex: 1,
   },
   settingTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#e8e6e3',
+    color: Colors.darkText,
   },
   settingDescription: {
     fontSize: 11,
-    color: '#9ca3af',
+    color: Colors.darkTextSecondary,
     marginTop: 1,
   },
 
-  // ── Logout ──────────────────────────────────────────────────
+  // -- Logout
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
+    borderRadius: BorderRadius.md,
     borderWidth: 1,
-    borderColor: 'rgba(227, 167, 161, 0.3)',
+    borderColor: 'rgba(227, 167, 161, 0.25)',
+    backgroundColor: 'rgba(227, 167, 161, 0.06)',
     paddingVertical: 14,
-    marginTop: 28,
+    marginTop: Spacing.xl,
     gap: 8,
   },
   logoutText: {
@@ -852,41 +1642,58 @@ const styles = StyleSheet.create({
     color: '#e3a7a1',
   },
 
-  // ── Footer ──────────────────────────────────────────────────
+  // -- Footer
   footerBranding: {
-    marginTop: 32,
+    marginTop: Spacing.xl,
   },
   brandFooterCard: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: Spacing.lg,
   },
-  brandFooterRow: {
-    flexDirection: 'row',
+  brandFooterIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 6,
+    justifyContent: 'center',
+    marginBottom: Spacing.sm,
   },
   brandFooterName: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#f7f2ec',
+    fontSize: FontSizes.lg,
+    fontWeight: '800',
+    color: Colors.bone,
+    letterSpacing: -0.3,
   },
   brandFooterTagline: {
-    fontSize: 12,
-    color: '#9ca3af',
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    marginTop: 2,
   },
 });
 
+// ---------------------------------------------------------------------------
+// Health Profile Styles
+// ---------------------------------------------------------------------------
 const healthStyles = StyleSheet.create({
-  progressRow: {
+  progressSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginBottom: 10,
-    paddingVertical: 4,
+    gap: 14,
+    marginBottom: Spacing.md,
+    paddingBottom: Spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.06)',
+  },
+  progressInfo: {
+    flex: 1,
+  },
+  progressTitle: {
+    fontSize: FontSizes.sm,
+    fontWeight: '700',
+    color: Colors.darkText,
+    marginBottom: 6,
   },
   progressTrack: {
-    flex: 1,
     height: 6,
     borderRadius: 3,
     backgroundColor: 'rgba(255,255,255,0.08)',
@@ -895,24 +1702,91 @@ const healthStyles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 3,
-    backgroundColor: '#b9cbb6',
   },
-  progressLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#b9cbb6',
-    minWidth: 36,
-    textAlign: 'right',
+  progressHint: {
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    marginTop: 4,
   },
   editButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(199, 215, 230, 0.25)',
-    paddingVertical: 10,
+    borderRadius: BorderRadius.md,
+    paddingVertical: 12,
     gap: 6,
     marginTop: 12,
+  },
+  editButtonText: {
+    fontSize: FontSizes.xs,
+    fontWeight: '700',
+    color: '#c7d7e6',
+  },
+});
+
+// ---------------------------------------------------------------------------
+// Notification Styles
+// ---------------------------------------------------------------------------
+const notifStyles = StyleSheet.create({
+  card: {
+    paddingVertical: Spacing.sm,
+    marginTop: 10,
+  },
+  dayRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    paddingHorizontal: 4,
+    paddingBottom: 8,
+    marginTop: 4,
+  },
+  dayChip: {
+    width: 40,
+    height: 34,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  dayChipActive: {
+    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+    borderColor: 'rgba(245, 158, 11, 0.5)',
+  },
+  dayChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#9ca3af',
+  },
+  dayChipTextActive: {
+    color: '#f59e0b',
+  },
+  mealList: {
+    paddingHorizontal: 4,
+    paddingBottom: 8,
+    gap: 6,
+  },
+  mealRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+  },
+  mealLabel: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.darkText,
+  },
+  mealTime: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#10b981',
+    minWidth: 46,
+    textAlign: 'right',
   },
 });

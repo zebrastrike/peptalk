@@ -15,6 +15,8 @@ import OpenAI from 'openai';
 import { ChatMessage, EnhancedBotContext } from '../types';
 import { PEPTIDES } from '../data/peptides';
 import { PROTOCOL_TEMPLATES } from '../data/protocols';
+import { KNOWLEDGE_TOPICS } from '../data/knowledgeTopics';
+import { SAFETY_PROFILES } from '../data/safetyProfiles';
 import { sanitizeForLLM } from './privacyGuard';
 
 // ---------------------------------------------------------------------------
@@ -59,12 +61,41 @@ function buildPeptideKnowledgeBase(): string {
     );
   });
 
+  // Compact knowledge topics: question → answer snippet for care, safety, storage, etc.
+  const topicLines: string[] = [];
+  KNOWLEDGE_TOPICS.forEach((topic) => {
+    topicLines.push(`\n[${topic.title.toUpperCase()}]`);
+    topic.sections.forEach((s) => {
+      topicLines.push(`Q: ${s.question}\nA: ${s.answer.substring(0, 200)}...`);
+    });
+  });
+
+  // Compact safety profiles: contraindications, black box warnings, key interactions
+  const safetyLines: string[] = [];
+  SAFETY_PROFILES.forEach((sp) => {
+    const bbw = sp.blackBoxWarnings?.length ? ` | BBW: ${sp.blackBoxWarnings[0].substring(0, 80)}` : '';
+    const contra = sp.contraindications.slice(0, 3).join('; ');
+    const interactions = sp.drugInteractions
+      .filter((d) => d.severity === 'severe')
+      .map((d) => d.drug)
+      .join(', ');
+    safetyLines.push(
+      `- ${sp.peptideId}: CONTRA: ${contra}${interactions ? ` | SEVERE IX: ${interactions}` : ''}${bbw}`
+    );
+  });
+
   return [
     'PEPTIDE DATABASE (' + PEPTIDES.length + ' peptides):',
     ...lines,
     '',
     'PROTOCOL TEMPLATES (' + PROTOCOL_TEMPLATES.length + '):',
     ...protoLines,
+    '',
+    'SAFETY PROFILES (' + SAFETY_PROFILES.length + '):',
+    ...safetyLines,
+    '',
+    'KNOWLEDGE BASE (care, safety, storage, quality, regulations):',
+    ...topicLines,
   ].join('\n');
 }
 
@@ -85,11 +116,12 @@ function buildSystemPrompt(context: EnhancedBotContext): string {
   return `You are PepTalk, an AI peptide research assistant built into a mobile app for people exploring peptide therapy. You are knowledgeable, warm, and safety-conscious.
 
 ROLE:
-- You help users understand peptides, protocols, interactions, and research
+- You help users understand peptides, protocols, interactions, safety, storage, quality, regulations, and research
 - You are NOT a doctor. You do NOT provide medical advice, prescriptions, or clinical guidance
 - You reference published research and always recommend consulting a qualified healthcare provider
 - You speak in plain language, avoiding excessive medical jargon
 - You are concise — 2-4 paragraphs max per response
+- You have deep knowledge about peptide care, how to use peptides, safety/contraindications, storage/stability, buying quality peptides, and regulations — use the KNOWLEDGE BASE section below to answer these questions accurately
 
 SAFETY RULES:
 - Always include a disclaimer when discussing dosing: "Consult your provider before starting any protocol"
@@ -195,6 +227,111 @@ export async function generateAIResponse(
     };
   } catch (error) {
     if (__DEV__) console.warn('[llmService] API call failed:', error);
+    return null;
+  }
+}
+
+/**
+ * Generate personalized recipes using the Grok API.
+ */
+export async function generateRecipe(params: {
+  diet: string;
+  mealType: string;
+  preferences: string;
+  targets: { calories: number; proteinGrams: number; carbsGrams: number; fatGrams: number };
+}): Promise<Array<{
+  name: string;
+  description: string;
+  prepMinutes: number;
+  cookMinutes: number;
+  servings: number;
+  ingredients: string[];
+  instructions: string[];
+  macros: { calories: number; protein: number; carbs: number; fat: number };
+}> | null> {
+  if (!XAI_API_KEY) return null;
+
+  const { diet, mealType, preferences, targets } = params;
+  const prompt = `Generate 3 ${mealType} recipes for a ${diet === 'any' ? 'balanced' : diet} diet.
+
+Daily macro targets: ${targets.calories} cal, ${targets.proteinGrams}g protein, ${targets.carbsGrams}g carbs, ${targets.fatGrams}g fat.
+Each recipe should fit roughly 1/3 of these daily targets for a ${mealType} meal.
+${preferences ? `Additional preferences: ${preferences}` : ''}
+
+Return ONLY valid JSON, no markdown. Format:
+[{
+  "name": "Recipe Name",
+  "description": "Short description",
+  "prepMinutes": 15,
+  "cookMinutes": 25,
+  "servings": 1,
+  "ingredients": ["ingredient 1", "ingredient 2"],
+  "instructions": ["Step 1", "Step 2"],
+  "macros": {"calories": 500, "protein": 40, "carbs": 50, "fat": 15}
+}]`;
+
+  try {
+    const completion = await client.chat.completions.create({
+      model: MODEL,
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a nutrition expert and recipe creator. Generate practical, delicious recipes with accurate macro estimates. Return ONLY valid JSON arrays, no markdown code blocks.',
+        },
+        { role: 'user', content: prompt },
+      ],
+      max_tokens: 2048,
+      temperature: 0.8,
+    });
+
+    const raw = completion.choices[0]?.message?.content;
+    if (!raw) return null;
+
+    // Strip markdown code blocks if present
+    const cleaned = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    return JSON.parse(cleaned);
+  } catch (error) {
+    if (__DEV__) console.warn('[llmService] Recipe generation failed:', error);
+    return null;
+  }
+}
+
+/**
+ * Generate an AI health plan (workout + meal + protocol schedule).
+ */
+export async function generateHealthPlan(params: {
+  goals: string[];
+  profile: string;
+  currentPrograms: string[];
+  duration: string;
+}): Promise<string | null> {
+  if (!XAI_API_KEY) return null;
+
+  try {
+    const completion = await client.chat.completions.create({
+      model: MODEL,
+      messages: [
+        {
+          role: 'system',
+          content: `You are Jamie, a certified nutritionist and personal trainer creating comprehensive health plans. Create detailed weekly plans that include workout scheduling, meal planning, and supplement/peptide protocol timing. Be specific with days, times, and actions. Format the plan as structured text the user can follow.`,
+        },
+        {
+          role: 'user',
+          content: `Create a ${params.duration} health plan.
+Goals: ${params.goals.join(', ')}
+Profile: ${params.profile}
+Current programs: ${params.currentPrograms.join(', ') || 'None'}
+
+Include: weekly workout schedule, meal plan framework, and any protocol/supplement timing recommendations.`,
+        },
+      ],
+      max_tokens: 2048,
+      temperature: 0.7,
+    });
+
+    return completion.choices[0]?.message?.content ?? null;
+  } catch (error) {
+    if (__DEV__) console.warn('[llmService] Plan generation failed:', error);
     return null;
   }
 }

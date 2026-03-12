@@ -15,7 +15,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sbbpeptides.peptalk"
+      "bundleIdentifier": "com.peptalkapp.peptalk",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "PepTalk uses HealthKit to auto-fill your daily check-ins with steps, weight, heart rate, and sleep data.",
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +27,7 @@
         "backgroundColor": "#1f2a36"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.sbbpeptides.peptalk"
+      "package": "com.peptalkapp.peptalk"
     },
     "web": {
       "favicon": "./assets/favicon.png",

@@ -7,14 +7,48 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, router } from 'expo-router';
 import { GlassCard } from '../../src/components/GlassCard';
+import { TrendCard } from '../../src/components/TrendCard';
+import { GradientButton } from '../../src/components/GradientButton';
+import { AnimatedPress } from '../../src/components/AnimatedPress';
 import { Disclaimer } from '../../src/components/Disclaimer';
+import { selectionTick, notifySuccess } from '../../src/utils/haptics';
 import { useCheckinStore } from '../../src/store/useCheckinStore';
-import { trackCheckInSaved } from '../../src/services/sbbEvents';
-import { CheckInRating } from '../../src/types';
+import { computeTrend } from '../../src/utils/trends';
+import { useDoseLogStore } from '../../src/store/useDoseLogStore';
+import { useWorkoutStore } from '../../src/store/useWorkoutStore';
+import { useMealStore } from '../../src/store/useMealStore';
+import { getPeptideById } from '../../src/data/peptides';
+import { trackCheckInSaved } from '../../src/services/analyticsEvents';
+import {
+  isHealthDataAvailable,
+  requestHealthPermissions,
+  syncToCheckIn,
+  getHealthSourceLabel,
+} from '../../src/services/healthDataService';
+import { Colors } from '../../src/constants/theme';
+import {
+  EMOTION_OPTIONS,
+  SIDE_EFFECT_TAGS,
+  getSentimentColor,
+  getSentimentBorder,
+} from '../../src/constants/emotions';
+import {
+  CheckInRating,
+  EmotionTag,
+  PeptideEffect,
+  EffectSentiment,
+} from '../../src/types';
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 const toDateKey = (date: Date) => {
   const year = date.getFullYear();
@@ -42,6 +76,16 @@ const ratingLabel = (value: CheckInRating) => {
   }
 };
 
+const sentimentOptions: { value: EffectSentiment; label: string; icon: string; color: string }[] = [
+  { value: 'positive', label: 'Positive', icon: 'trending-up-outline', color: '#10b981' },
+  { value: 'neutral', label: 'Neutral', icon: 'remove-outline', color: '#6366f1' },
+  { value: 'negative', label: 'Negative', icon: 'trending-down-outline', color: '#ef4444' },
+];
+
+// ---------------------------------------------------------------------------
+// RatingRow (unchanged)
+// ---------------------------------------------------------------------------
+
 const RatingRow: React.FC<{
   label: string;
   value: CheckInRating;
@@ -52,14 +96,14 @@ const RatingRow: React.FC<{
       <Text style={styles.ratingLabel}>{label}</Text>
       <View style={styles.ratingPills}>
         {ratingValues.map((rating) => (
-          <TouchableOpacity
+          <AnimatedPress
             key={rating}
             style={[
               styles.ratingPill,
               value === rating && styles.ratingPillActive,
             ]}
-            onPress={() => onChange(rating)}
-            activeOpacity={0.7}
+            onPress={() => { selectionTick(); onChange(rating); }}
+            scaleTo={0.85}
           >
             <Text
               style={[
@@ -69,7 +113,7 @@ const RatingRow: React.FC<{
             >
               {rating}
             </Text>
-          </TouchableOpacity>
+          </AnimatedPress>
         ))}
       </View>
       <Text style={styles.ratingHint}>{ratingLabel(value)}</Text>
@@ -77,13 +121,64 @@ const RatingRow: React.FC<{
   );
 };
 
+// ---------------------------------------------------------------------------
+// SeverityPicker
+// ---------------------------------------------------------------------------
+
+const SeverityPicker: React.FC<{
+  value: CheckInRating;
+  onChange: (v: CheckInRating) => void;
+}> = ({ value, onChange }) => (
+  <View style={styles.severityRow}>
+    <Text style={styles.severityLabel}>Severity</Text>
+    <View style={styles.severityPills}>
+      {ratingValues.map((v) => (
+        <TouchableOpacity
+          key={v}
+          onPress={() => onChange(v)}
+          style={[
+            styles.severityPill,
+            value === v && styles.severityPillActive,
+          ]}
+          activeOpacity={0.7}
+        >
+          <Text
+            style={[
+              styles.severityText,
+              value === v && styles.severityTextActive,
+            ]}
+          >
+            {v}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  </View>
+);
+
+// ---------------------------------------------------------------------------
+// Main Screen
+// ---------------------------------------------------------------------------
+
 export default function CheckInScreen() {
-  const { entries, saveCheckIn, getCheckInByDate, getStreak } =
+  const { entries, saveCheckIn, getCheckInByDate, getStreak, getEmotionFrequency } =
     useCheckinStore();
+  const { getActiveProtocols } = useDoseLogStore();
 
-  const todayKey = useMemo(() => toDateKey(new Date()), []);
-  const todayEntry = getCheckInByDate(todayKey);
+  // Accept optional ?date=YYYY-MM-DD search param (e.g. from calendar)
+  const params = useLocalSearchParams<{ date?: string }>();
 
+  const dateKey = useMemo(() => {
+    if (params.date && /^\d{4}-\d{2}-\d{2}$/.test(params.date)) {
+      return params.date;
+    }
+    return toDateKey(new Date());
+  }, [params.date]);
+
+  const isToday = dateKey === toDateKey(new Date());
+  const existingEntry = getCheckInByDate(dateKey);
+
+  // ── Existing rating state ─────────────────────────────────────────────────
   const [mood, setMood] = useState<CheckInRating>(3);
   const [energy, setEnergy] = useState<CheckInRating>(3);
   const [stress, setStress] = useState<CheckInRating>(3);
@@ -95,22 +190,147 @@ export default function CheckInScreen() {
   const [steps, setSteps] = useState('');
   const [notes, setNotes] = useState('');
 
-  useEffect(() => {
-    if (!todayEntry) return;
-    setMood(todayEntry.mood);
-    setEnergy(todayEntry.energy);
-    setStress(todayEntry.stress);
-    setSleepQuality(todayEntry.sleepQuality);
-    setRecovery(todayEntry.recovery);
-    setAppetite(todayEntry.appetite);
-    setWeight(todayEntry.weightLbs ? String(todayEntry.weightLbs) : '');
-    setRestingHeartRate(
-      todayEntry.restingHeartRate ? String(todayEntry.restingHeartRate) : ''
-    );
-    setSteps(todayEntry.steps ? String(todayEntry.steps) : '');
-    setNotes(todayEntry.notes ?? '');
-  }, [todayEntry]);
+  // ── Health sync state ────────────────────────────────────────────────────
+  const [healthSyncing, setHealthSyncing] = useState(false);
+  const [healthSynced, setHealthSynced] = useState(false);
 
+  // ── New state ─────────────────────────────────────────────────────────────
+  const [emotionTags, setEmotionTags] = useState<EmotionTag[]>([]);
+  const [overallFeeling, setOverallFeeling] = useState('');
+  const [peptideEffects, setPeptideEffects] = useState<PeptideEffect[]>([]);
+  const [sideEffectTags, setSideEffectTags] = useState<string[]>([]);
+
+  // ── Active protocols for Peptide Effects section ──────────────────────────
+  const activeProtocols = getActiveProtocols();
+
+  // Initialise peptideEffects array whenever active protocols change
+  useEffect(() => {
+    if (activeProtocols.length === 0) return;
+
+    setPeptideEffects((prev) => {
+      const existing = new Map(prev.map((pe) => [pe.peptideId, pe]));
+      return activeProtocols.map((p) =>
+        existing.get(p.peptideId) ?? {
+          peptideId: p.peptideId,
+          effect: '',
+          sentiment: 'neutral' as EffectSentiment,
+          severity: 3 as CheckInRating,
+        }
+      );
+    });
+  }, [activeProtocols.length]);
+
+  // ── Hydrate from existing entry ───────────────────────────────────────────
+  useEffect(() => {
+    if (!existingEntry) return;
+    setMood(existingEntry.mood);
+    setEnergy(existingEntry.energy);
+    setStress(existingEntry.stress);
+    setSleepQuality(existingEntry.sleepQuality);
+    setRecovery(existingEntry.recovery);
+    setAppetite(existingEntry.appetite);
+    setWeight(existingEntry.weightLbs ? String(existingEntry.weightLbs) : '');
+    setRestingHeartRate(
+      existingEntry.restingHeartRate ? String(existingEntry.restingHeartRate) : ''
+    );
+    setSteps(existingEntry.steps ? String(existingEntry.steps) : '');
+    setNotes(existingEntry.notes ?? '');
+    setEmotionTags(existingEntry.emotionTags ?? []);
+    setOverallFeeling(existingEntry.overallFeeling ?? '');
+    setSideEffectTags(existingEntry.sideEffectTags ?? []);
+
+    if (existingEntry.peptideEffects?.length) {
+      setPeptideEffects(existingEntry.peptideEffects);
+    }
+  }, [existingEntry]);
+
+  // ── Toggle helpers ────────────────────────────────────────────────────────
+  const toggleEmotion = (tag: EmotionTag) => {
+    setEmotionTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const toggleSideEffect = (tag: string) => {
+    setSideEffectTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const updatePeptideEffect = (
+    peptideId: string,
+    field: keyof PeptideEffect,
+    value: string | EffectSentiment | CheckInRating
+  ) => {
+    setPeptideEffects((prev) =>
+      prev.map((pe) =>
+        pe.peptideId === peptideId ? { ...pe, [field]: value } : pe
+      )
+    );
+  };
+
+  // ── Health Sync ────────────────────────────────────────────────────────────
+  const handleHealthSync = async () => {
+    setHealthSyncing(true);
+    try {
+      const granted = await requestHealthPermissions();
+      if (!granted) {
+        Alert.alert(
+          'Permission Required',
+          `PepTalk needs access to ${getHealthSourceLabel()} to sync your data. Please enable it in your device settings.`,
+        );
+        return;
+      }
+
+      const data = await syncToCheckIn();
+      const filled: string[] = [];
+
+      if (data.steps != null) {
+        setSteps(String(data.steps));
+        filled.push('steps');
+      }
+      if (data.weightLbs != null) {
+        setWeight(String(data.weightLbs));
+        filled.push('weight');
+      }
+      if (data.restingHeartRate != null) {
+        setRestingHeartRate(String(data.restingHeartRate));
+        filled.push('heart rate');
+      }
+      if (data.sleepHours != null) {
+        // Map sleep hours to a 1-5 quality rating as a convenience
+        const hrs = data.sleepHours;
+        const quality: CheckInRating =
+          hrs >= 8 ? 5 : hrs >= 7 ? 4 : hrs >= 6 ? 3 : hrs >= 5 ? 2 : 1;
+        setSleepQuality(quality);
+        filled.push('sleep');
+      }
+
+      setHealthSynced(true);
+      notifySuccess();
+
+      if (filled.length > 0) {
+        Alert.alert(
+          'Health Data Synced',
+          `Pre-filled: ${filled.join(', ')}. Review and save your check-in.`,
+        );
+      } else {
+        Alert.alert(
+          'No Data Available',
+          `No recent health data found in ${getHealthSourceLabel()}. You can enter your metrics manually.`,
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        'Sync Failed',
+        'Unable to fetch health data. Please try again later.',
+      );
+    } finally {
+      setHealthSyncing(false);
+    }
+  };
+
+  // ── Save ──────────────────────────────────────────────────────────────────
   const handleSave = () => {
     const toNumber = (value: string) => {
       if (!value) return undefined;
@@ -119,7 +339,7 @@ export default function CheckInScreen() {
     };
 
     const entry = saveCheckIn({
-      date: todayKey,
+      date: dateKey,
       mood,
       energy,
       stress,
@@ -130,28 +350,110 @@ export default function CheckInScreen() {
       restingHeartRate: toNumber(restingHeartRate),
       steps: toNumber(steps),
       notes,
+      emotionTags,
+      overallFeeling,
+      peptideEffects: peptideEffects.filter((pe) => pe.effect.trim().length > 0),
+      sideEffectTags,
     });
 
     trackCheckInSaved(entry.date, Boolean(entry.notes));
-    Alert.alert('Check-in saved', 'Your daily metrics are updated.');
+    notifySuccess();
+
+    // Streak celebration + smart next actions
+    const newStreak = getStreak();
+    const milestones = [3, 7, 14, 21, 30, 60, 90, 100, 180, 365];
+    const hitMilestone = milestones.includes(newStreak);
+
+    // Build contextual next-action buttons
+    const todayKey = toDateKey(new Date());
+    const todayDoses = useDoseLogStore.getState().doses.filter((d: { date: string }) => d.date === todayKey);
+    const todayWorkouts = useWorkoutStore.getState().logs.filter(w => w.date === todayKey);
+    const todayMeals = useMealStore.getState().meals.filter(m => m.date === todayKey);
+
+    const actions: { text: string; onPress: () => void }[] = [];
+
+    if (todayDoses.length === 0) {
+      actions.push({
+        text: 'Log a Dose',
+        onPress: () => router.push('/(tabs)/calendar'),
+      });
+    }
+    if (todayWorkouts.length === 0) {
+      actions.push({
+        text: 'Start Workout',
+        onPress: () => router.push('/workouts' as any),
+      });
+    }
+    if (todayMeals.length === 0) {
+      actions.push({
+        text: 'Log a Meal',
+        onPress: () => router.push('/nutrition' as any),
+      });
+    }
+    actions.push({ text: 'Done', onPress: () => {} });
+
+    const title = hitMilestone
+      ? `🔥 ${newStreak}-Day Streak!`
+      : newStreak > 1
+        ? `Check-in Saved — ${newStreak} day streak!`
+        : 'Check-in Saved';
+
+    const message = hitMilestone
+      ? `Amazing consistency! You've checked in ${newStreak} days in a row. Keep it going!`
+      : 'Your daily metrics are updated. What would you like to do next?';
+
+    Alert.alert(title, message, actions);
   };
 
+  // ── Derived data ──────────────────────────────────────────────────────────
   const streak = getStreak();
   const recentEntries = entries.slice(0, 7);
 
+  const trendData = useMemo(() => {
+    const recent = entries.slice(0, 14).reverse(); // oldest first for sparkline
+    return {
+      mood: recent.map(e => e.mood),
+      energy: recent.map(e => e.energy),
+      sleep: recent.map(e => e.sleepQuality),
+      stress: recent.map(e => e.stress),
+      recovery: recent.map(e => e.recovery),
+      appetite: recent.map(e => e.appetite),
+    };
+  }, [entries]);
+
+  const weightData = useMemo(() => {
+    return entries
+      .slice(0, 30)
+      .filter(e => e.weightLbs != null)
+      .reverse()
+      .map(e => e.weightLbs!);
+  }, [entries]);
+
+  const emotionFreq = useMemo(() => {
+    const freq = getEmotionFrequency(14);
+    return Object.entries(freq)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5);
+  }, [entries]);
+
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
+        {/* ── Header ───────────────────────────────────────────────────────── */}
         <View style={styles.header}>
           <Text style={styles.title}>Daily Check-In</Text>
           <Text style={styles.subtitle}>
-            Log how you feel, track your metrics, and build a research profile.
+            {isToday
+              ? 'Log how you feel, track your metrics, and build a research profile.'
+              : `Checking in for ${dateKey}`}
           </Text>
         </View>
 
+        {/* ── Summary ──────────────────────────────────────────────────────── */}
         <GlassCard style={styles.summaryCard}>
           <View style={styles.summaryRow}>
             <View>
@@ -160,14 +462,57 @@ export default function CheckInScreen() {
             </View>
             <View style={styles.summaryDivider} />
             <View>
-              <Text style={styles.summaryLabel}>Today</Text>
+              <Text style={styles.summaryLabel}>
+                {isToday ? 'Today' : dateKey}
+              </Text>
               <Text style={styles.summaryValue}>
-                {todayEntry ? 'Completed' : 'Pending'}
+                {existingEntry ? 'Completed' : 'Pending'}
               </Text>
             </View>
           </View>
         </GlassCard>
 
+        {/* ── Trends ────────────────────────────────────────────────────────── */}
+        {entries.length >= 3 && (
+          <>
+            <GlassCard style={styles.formCard}>
+              <Text style={styles.sectionTitle}>14-Day Trends</Text>
+              <View style={styles.trendGrid}>
+                <TrendCard label="Mood" data={trendData.mood} color="#e3a7a1" unit="/5" />
+                <TrendCard label="Energy" data={trendData.energy} color="#eab308" unit="/5" />
+                <TrendCard label="Sleep" data={trendData.sleep} color="#6366f1" unit="/5" />
+                <TrendCard label="Stress" data={trendData.stress} color="#ef4444" unit="/5" />
+                <TrendCard label="Recovery" data={trendData.recovery} color="#10b981" unit="/5" />
+                <TrendCard label="Appetite" data={trendData.appetite} color="#f59e0b" unit="/5" />
+              </View>
+            </GlassCard>
+
+            {emotionFreq.length > 0 && (
+              <GlassCard style={styles.formCard}>
+                <Text style={styles.sectionTitle}>Top Emotions (14 days)</Text>
+                {emotionFreq.map(([tag, count]) => {
+                  const opt = EMOTION_OPTIONS.find(o => o.value === tag);
+                  return (
+                    <View key={tag} style={styles.emotionBarRow}>
+                      <Text style={styles.emotionBarLabel}>{opt?.label ?? tag}</Text>
+                      <View style={styles.emotionBar}>
+                        <View style={[styles.emotionBarFill, { flex: count, backgroundColor: getSentimentColor(opt?.sentiment ?? 'neutral') }]} />
+                        <View style={{ flex: Math.max(0, 14 - count) }} />
+                      </View>
+                      <Text style={styles.emotionBarCount}>{count}</Text>
+                    </View>
+                  );
+                })}
+              </GlassCard>
+            )}
+
+            {weightData.length >= 3 && (
+              <TrendCard label="Weight" data={weightData} color="#3b82f6" unit=" lbs" />
+            )}
+          </>
+        )}
+
+        {/* ── Ratings ──────────────────────────────────────────────────────── */}
         <GlassCard style={styles.formCard}>
           <Text style={styles.sectionTitle}>How are you today?</Text>
 
@@ -181,6 +526,229 @@ export default function CheckInScreen() {
           />
           <RatingRow label="Recovery" value={recovery} onChange={setRecovery} />
           <RatingRow label="Appetite" value={appetite} onChange={setAppetite} />
+        </GlassCard>
+
+        {/* ── Emotion Tags ─────────────────────────────────────────────────── */}
+        <GlassCard style={styles.formCard}>
+          <Text style={styles.sectionTitle}>Emotion Tags</Text>
+          <Text style={styles.sectionHint}>
+            Tap to toggle -- select all that apply
+          </Text>
+
+          <View style={styles.chipWrap}>
+            {EMOTION_OPTIONS.map((opt) => {
+              const selected = emotionTags.includes(opt.value);
+              return (
+                <TouchableOpacity
+                  key={opt.value}
+                  onPress={() => toggleEmotion(opt.value)}
+                  activeOpacity={0.7}
+                  style={[
+                    styles.chip,
+                    selected && {
+                      backgroundColor: getSentimentColor(opt.sentiment),
+                      borderColor: getSentimentBorder(opt.sentiment),
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name={opt.icon as any}
+                    size={14}
+                    color={selected ? getSentimentBorder(opt.sentiment) : '#9ca3af'}
+                    style={{ marginRight: 4 }}
+                  />
+                  <Text
+                    style={[
+                      styles.chipText,
+                      selected && {
+                        color: getSentimentBorder(opt.sentiment),
+                        fontWeight: '700',
+                      },
+                    ]}
+                  >
+                    {opt.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </GlassCard>
+
+        {/* ── Overall Feeling ──────────────────────────────────────────────── */}
+        <GlassCard style={styles.formCard}>
+          <Text style={styles.sectionTitle}>How are you feeling overall?</Text>
+          <TextInput
+            style={styles.feelingInput}
+            value={overallFeeling}
+            onChangeText={setOverallFeeling}
+            placeholder="Describe how you're feeling in your own words..."
+            placeholderTextColor="#6b7280"
+            multiline
+          />
+        </GlassCard>
+
+        {/* ── Peptide Effects (only if active protocols) ───────────────────── */}
+        {activeProtocols.length > 0 && (
+          <GlassCard style={styles.formCard}>
+            <Text style={styles.sectionTitle}>Peptide Effects</Text>
+            <Text style={styles.sectionHint}>
+              Track how each peptide in your active protocols is affecting you
+            </Text>
+
+            {activeProtocols.map((protocol) => {
+              const peptide = getPeptideById(protocol.peptideId);
+              const pepName = peptide?.name ?? protocol.peptideId;
+              const pe = peptideEffects.find(
+                (e) => e.peptideId === protocol.peptideId
+              ) ?? {
+                peptideId: protocol.peptideId,
+                effect: '',
+                sentiment: 'neutral' as EffectSentiment,
+                severity: 3 as CheckInRating,
+              };
+
+              return (
+                <View key={protocol.peptideId} style={styles.pepEffectBlock}>
+                  <Text style={styles.pepEffectName}>{pepName}</Text>
+
+                  {/* Sentiment selector */}
+                  <View style={styles.sentimentRow}>
+                    {sentimentOptions.map((so) => {
+                      const active = pe.sentiment === so.value;
+                      return (
+                        <TouchableOpacity
+                          key={so.value}
+                          onPress={() =>
+                            updatePeptideEffect(
+                              protocol.peptideId,
+                              'sentiment',
+                              so.value
+                            )
+                          }
+                          activeOpacity={0.7}
+                          style={[
+                            styles.sentimentChip,
+                            active && {
+                              backgroundColor: `${so.color}33`,
+                              borderColor: so.color,
+                            },
+                          ]}
+                        >
+                          <Ionicons
+                            name={so.icon as any}
+                            size={14}
+                            color={active ? so.color : '#9ca3af'}
+                            style={{ marginRight: 4 }}
+                          />
+                          <Text
+                            style={[
+                              styles.sentimentChipText,
+                              active && { color: so.color, fontWeight: '700' },
+                            ]}
+                          >
+                            {so.label}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+
+                  {/* Effect text input */}
+                  <TextInput
+                    style={styles.pepEffectInput}
+                    value={pe.effect}
+                    onChangeText={(text) =>
+                      updatePeptideEffect(protocol.peptideId, 'effect', text)
+                    }
+                    placeholder={`Effects noticed from ${pepName}...`}
+                    placeholderTextColor="#6b7280"
+                  />
+
+                  {/* Severity 1-5 */}
+                  <SeverityPicker
+                    value={pe.severity ?? (3 as CheckInRating)}
+                    onChange={(v) =>
+                      updatePeptideEffect(protocol.peptideId, 'severity', v)
+                    }
+                  />
+                </View>
+              );
+            })}
+          </GlassCard>
+        )}
+
+        {/* ── Side Effects Quick-Tags ──────────────────────────────────────── */}
+        <GlassCard style={styles.formCard}>
+          <Text style={styles.sectionTitle}>Side Effects</Text>
+          <Text style={styles.sectionHint}>
+            Tap any side effects you experienced
+          </Text>
+
+          <View style={styles.chipWrap}>
+            {SIDE_EFFECT_TAGS.map((tag) => {
+              const selected = sideEffectTags.includes(tag);
+              return (
+                <TouchableOpacity
+                  key={tag}
+                  onPress={() => toggleSideEffect(tag)}
+                  activeOpacity={0.7}
+                  style={[
+                    styles.chip,
+                    selected && styles.sideEffectChipActive,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.chipText,
+                      selected && styles.sideEffectChipTextActive,
+                    ]}
+                  >
+                    {tag}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </GlassCard>
+
+        {/* ── Metrics ──────────────────────────────────────────────────────── */}
+        <GlassCard style={styles.formCard}>
+          <View style={styles.metricHeaderRow}>
+            <Text style={styles.sectionTitle}>Metrics</Text>
+            <TouchableOpacity
+              style={[
+                styles.healthSyncButton,
+                healthSynced && styles.healthSyncButtonDone,
+              ]}
+              onPress={handleHealthSync}
+              disabled={healthSyncing || healthSynced}
+              activeOpacity={0.7}
+            >
+              {healthSyncing ? (
+                <ActivityIndicator size="small" color={Colors.pepTeal} />
+              ) : (
+                <>
+                  <Ionicons
+                    name={healthSynced ? 'checkmark-circle' : 'sync-outline'}
+                    size={14}
+                    color={healthSynced ? Colors.success : Colors.pepTeal}
+                  />
+                  <Text
+                    style={[
+                      styles.healthSyncText,
+                      healthSynced && styles.healthSyncTextDone,
+                    ]}
+                  >
+                    {healthSynced
+                      ? 'Synced'
+                      : Platform.OS === 'ios'
+                        ? 'Sync from Apple Health'
+                        : 'Sync from Health Connect'}
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.metricGrid}>
             <View style={styles.metricInput}>
@@ -217,8 +785,11 @@ export default function CheckInScreen() {
               />
             </View>
           </View>
+        </GlassCard>
 
-          <Text style={styles.metricLabel}>Notes</Text>
+        {/* ── Notes ────────────────────────────────────────────────────────── */}
+        <GlassCard style={styles.formCard}>
+          <Text style={styles.sectionTitle}>Notes</Text>
           <TextInput
             style={styles.notesInput}
             value={notes}
@@ -227,19 +798,17 @@ export default function CheckInScreen() {
             placeholderTextColor="#6b7280"
             multiline
           />
-
-          <TouchableOpacity
-            style={styles.saveButton}
-            onPress={handleSave}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="checkmark-circle-outline" size={20} color="#0f1720" />
-            <Text style={styles.saveButtonText}>
-              {todayEntry ? 'Update Check-In' : 'Save Check-In'}
-            </Text>
-          </TouchableOpacity>
         </GlassCard>
 
+        {/* ── Save Button ──────────────────────────────────────────────────── */}
+        <View style={{ marginTop: 4, marginBottom: 20 }}>
+          <GradientButton
+            label={existingEntry ? 'Update Check-In' : 'Save Check-In'}
+            onPress={handleSave}
+          />
+        </View>
+
+        {/* ── Recent Check-Ins ─────────────────────────────────────────────── */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Recent Check-Ins</Text>
         </View>
@@ -254,6 +823,21 @@ export default function CheckInScreen() {
                 Energy {entry.energy}/5 · Sleep {entry.sleepQuality}/5 · Stress{' '}
                 {entry.stress}/5
               </Text>
+              {entry.emotionTags && entry.emotionTags.length > 0 && (
+                <Text style={styles.recentEmotions}>
+                  {entry.emotionTags
+                    .map((t) => {
+                      const opt = EMOTION_OPTIONS.find((o) => o.value === t);
+                      return opt?.label ?? t;
+                    })
+                    .join(', ')}
+                </Text>
+              )}
+              {entry.sideEffectTags && entry.sideEffectTags.length > 0 && (
+                <Text style={styles.recentSideEffects}>
+                  Side effects: {entry.sideEffectTags.join(', ')}
+                </Text>
+              )}
             </GlassCard>
           ))
         ) : (
@@ -270,6 +854,10 @@ export default function CheckInScreen() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -279,6 +867,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
+
+  // ── Header ──────────────────────────────────────────────────────────────
   header: {
     paddingTop: 16,
     paddingBottom: 8,
@@ -295,6 +885,8 @@ const styles = StyleSheet.create({
     marginTop: 6,
     lineHeight: 18,
   },
+
+  // ── Summary Card ────────────────────────────────────────────────────────
   summaryCard: {
     marginTop: 16,
     marginBottom: 16,
@@ -319,9 +911,50 @@ const styles = StyleSheet.create({
     height: 36,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
-  formCard: {
-    marginBottom: 20,
+
+  // ── Trends ─────────────────────────────────────────────────────────────
+  trendGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginTop: 8,
   },
+  emotionBarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  },
+  emotionBarLabel: {
+    width: 80,
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+  emotionBar: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    overflow: 'hidden',
+  },
+  emotionBarFill: {
+    borderRadius: 4,
+  },
+  emotionBarCount: {
+    width: 24,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#e8e6e3',
+    textAlign: 'right',
+  },
+
+  // ── Form Cards ──────────────────────────────────────────────────────────
+  formCard: {
+    marginBottom: 16,
+  },
+
+  // ── Section helpers ─────────────────────────────────────────────────────
   sectionHeader: {
     marginTop: 6,
     marginBottom: 10,
@@ -330,7 +963,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#e8e6e3',
+    marginBottom: 4,
   },
+  sectionHint: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginBottom: 12,
+  },
+
+  // ── Rating Row ──────────────────────────────────────────────────────────
   ratingRow: {
     marginBottom: 14,
   },
@@ -370,11 +1011,166 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     marginTop: 6,
   },
+
+  // ── Chip Wrap (Emotion Tags & Side Effects) ─────────────────────────────
+  chipWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+  },
+  chipText: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+
+  // ── Side Effect chip active state ───────────────────────────────────────
+  sideEffectChipActive: {
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    borderColor: 'rgba(239, 68, 68, 0.5)',
+  },
+  sideEffectChipTextActive: {
+    color: '#f87171',
+    fontWeight: '700',
+  },
+
+  // ── Overall Feeling ─────────────────────────────────────────────────────
+  feelingInput: {
+    minHeight: 72,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    color: '#e8e6e3',
+    textAlignVertical: 'top',
+    marginTop: 4,
+  },
+
+  // ── Peptide Effects ─────────────────────────────────────────────────────
+  pepEffectBlock: {
+    marginBottom: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.06)',
+    paddingBottom: 14,
+  },
+  pepEffectName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#e3a7a1',
+    marginBottom: 8,
+  },
+  sentimentRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 10,
+  },
+  sentimentChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+  },
+  sentimentChipText: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+  pepEffectInput: {
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    color: '#e8e6e3',
+    fontSize: 13,
+    marginBottom: 10,
+  },
+
+  // ── Severity ────────────────────────────────────────────────────────────
+  severityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  severityLabel: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+  severityPills: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  severityPill: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  severityPillActive: {
+    backgroundColor: 'rgba(227, 167, 161, 0.2)',
+    borderColor: 'rgba(227, 167, 161, 0.6)',
+  },
+  severityText: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+  severityTextActive: {
+    color: '#e3a7a1',
+    fontWeight: '700',
+  },
+
+  // ── Metrics ─────────────────────────────────────────────────────────────
+  metricHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  healthSyncButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(6, 182, 212, 0.3)',
+    backgroundColor: 'rgba(6, 182, 212, 0.08)',
+  },
+  healthSyncButtonDone: {
+    borderColor: 'rgba(34, 197, 94, 0.3)',
+    backgroundColor: 'rgba(34, 197, 94, 0.08)',
+  },
+  healthSyncText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#06B6D4',
+  },
+  healthSyncTextDone: {
+    color: '#22c55e',
+  },
   metricGrid: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 12,
-    marginBottom: 8,
+    marginTop: 8,
   },
   metricInput: {
     flex: 1,
@@ -393,6 +1189,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     color: '#e8e6e3',
   },
+
+  // ── Notes ───────────────────────────────────────────────────────────────
   notesInput: {
     minHeight: 80,
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
@@ -404,8 +1202,11 @@ const styles = StyleSheet.create({
     color: '#e8e6e3',
     textAlignVertical: 'top',
   },
+
+  // ── Save Button ─────────────────────────────────────────────────────────
   saveButton: {
-    marginTop: 16,
+    marginTop: 4,
+    marginBottom: 20,
     backgroundColor: '#e3a7a1',
     borderRadius: 14,
     paddingVertical: 14,
@@ -419,6 +1220,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#0f1720',
   },
+
+  // ── Recent Check-Ins ───────────────────────────────────────────────────
   recentCard: {
     marginBottom: 10,
   },
@@ -440,6 +1243,16 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#9ca3af',
     marginTop: 6,
+  },
+  recentEmotions: {
+    fontSize: 11,
+    color: '#10b981',
+    marginTop: 4,
+  },
+  recentSideEffects: {
+    fontSize: 11,
+    color: '#f87171',
+    marginTop: 2,
   },
   emptyText: {
     fontSize: 12,

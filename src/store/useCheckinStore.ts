@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { CheckInEntry, CheckInRating } from '../types';
+import { CheckInEntry, CheckInRating, EmotionTag, PeptideEffect } from '../types';
 import { secureStorage } from '../services/secureStorage';
 
 const toDateKey = (date: Date) => {
@@ -28,6 +28,10 @@ interface CheckInInput {
   restingHeartRate?: number;
   steps?: number;
   notes?: string;
+  emotionTags?: EmotionTag[];
+  overallFeeling?: string;
+  peptideEffects?: PeptideEffect[];
+  sideEffectTags?: string[];
 }
 
 interface CheckinStore {
@@ -35,6 +39,8 @@ interface CheckinStore {
   saveCheckIn: (entry: CheckInInput) => CheckInEntry;
   removeCheckIn: (id: string) => void;
   getCheckInByDate: (date: string) => CheckInEntry | undefined;
+  getEntriesInRange: (start: string, end: string) => CheckInEntry[];
+  getEmotionFrequency: (days: number) => Record<string, number>;
   getStreak: () => number;
   clearAll: () => void;
 }
@@ -61,6 +67,10 @@ export const useCheckinStore = create<CheckinStore>()(
           restingHeartRate: entry.restingHeartRate,
           steps: entry.steps,
           notes: entry.notes?.trim() || undefined,
+          emotionTags: entry.emotionTags?.length ? entry.emotionTags : undefined,
+          overallFeeling: entry.overallFeeling?.trim() || undefined,
+          peptideEffects: entry.peptideEffects?.length ? entry.peptideEffects : undefined,
+          sideEffectTags: entry.sideEffectTags?.length ? entry.sideEffectTags : undefined,
         };
 
         set((state) => {
@@ -83,6 +93,24 @@ export const useCheckinStore = create<CheckinStore>()(
 
       getCheckInByDate: (date) => {
         return get().entries.find((entry) => entry.date === date);
+      },
+
+      getEntriesInRange: (start, end) => {
+        return get().entries.filter((e) => e.date >= start && e.date <= end);
+      },
+
+      getEmotionFrequency: (days) => {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        const cutoffKey = toDateKey(cutoff);
+        const freq: Record<string, number> = {};
+        for (const entry of get().entries) {
+          if (entry.date < cutoffKey) break; // entries are sorted desc
+          entry.emotionTags?.forEach((tag) => {
+            freq[tag] = (freq[tag] ?? 0) + 1;
+          });
+        }
+        return freq;
       },
 
       getStreak: () => {

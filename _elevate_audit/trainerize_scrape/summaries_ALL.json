@@ -1,0 +1,7320 @@
+[
+  {
+    "workoutsByWeek": [
+      2,
+      3,
+      4,
+      3
+    ],
+    "cardioByWeek": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      2,
+      2,
+      2,
+      5,
+      5
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 123,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 6,
+    "workoutsTotal": 400,
+    "cardioTotal": 240,
+    "photosTotal": 3,
+    "messageTotal": 1,
+    "lastPhotoID": 34014511,
+    "lastWeight": 123,
+    "lastFat": null,
+    "lastWeightDate": "2025-06-19",
+    "lastMessageDate": "2025-10-24 15:37:06",
+    "latestResponseDate": "2025-02-10 03:23:27",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Lisa's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2023-02-19",
+        "endDate": "2026-04-05",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35965073,
+      "type": "regular",
+      "name": "Summer. ready 26",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-04-05"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6252617,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1800,
+        "carbsGrams": 180,
+        "carbsPercent": 40,
+        "proteinGrams": 135,
+        "proteinPercent": 30,
+        "fatGrams": 60,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 4320556,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 2,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 50,
+        "nutritionCompleted": 2,
+        "nutritionCompliance": 28,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 8,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 2,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 50,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 9,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 2,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 50,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 10,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 2,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 50,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 9,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      3,
+      1,
+      5,
+      3
+    ],
+    "cardioByWeek": [
+      4,
+      5,
+      5,
+      2
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      7,
+      12
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 125.4,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 18,
+    "workoutsTotal": 548,
+    "cardioTotal": 172,
+    "photosTotal": 15,
+    "messageTotal": 1,
+    "lastPhotoID": 47418071,
+    "lastWeight": 125.4,
+    "lastFat": null,
+    "lastWeightDate": "2025-04-10",
+    "lastMessageDate": "2026-03-10 17:50:06",
+    "latestResponseDate": "2026-02-11 18:44:21",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Laken's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2023-12-03",
+        "endDate": "2026-03-27",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35736963,
+      "type": "regular",
+      "name": "Custom M3 2026",
+      "startDate": "2026-02-28",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-03-27"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": null,
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1900,
+        "carbsGrams": null,
+        "carbsPercent": null,
+        "proteinGrams": 143,
+        "proteinPercent": 30,
+        "fatGrams": null,
+        "fatPercent": null,
+        "trackingType": "trackWithMFP",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 5352582,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 5,
+        "workoutScheduled": 5,
+        "cardioCompleted": 5,
+        "cardioScheduled": 5,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 4,
+        "nutritionCompliance": 57,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 5,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 8,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": null,
+            "proteinGrams": 143,
+            "fatGrams": null,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 3,
+        "workoutScheduled": 3,
+        "cardioCompleted": 4,
+        "cardioScheduled": 4,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 4,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 8,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": null,
+            "proteinGrams": 143,
+            "fatGrams": null,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 1,
+        "workoutScheduled": 1,
+        "cardioCompleted": 5,
+        "cardioScheduled": 5,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 5,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 11,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": null,
+            "proteinGrams": 143,
+            "fatGrams": null,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 4,
+        "workoutScheduled": 4,
+        "cardioCompleted": 4,
+        "cardioScheduled": 4,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 5,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 9,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": null,
+            "proteinGrams": 143,
+            "fatGrams": null,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 5,
+        "cardioCompleted": 2,
+        "cardioScheduled": 6,
+        "workoutCompliance": 45,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 2,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 5,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      4,
+      3,
+      2,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      1,
+      2,
+      4,
+      0
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 146.64,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 2,
+    "workoutsTotal": 373,
+    "cardioTotal": 2,
+    "photosTotal": 6,
+    "messageTotal": 1,
+    "lastPhotoID": 59099372,
+    "lastWeight": 146.64,
+    "lastFat": null,
+    "lastWeightDate": "2025-04-14",
+    "lastMessageDate": "2025-09-22 01:58:39",
+    "latestResponseDate": "2025-09-18 16:20:20",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Alex's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2024-06-03",
+        "endDate": "2026-03-15",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35564139,
+      "type": "regular",
+      "name": "Feb 2026",
+      "startDate": "2026-02-16",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-03-15"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6570014,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1500,
+        "carbsGrams": 150,
+        "carbsPercent": 40,
+        "proteinGrams": 113,
+        "proteinPercent": 30,
+        "fatGrams": 50,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 5987490,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 2,
+        "workoutScheduled": 2,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 150,
+            "proteinGrams": 112.5,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 3,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 75,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 150,
+            "proteinGrams": 112.5,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 1,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 25,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 150,
+            "proteinGrams": 112.5,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 1,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 25,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 150,
+            "proteinGrams": 112.5,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      1,
+      1,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      5,
+      5,
+      6,
+      6,
+      6
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 274.4,
+        "fat": 58.9,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 8,
+    "workoutsTotal": 15,
+    "cardioTotal": 6,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 274.4,
+    "lastFat": 58.9,
+    "lastWeightDate": "2025-09-01",
+    "lastMessageDate": "2026-02-13 18:33:20",
+    "latestResponseDate": "2024-10-14 00:35:36",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Heather's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2024-09-08",
+        "endDate": "2026-04-05",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35564265,
+      "type": "regular",
+      "name": "jan-march 2026",
+      "startDate": "2026-02-09",
+      "durationType": "week",
+      "duration": 8,
+      "endDate": "2026-04-05"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6015407,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1800,
+        "carbsGrams": 180,
+        "carbsPercent": 40,
+        "proteinGrams": 135,
+        "proteinPercent": 30,
+        "fatGrams": 60,
+        "fatPercent": 30,
+        "trackingType": "trackWithMFP",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 6384805,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 1,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 3,
+        "cardioCompleted": 1,
+        "cardioScheduled": 3,
+        "workoutCompliance": 16,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 3,
+        "cardioCompleted": 1,
+        "cardioScheduled": 3,
+        "workoutCompliance": 16,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 3,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 180,
+            "proteinGrams": 135,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 3,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 3,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      3
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      7,
+      11
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 187.94,
+        "fat": 43.5,
+        "isProjected": true
+      },
+      {
+        "date": "2026-03-04",
+        "weight": 190,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-09",
+        "weight": 188,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 14,
+    "workoutsTotal": 68,
+    "cardioTotal": 25,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 188,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-09",
+    "lastMessageDate": "2025-01-16 14:11:40",
+    "latestResponseDate": "2025-01-09 16:34:23",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 162712385,
+        "id": 3601331,
+        "name": "LL BodyREcomp March26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-03-09",
+        "endDate": "2026-05-03",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Christina's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 3601331,
+      "name": "LL BodyREcomp March26",
+      "startDate": "2026-03-09",
+      "endDate": "2026-05-03"
+    },
+    "trainingPlan": {
+      "id": 28905697,
+      "type": "regular",
+      "name": "Week 1 - 2",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": {
+      "id": 28905698,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-23",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-04-05"
+    },
+    "mealPlan": {
+      "id": 6652420,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1400,
+        "carbsGrams": 105,
+        "carbsPercent": 30,
+        "proteinGrams": 140,
+        "proteinPercent": 40,
+        "fatGrams": 47,
+        "fatPercent": 30,
+        "trackingType": "trackWithMFP",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 6797469,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 15,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 2,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 1,
+        "workoutCompliance": 22,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 12,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      2
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      9,
+      9,
+      9,
+      7,
+      7
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 140,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 9,
+    "workoutsTotal": 279,
+    "cardioTotal": 103,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 140,
+    "lastFat": null,
+    "lastWeightDate": "2025-01-09",
+    "lastMessageDate": "2026-02-13 18:08:16",
+    "latestResponseDate": null,
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 161947275,
+        "id": 4758266,
+        "name": "LL JAN-FEB 26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-02-16",
+        "endDate": "2026-04-12",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": 85609519,
+        "id": 3251732,
+        "name": "Lusciously Lean BODYreCOMP 1.0",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": "2025-01-13",
+        "endDate": "2025-03-09",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Ashley's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": "2025-01-31",
+        "endDate": "2026-02-02",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 4758266,
+      "name": "LL JAN-FEB 26",
+      "startDate": "2026-02-16",
+      "endDate": "2026-04-12"
+    },
+    "trainingPlan": {
+      "id": 34719369,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-02",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-15"
+    },
+    "nextTrainingPlan": {
+      "id": 34719370,
+      "type": "regular",
+      "name": "Week 5 - 6",
+      "startDate": "2026-03-16",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-29"
+    },
+    "mealPlan": {
+      "id": 6120972,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1400,
+        "carbsGrams": 105,
+        "carbsPercent": 30,
+        "proteinGrams": 140,
+        "proteinPercent": 40,
+        "fatGrams": 47,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 6847867,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 7,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 1,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 2,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 22,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      4,
+      5,
+      5,
+      3
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      1,
+      3
+    ],
+    "scheduledByWeek": [
+      1,
+      0,
+      0,
+      4,
+      10
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 189.49,
+        "fat": 21.7,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 12,
+    "workoutsTotal": 196,
+    "cardioTotal": 110,
+    "photosTotal": 27,
+    "messageTotal": 1,
+    "lastPhotoID": 70685133,
+    "lastWeight": 189.49,
+    "lastFat": 21.7,
+    "lastWeightDate": "2025-12-05",
+    "lastMessageDate": "2026-03-02 04:51:24",
+    "latestResponseDate": "2026-02-12 11:36:23",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Ginny's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2025-03-30",
+        "endDate": "2026-04-05",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35965951,
+      "type": "regular",
+      "name": "March 2026",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-04-05"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6648500,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1700,
+        "carbsGrams": 170,
+        "carbsPercent": 40,
+        "proteinGrams": 128,
+        "proteinPercent": 30,
+        "fatGrams": 57,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 7145953,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 75,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 4,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 80,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 5,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 5,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 7,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 5,
+        "cardioCompleted": 3,
+        "cardioScheduled": 5,
+        "workoutCompliance": 60,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 3,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 5,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      4,
+      5,
+      4,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      9,
+      11
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 146.56,
+        "fat": null,
+        "isProjected": true
+      },
+      {
+        "date": "2026-01-26",
+        "weight": 146.5,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-04",
+        "weight": 147.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-08",
+        "weight": 146.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-12",
+        "weight": 146.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-02",
+        "weight": 148.5,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-03",
+        "weight": 148.7,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-04",
+        "weight": 148.5,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-05",
+        "weight": 148.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-06",
+        "weight": 148.6,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 14,
+    "workoutsTotal": 175,
+    "cardioTotal": 32,
+    "photosTotal": 18,
+    "messageTotal": 1,
+    "lastPhotoID": 69687211,
+    "lastWeight": 148.6,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-06",
+    "lastMessageDate": "2026-03-12 03:03:05",
+    "latestResponseDate": "2025-09-20 22:08:31",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 162806411,
+        "id": 3601331,
+        "name": "LL BodyREcomp March26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-03-09",
+        "endDate": "2026-05-03",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Mashhood's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 3601331,
+      "name": "LL BodyREcomp March26",
+      "startDate": "2026-03-09",
+      "endDate": "2026-05-03"
+    },
+    "trainingPlan": {
+      "id": 28905697,
+      "type": "regular",
+      "name": "Week 1 - 2",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": {
+      "id": 28905698,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-23",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-04-05"
+    },
+    "mealPlan": {
+      "id": 6658751,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1400,
+        "carbsGrams": 105,
+        "carbsPercent": 30,
+        "proteinGrams": 140,
+        "proteinPercent": 40,
+        "fatGrams": 47,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 7749407,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 33,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 4,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 44,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 5,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 62,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 4,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 9,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 1,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      2,
+      1,
+      0,
+      2
+    ],
+    "cardioByWeek": [
+      6,
+      1,
+      3,
+      0
+    ],
+    "scheduledByWeek": [
+      7,
+      6,
+      7,
+      6,
+      8
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 136,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 10,
+    "workoutsTotal": 76,
+    "cardioTotal": 81,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 136,
+    "lastFat": null,
+    "lastWeightDate": "2025-06-30",
+    "lastMessageDate": "2026-01-25 21:03:58",
+    "latestResponseDate": "2025-08-31 20:21:03",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 161163928,
+        "id": 4758266,
+        "name": "LL JAN-FEB 26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-01-26",
+        "endDate": "2026-03-22",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Courtney's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 4758266,
+      "name": "LL JAN-FEB 26",
+      "startDate": "2026-01-26",
+      "endDate": "2026-03-22"
+    },
+    "trainingPlan": {
+      "id": 34719371,
+      "type": "regular",
+      "name": "Week 7 - 8",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6413235,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1400,
+        "carbsGrams": 105,
+        "carbsPercent": 30,
+        "proteinGrams": 140,
+        "proteinPercent": 40,
+        "fatGrams": 47,
+        "fatPercent": 30,
+        "trackingType": "trackWithMFP",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 7393755,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 2,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 22,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 1,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 14,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 3,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 105,
+            "proteinGrams": 140,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 2,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 25,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 180,
+        "fat": 15,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 0,
+    "workoutsTotal": 5,
+    "cardioTotal": 0,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 180,
+    "lastFat": 15,
+    "lastWeightDate": "2019-04-19",
+    "lastMessageDate": "2026-03-10 16:28:50",
+    "latestResponseDate": "2019-04-15 00:35:07",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": {
+      "id": 374621,
+      "date": "2019-04-19",
+      "score": 9,
+      "type": "modified"
+    },
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Timmy's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2019-03-01",
+        "endDate": "2019-05-23",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 2587578,
+      "type": "regular",
+      "name": "Lean out and bulk up ",
+      "startDate": "2019-03-01",
+      "durationType": "week",
+      "duration": 12,
+      "endDate": "2019-05-23"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 423036,
+      "name": "Timmy's Meal Plan",
+      "type": "file",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 2000,
+        "carbsGrams": 250,
+        "carbsPercent": 50,
+        "proteinGrams": 125,
+        "proteinPercent": 25,
+        "fatGrams": 56,
+        "fatPercent": 25,
+        "trackingType": "noTracking",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 202784,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      1,
+      1,
+      1,
+      1,
+      4
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 180.6,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 5,
+    "workoutsTotal": 1401,
+    "cardioTotal": 220,
+    "photosTotal": 7,
+    "messageTotal": 1,
+    "lastPhotoID": 10452160,
+    "lastWeight": 180.6,
+    "lastFat": null,
+    "lastWeightDate": "2022-01-21",
+    "lastMessageDate": "2026-02-12 14:07:28",
+    "latestResponseDate": "2024-12-27 17:11:16",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Cari's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2019-04-21",
+        "endDate": "2026-03-29",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35865724,
+      "type": "regular",
+      "name": "March 2026",
+      "startDate": "2026-03-02",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-03-29"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6120795,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1700,
+        "carbsGrams": 128,
+        "carbsPercent": 30,
+        "proteinGrams": 170,
+        "proteinPercent": 40,
+        "fatGrams": 57,
+        "fatPercent": 30,
+        "trackingType": "noTracking",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 2750863,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 4,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 127.5,
+            "proteinGrams": 170,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 3,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 75,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 127.5,
+            "proteinGrams": 170,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 3,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 75,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 127.5,
+            "proteinGrams": 170,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 3,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 75,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 127.5,
+            "proteinGrams": 170,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 75,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      2,
+      2,
+      1,
+      3
+    ],
+    "cardioByWeek": [
+      5,
+      6,
+      6,
+      4
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      6,
+      11
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 136,
+        "fat": 17.6,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 14,
+    "workoutsTotal": 1563,
+    "cardioTotal": 1005,
+    "photosTotal": 6,
+    "messageTotal": 2,
+    "lastPhotoID": 4878714,
+    "lastWeight": 136,
+    "lastFat": null,
+    "lastWeightDate": "2024-05-27",
+    "lastMessageDate": "2025-11-27 15:38:02",
+    "latestResponseDate": "2025-11-29 14:12:48",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 162657209,
+        "id": 3601331,
+        "name": "LL BodyREcomp March26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-03-09",
+        "endDate": "2026-05-03",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Amanda's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": "2021-06-06",
+        "endDate": "2024-10-27",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      },
+      {
+        "userProgramID": 37198203,
+        "id": 2815442,
+        "name": "LL HOME Summer Prep",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": "2024-04-01",
+        "endDate": "2024-05-26",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 3601331,
+      "name": "LL BodyREcomp March26",
+      "startDate": "2026-03-09",
+      "endDate": "2026-05-03"
+    },
+    "trainingPlan": {
+      "id": 28905697,
+      "type": "regular",
+      "name": "Week 1 - 2",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": {
+      "id": 28905698,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-23",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-04-05"
+    },
+    "mealPlan": {
+      "id": 5353626,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1400,
+        "carbsGrams": 140,
+        "carbsPercent": 40,
+        "proteinGrams": 105,
+        "proteinPercent": 30,
+        "fatGrams": 47,
+        "fatPercent": 30,
+        "trackingType": "trackWithFitbit",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 6577853,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 5,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 71,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 5,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 7,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 2,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 25,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 5,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 2,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 25,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 6,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 1,
+        "workoutScheduled": 1,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 6,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 1,
+        "workoutCompliance": 33,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 4,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      2,
+      4,
+      0,
+      4
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      3,
+      2,
+      0,
+      1,
+      5
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 115.4,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 6,
+    "workoutsTotal": 1230,
+    "cardioTotal": 282,
+    "photosTotal": 10,
+    "messageTotal": 1,
+    "lastPhotoID": 5201243,
+    "lastWeight": 115.4,
+    "lastFat": null,
+    "lastWeightDate": "2019-12-16",
+    "lastMessageDate": "2025-07-20 22:29:28",
+    "latestResponseDate": "2025-07-24 02:50:38",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Cassie's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2019-07-07",
+        "endDate": "2026-04-05",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35964861,
+      "type": "regular",
+      "name": "March 2026",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-04-05"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6413217,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1700,
+        "carbsGrams": 170,
+        "carbsPercent": 40,
+        "proteinGrams": 128,
+        "proteinPercent": 30,
+        "fatGrams": 57,
+        "fatPercent": 30,
+        "trackingType": "noTracking",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 2961557,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 4,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 80,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 2,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 40,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 3,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 60,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 7,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 4,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 80,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      1,
+      4,
+      2,
+      2
+    ],
+    "cardioByWeek": [
+      2,
+      1,
+      1,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      8,
+      6,
+      0
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 166.2,
+        "fat": 23.6,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-21",
+        "weight": 166.2,
+        "fat": 23.6,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-22",
+        "weight": 165.6,
+        "fat": 23.6,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-29",
+        "weight": 165,
+        "fat": 23.4,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-30",
+        "weight": 165.6,
+        "fat": 23.6,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-02",
+        "weight": 164.4,
+        "fat": 23.4,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-03",
+        "weight": 164.4,
+        "fat": 23.4,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-04",
+        "weight": 164.8,
+        "fat": 23.4,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-05",
+        "weight": 164,
+        "fat": 23.3,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-10",
+        "weight": 162.8,
+        "fat": 23.1,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-12",
+        "weight": 162.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-13",
+        "weight": 162.2,
+        "fat": 23,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-15",
+        "weight": 161.2,
+        "fat": 22.9,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-19",
+        "weight": 163.8,
+        "fat": 23.3,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-24",
+        "weight": 160.8,
+        "fat": 22.8,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-25",
+        "weight": 160,
+        "fat": 22.6,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-02",
+        "weight": 0,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-15",
+        "weight": 0,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 3,
+    "workoutsTotal": 851,
+    "cardioTotal": 328,
+    "photosTotal": 32,
+    "messageTotal": 1,
+    "lastPhotoID": 73786831,
+    "lastWeight": 160,
+    "lastFat": 22.6,
+    "lastWeightDate": "2026-02-25",
+    "lastMessageDate": "2025-09-01 02:50:59",
+    "latestResponseDate": "2025-09-01 02:56:59",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Gia's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2020-06-20",
+        "endDate": "2026-03-22",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35988858,
+      "type": "regular",
+      "name": "Week 7 - 8",
+      "startDate": "2026-03-02",
+      "durationType": "specificDate",
+      "duration": null,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 5344437,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1500,
+        "carbsGrams": 113,
+        "carbsPercent": 30,
+        "proteinGrams": 150,
+        "proteinPercent": 40,
+        "fatGrams": 50,
+        "fatPercent": 30,
+        "trackingType": "trackWithFitbit",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 1458147,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 33,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 1,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 11,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 2,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 7,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 4,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 57,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 2,
+        "workoutScheduled": 2,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 2,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 25,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      2,
+      5,
+      0,
+      5
+    ],
+    "cardioByWeek": [
+      0,
+      4,
+      1,
+      3
+    ],
+    "scheduledByWeek": [
+      4,
+      1,
+      9,
+      1,
+      9
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 309.5,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-20",
+        "weight": 309.7,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-21",
+        "weight": 306.6,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-22",
+        "weight": 308.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-14",
+        "weight": 316.1,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-10",
+        "weight": 317.6,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-11",
+        "weight": 317.2,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 9,
+    "workoutsTotal": 78,
+    "cardioTotal": 40,
+    "photosTotal": 3,
+    "messageTotal": 1,
+    "lastPhotoID": 74329499,
+    "lastWeight": 317.2,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-11",
+    "lastMessageDate": "2026-02-02 17:14:37",
+    "latestResponseDate": "2025-09-20 16:40:09",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Brandon's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2025-09-22",
+        "endDate": "2026-03-28",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35865474,
+      "type": "regular",
+      "name": "March 2026",
+      "startDate": "2026-03-01",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-03-28"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6628963,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1900,
+        "carbsGrams": 190,
+        "carbsPercent": 40,
+        "proteinGrams": 143,
+        "proteinPercent": 30,
+        "fatGrams": 63,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 7747976,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 6,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 50,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 190,
+            "proteinGrams": 142.5,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 2,
+        "workoutScheduled": 6,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 33,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 190,
+            "proteinGrams": 142.5,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 5,
+        "workoutScheduled": 6,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 83,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 4,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 190,
+            "proteinGrams": 142.5,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 4,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 190,
+            "proteinGrams": 142.5,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 5,
+        "workoutScheduled": 5,
+        "cardioCompleted": 3,
+        "cardioScheduled": 4,
+        "workoutCompliance": 88,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 3,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 4,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      5,
+      5,
+      4,
+      1
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 145,
+        "fat": 24,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 0,
+    "workoutsTotal": 1368,
+    "cardioTotal": 542,
+    "photosTotal": 48,
+    "messageTotal": 1,
+    "lastPhotoID": 48258542,
+    "lastWeight": 145,
+    "lastFat": 24,
+    "lastWeightDate": "2024-02-05",
+    "lastMessageDate": "2025-11-11 16:38:14",
+    "latestResponseDate": "2025-11-11 16:49:59",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Vanessa's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2020-06-21",
+        "endDate": "2024-07-28",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 24920196,
+      "type": "regular",
+      "name": "TOXIC",
+      "startDate": "2024-07-01",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2024-07-28"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6113692,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1500,
+        "carbsGrams": 113,
+        "carbsPercent": 30,
+        "proteinGrams": 150,
+        "proteinPercent": 40,
+        "fatGrams": 50,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 1391107,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 5,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 55,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 5,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 55,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 4,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 57,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 9,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 5,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 13,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 1,
+        "workoutScheduled": 1,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      5,
+      5,
+      5,
+      1,
+      0
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 140,
+        "fat": 25,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 0,
+    "workoutsTotal": 479,
+    "cardioTotal": 33,
+    "photosTotal": 3,
+    "messageTotal": 1,
+    "lastPhotoID": 4749188,
+    "lastWeight": 140,
+    "lastFat": null,
+    "lastWeightDate": "2021-04-26",
+    "lastMessageDate": "2025-08-19 01:40:43",
+    "latestResponseDate": "2025-08-19 19:14:59",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Kimberly's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2019-09-07",
+        "endDate": "2026-03-08",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35505520,
+      "type": "regular",
+      "name": "Feb 2026",
+      "startDate": "2026-02-09",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-03-08"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 5047559,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1600,
+        "carbsGrams": 160,
+        "carbsPercent": 40,
+        "proteinGrams": 120,
+        "proteinPercent": 30,
+        "fatGrams": 53,
+        "fatPercent": 30,
+        "trackingType": "noTracking",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 2145789,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 1,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1600,
+            "carbsGrams": 160,
+            "proteinGrams": 120,
+            "fatGrams": 53.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 1,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1600,
+            "carbsGrams": 160,
+            "proteinGrams": 120,
+            "fatGrams": 53.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1600,
+            "carbsGrams": 160,
+            "proteinGrams": 120,
+            "fatGrams": 53.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1600,
+            "carbsGrams": 160,
+            "proteinGrams": 120,
+            "fatGrams": 53.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 1,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      6,
+      3,
+      4,
+      1
+    ],
+    "cardioByWeek": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      3,
+      4
+    ],
+    "nutritionByWeek": [
+      3,
+      3
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 200.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-24",
+        "weight": 198,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-25",
+        "weight": 199.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-26",
+        "weight": 199.6,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-27",
+        "weight": 198.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-28",
+        "weight": 198.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-29",
+        "weight": 197.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-01-31",
+        "weight": 194.6,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-01",
+        "weight": 196,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-04",
+        "weight": 195.6,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-07",
+        "weight": 194.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-11",
+        "weight": 195.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-12",
+        "weight": 194.6,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-13",
+        "weight": 193.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-14",
+        "weight": 193.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-15",
+        "weight": 193,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-16",
+        "weight": 192,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-17",
+        "weight": 194.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-21",
+        "weight": 192.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-22",
+        "weight": 191.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-23",
+        "weight": 192.6,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-27",
+        "weight": 190.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-01",
+        "weight": 190,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-02",
+        "weight": 190.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-03",
+        "weight": 190.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-05",
+        "weight": 189.2,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-07",
+        "weight": 190.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-08",
+        "weight": 188,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-09",
+        "weight": 188.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-11",
+        "weight": 188,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-12",
+        "weight": 188.2,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 6,
+    "workoutsTotal": 40,
+    "cardioTotal": 15,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 188.2,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-12",
+    "lastMessageDate": "2026-01-11 16:04:29",
+    "latestResponseDate": null,
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Jeff's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2025-12-28",
+        "endDate": "2026-04-05",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35989317,
+      "type": "regular",
+      "name": "Custom M3",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-04-05"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6539924,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 2000,
+        "carbsGrams": 200,
+        "carbsPercent": 40,
+        "proteinGrams": 150,
+        "proteinPercent": 30,
+        "fatGrams": 67,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 8005845,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 3,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 5,
+        "nutritionCompliance": 71,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 13,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 6,
+        "workoutScheduled": 6,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 5,
+        "nutritionCompliance": 71,
+        "clientWorkoutCompleted": 6,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 9,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 3,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 75,
+        "nutritionCompleted": 3,
+        "nutritionCompliance": 42,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 9,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 3,
+        "workoutScheduled": 3,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 3,
+        "nutritionCompliance": 42,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 12,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 1,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 25,
+        "nutritionCompleted": 3,
+        "nutritionCompliance": 42,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 4,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      9,
+      9,
+      7,
+      7,
+      8
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 226,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 10,
+    "workoutsTotal": 0,
+    "cardioTotal": 0,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 226,
+    "lastFat": null,
+    "lastWeightDate": "2026-01-19",
+    "lastMessageDate": null,
+    "latestResponseDate": null,
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 161510630,
+        "id": 4758266,
+        "name": "LL JAN-FEB 26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-02-02",
+        "endDate": "2026-03-29",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Candice's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 4758266,
+      "name": "LL JAN-FEB 26",
+      "startDate": "2026-02-02",
+      "endDate": "2026-03-29"
+    },
+    "trainingPlan": {
+      "id": 34719370,
+      "type": "regular",
+      "name": "Week 5 - 6",
+      "startDate": "2026-03-02",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-15"
+    },
+    "nextTrainingPlan": {
+      "id": 34719371,
+      "type": "regular",
+      "name": "Week 7 - 8",
+      "startDate": "2026-03-16",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-29"
+    },
+    "mealPlan": {
+      "id": 6487698,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 2000,
+        "carbsGrams": 200,
+        "carbsPercent": 40,
+        "proteinGrams": 150,
+        "proteinPercent": 30,
+        "fatGrams": 67,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 8173205,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 2000,
+            "carbsGrams": 200,
+            "proteinGrams": 150,
+            "fatGrams": 66.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      9,
+      9,
+      7,
+      7,
+      8
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 168,
+        "fat": null,
+        "isProjected": true
+      },
+      {
+        "date": "2026-01-20",
+        "weight": 168,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 10,
+    "workoutsTotal": 0,
+    "cardioTotal": 0,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 168,
+    "lastFat": null,
+    "lastWeightDate": "2026-01-20",
+    "lastMessageDate": null,
+    "latestResponseDate": null,
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 161510593,
+        "id": 4758266,
+        "name": "LL JAN-FEB 26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-02-02",
+        "endDate": "2026-03-29",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Christina's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 4758266,
+      "name": "LL JAN-FEB 26",
+      "startDate": "2026-02-02",
+      "endDate": "2026-03-29"
+    },
+    "trainingPlan": {
+      "id": 34719370,
+      "type": "regular",
+      "name": "Week 5 - 6",
+      "startDate": "2026-03-02",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-15"
+    },
+    "nextTrainingPlan": {
+      "id": 34719371,
+      "type": "regular",
+      "name": "Week 7 - 8",
+      "startDate": "2026-03-16",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-29"
+    },
+    "mealPlan": {
+      "id": 6487699,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1700,
+        "carbsGrams": 170,
+        "carbsPercent": 40,
+        "proteinGrams": 128,
+        "proteinPercent": 30,
+        "fatGrams": 57,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 8173206,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      9,
+      7,
+      7,
+      8,
+      8
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 162,
+        "fat": null,
+        "isProjected": true
+      },
+      {
+        "date": "2026-01-25",
+        "weight": 162,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 10,
+    "workoutsTotal": 0,
+    "cardioTotal": 0,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 162,
+    "lastFat": null,
+    "lastWeightDate": "2026-01-25",
+    "lastMessageDate": "2026-02-07 15:05:25",
+    "latestResponseDate": null,
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 161173641,
+        "id": 4758266,
+        "name": "LL JAN-FEB 26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-01-26",
+        "endDate": "2026-03-22",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Britni's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 4758266,
+      "name": "LL JAN-FEB 26",
+      "startDate": "2026-01-26",
+      "endDate": "2026-03-22"
+    },
+    "trainingPlan": {
+      "id": 34719371,
+      "type": "regular",
+      "name": "Week 7 - 8",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": null,
+    "goal": {
+      "weight": null,
+      "nutrition": null
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": null
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": null
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": null
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": null
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      9,
+      7,
+      7,
+      8,
+      8
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 165,
+        "fat": null,
+        "isProjected": true
+      },
+      {
+        "date": "2026-01-25",
+        "weight": 165,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 10,
+    "workoutsTotal": 0,
+    "cardioTotal": 4,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 165,
+    "lastFat": null,
+    "lastWeightDate": "2026-01-25",
+    "lastMessageDate": "2026-02-07 16:04:52",
+    "latestResponseDate": "2026-01-27 16:21:49",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 161216320,
+        "id": 4758266,
+        "name": "LL JAN-FEB 26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-01-26",
+        "endDate": "2026-03-22",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Courtney's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 4758266,
+      "name": "LL JAN-FEB 26",
+      "startDate": "2026-01-26",
+      "endDate": "2026-03-22"
+    },
+    "trainingPlan": {
+      "id": 34719371,
+      "type": "regular",
+      "name": "Week 7 - 8",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6504870,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1500,
+        "carbsGrams": 113,
+        "carbsPercent": 30,
+        "proteinGrams": 150,
+        "proteinPercent": 40,
+        "fatGrams": 50,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 8191453,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 9,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      9,
+      11
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 183,
+        "fat": null,
+        "isProjected": true
+      },
+      {
+        "date": "2026-03-05",
+        "weight": 183,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 14,
+    "workoutsTotal": 0,
+    "cardioTotal": 0,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 183,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-05",
+    "lastMessageDate": "2026-03-11 16:24:49",
+    "latestResponseDate": "2026-03-11 17:06:32",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 162657225,
+        "id": 3601331,
+        "name": "LL BodyREcomp March26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-03-09",
+        "endDate": "2026-05-03",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Alyssa's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 3601331,
+      "name": "LL BodyREcomp March26",
+      "startDate": "2026-03-09",
+      "endDate": "2026-05-03"
+    },
+    "trainingPlan": {
+      "id": 28905697,
+      "type": "regular",
+      "name": "Week 1 - 2",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": {
+      "id": 28905698,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-23",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-04-05"
+    },
+    "mealPlan": {
+      "id": 6644580,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1800,
+        "carbsGrams": 135,
+        "carbsPercent": 30,
+        "proteinGrams": 180,
+        "proteinPercent": 40,
+        "fatGrams": 60,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 8336163,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1800,
+            "carbsGrams": 135,
+            "proteinGrams": 180,
+            "fatGrams": 60,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 1,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      5,
+      5
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 285,
+        "fat": null,
+        "isProjected": true
+      },
+      {
+        "date": "2026-03-07",
+        "weight": 285,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 6,
+    "workoutsTotal": 0,
+    "cardioTotal": 0,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 285,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-07",
+    "lastMessageDate": "2026-03-07 20:00:41",
+    "latestResponseDate": null,
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 162696606,
+        "id": 198469,
+        "name": "Lean & Mean I",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-03-09",
+        "endDate": "2026-05-03",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Miguel's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": null,
+        "endDate": null,
+        "isEmpty": true,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 198469,
+      "name": "Lean & Mean I",
+      "startDate": "2026-03-09",
+      "endDate": "2026-05-03"
+    },
+    "trainingPlan": {
+      "id": 3540867,
+      "type": "regular",
+      "name": "Week 1 - 2",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": {
+      "id": 3540868,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-23",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-04-05"
+    },
+    "mealPlan": {
+      "id": 6651092,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 2200,
+        "carbsGrams": 220,
+        "carbsPercent": 40,
+        "proteinGrams": 165,
+        "proteinPercent": 30,
+        "fatGrams": 73,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 8342972,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": null
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 1,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      1,
+      5,
+      3
+    ],
+    "cardioByWeek": [
+      0,
+      2,
+      9,
+      2
+    ],
+    "scheduledByWeek": [
+      5,
+      0,
+      0,
+      2,
+      5
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 149.42,
+        "fat": 37.4,
+        "isProjected": true
+      },
+      {
+        "date": "2026-01-20",
+        "weight": 149.4,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-06",
+        "weight": 148.8,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-02-10",
+        "weight": 147,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-04",
+        "weight": 147,
+        "fat": null,
+        "isProjected": false
+      },
+      {
+        "date": "2026-03-08",
+        "weight": 145,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 6,
+    "workoutsTotal": 787,
+    "cardioTotal": 598,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 145,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-08",
+    "lastMessageDate": "2025-07-27 16:59:58",
+    "latestResponseDate": "2025-07-28 21:20:20",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Courtney's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2021-12-28",
+        "endDate": "2026-03-29",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35736793,
+      "type": "regular",
+      "name": "M3 2026",
+      "startDate": "2026-03-02",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-03-29"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6604285,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1700,
+        "carbsGrams": 170,
+        "carbsPercent": 40,
+        "proteinGrams": 128,
+        "proteinPercent": 30,
+        "fatGrams": 57,
+        "fatPercent": 30,
+        "trackingType": "noTracking",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 4769018,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 4,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 80,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 7,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 2,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 5,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 100,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 8,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 7,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1700,
+            "carbsGrams": 170,
+            "proteinGrams": 127.5,
+            "fatGrams": 56.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 60,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 2,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      3,
+      1,
+      0,
+      0
+    ],
+    "cardioByWeek": [
+      2,
+      1,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      9,
+      11
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 123,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 14,
+    "workoutsTotal": 672,
+    "cardioTotal": 281,
+    "photosTotal": 51,
+    "messageTotal": 1,
+    "lastPhotoID": 57675844,
+    "lastWeight": 123,
+    "lastFat": null,
+    "lastWeightDate": "2026-01-05",
+    "lastMessageDate": "2026-03-09 19:30:12",
+    "latestResponseDate": "2026-03-09 19:44:26",
+    "mfpConnected": true,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 162712411,
+        "id": 3601331,
+        "name": "LL BodyREcomp March26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-03-09",
+        "endDate": "2026-05-03",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Courtney's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": "2022-06-19",
+        "endDate": "2024-03-03",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 3601331,
+      "name": "LL BodyREcomp March26",
+      "startDate": "2026-03-09",
+      "endDate": "2026-05-03"
+    },
+    "trainingPlan": {
+      "id": 28905697,
+      "type": "regular",
+      "name": "Week 1 - 2",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": {
+      "id": 28905698,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-23",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-04-05"
+    },
+    "mealPlan": {
+      "id": 6232153,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1400,
+        "carbsGrams": 140,
+        "carbsPercent": 40,
+        "proteinGrams": 105,
+        "proteinPercent": 30,
+        "fatGrams": 47,
+        "fatPercent": 30,
+        "trackingType": "noTracking",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 2879401,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 42,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 3,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 3,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 37,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 2,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 1,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 12,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 1,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1400,
+            "carbsGrams": 140,
+            "proteinGrams": 105,
+            "fatGrams": 46.67,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 1,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 3,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      5,
+      5,
+      0,
+      3
+    ],
+    "cardioByWeek": [
+      2,
+      2,
+      7,
+      1
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      0,
+      6,
+      11
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 150,
+        "fat": null,
+        "isProjected": true
+      }
+    ],
+    "workoutsUpcomingScheduled": 13,
+    "workoutsTotal": 672,
+    "cardioTotal": 254,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 150,
+    "lastFat": null,
+    "lastWeightDate": "2025-03-22",
+    "lastMessageDate": "2025-05-25 14:08:39",
+    "latestResponseDate": "2024-05-25 12:27:40",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": 162657372,
+        "id": 3601331,
+        "name": "LL BodyREcomp March26",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2026-03-09",
+        "endDate": "2026-05-03",
+        "isEmpty": false,
+        "accessLevel": "mine",
+        "userGroup": null
+      },
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Liz's program",
+        "durationType": "phased",
+        "subscribeType": "addon",
+        "startDate": "2022-06-05",
+        "endDate": "2024-05-26",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": {
+      "id": 3601331,
+      "name": "LL BodyREcomp March26",
+      "startDate": "2026-03-09",
+      "endDate": "2026-05-03"
+    },
+    "trainingPlan": {
+      "id": 28905697,
+      "type": "regular",
+      "name": "Week 1 - 2",
+      "startDate": "2026-03-09",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": {
+      "id": 28905698,
+      "type": "regular",
+      "name": "Week 3 - 4",
+      "startDate": "2026-03-23",
+      "durationType": "week",
+      "duration": 2,
+      "endDate": "2026-04-05"
+    },
+    "mealPlan": {
+      "id": 6413322,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1500,
+        "carbsGrams": 113,
+        "carbsPercent": 30,
+        "proteinGrams": 150,
+        "proteinPercent": 40,
+        "fatGrams": 50,
+        "fatPercent": 30,
+        "trackingType": "noTracking",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 4304062,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 5,
+        "workoutScheduled": 7,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 71,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 2,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 5,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 62,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 6,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 5,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 62,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 5,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 5,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 4,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1500,
+            "carbsGrams": 112.5,
+            "proteinGrams": 150,
+            "fatGrams": 50,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 3,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 1,
+        "workoutCompliance": 33,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 3,
+        "clientCardioCompleted": 1,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 8,
+        "cardioCompleted": 0,
+        "cardioScheduled": 3,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  },
+  {
+    "workoutsByWeek": [
+      0,
+      4,
+      2,
+      2
+    ],
+    "cardioByWeek": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "scheduledByWeek": [
+      0,
+      0,
+      4,
+      3,
+      5
+    ],
+    "nutritionByWeek": [
+      0,
+      0
+    ],
+    "bodystats": [
+      {
+        "date": "2026-01-19",
+        "weight": 166.3,
+        "fat": null,
+        "isProjected": true
+      },
+      {
+        "date": "2026-03-04",
+        "weight": 167.8,
+        "fat": null,
+        "isProjected": false
+      }
+    ],
+    "workoutsUpcomingScheduled": 6,
+    "workoutsTotal": 528,
+    "cardioTotal": 21,
+    "photosTotal": 0,
+    "messageTotal": 1,
+    "lastPhotoID": null,
+    "lastWeight": 167.8,
+    "lastFat": null,
+    "lastWeightDate": "2026-03-04",
+    "lastMessageDate": "2024-12-06 20:48:51",
+    "latestResponseDate": "2024-11-03 18:27:08",
+    "mfpConnected": false,
+    "fitbitConnected": false,
+    "lastFMS": null,
+    "programs": [
+      {
+        "userProgramID": null,
+        "id": 0,
+        "name": "Autumn's program",
+        "durationType": "phased",
+        "subscribeType": "core",
+        "startDate": "2022-09-07",
+        "endDate": "2026-03-22",
+        "isEmpty": false,
+        "accessLevel": "custom",
+        "userGroup": null
+      }
+    ],
+    "program": null,
+    "trainingPlan": {
+      "id": 35736718,
+      "type": "regular",
+      "name": "Back on Track 2026",
+      "startDate": "2026-02-23",
+      "durationType": "week",
+      "duration": 4,
+      "endDate": "2026-03-22"
+    },
+    "nextTrainingPlan": null,
+    "mealPlan": {
+      "id": 6604260,
+      "name": "AutoGen Meal Plan",
+      "type": "planner",
+      "status": "published"
+    },
+    "goal": {
+      "weight": null,
+      "nutrition": {
+        "caloricGoal": 1900,
+        "carbsGrams": 143,
+        "carbsPercent": 30,
+        "proteinGrams": 190,
+        "proteinPercent": 40,
+        "fatGrams": 63,
+        "fatPercent": 30,
+        "trackingType": "trackWithTZ",
+        "nutritionDeviation": 20,
+        "from": "tr",
+        "id": 3604692,
+        "type": "nutritionGoal",
+        "progress": null,
+        "achieved": null
+      }
+    },
+    "weeklyStats": [
+      {
+        "week": -4,
+        "startDate": "2026-02-09",
+        "endDate": "2026-02-15",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 142.5,
+            "proteinGrams": 190,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -3,
+        "startDate": "2026-02-16",
+        "endDate": "2026-02-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 0,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": null,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 142.5,
+            "proteinGrams": 190,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -2,
+        "startDate": "2026-02-23",
+        "endDate": "2026-03-01",
+        "workoutCompleted": 4,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 80,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 4,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 8,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 142.5,
+            "proteinGrams": 190,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": -1,
+        "startDate": "2026-03-02",
+        "endDate": "2026-03-08",
+        "workoutCompleted": 2,
+        "workoutScheduled": 6,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 33,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 4,
+        "goal": {
+          "nutrition": {
+            "caloricGoal": 1900,
+            "carbsGrams": 142.5,
+            "proteinGrams": 190,
+            "fatGrams": 63.33,
+            "deviation": 20
+          }
+        }
+      },
+      {
+        "week": 0,
+        "startDate": "2026-03-09",
+        "endDate": "2026-03-15",
+        "workoutCompleted": 2,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 40,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": 0,
+        "clientWorkoutCompleted": 2,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 2,
+        "goal": null
+      },
+      {
+        "week": 1,
+        "startDate": "2026-03-16",
+        "endDate": "2026-03-22",
+        "workoutCompleted": 0,
+        "workoutScheduled": 5,
+        "cardioCompleted": 0,
+        "cardioScheduled": 0,
+        "workoutCompliance": 0,
+        "nutritionCompleted": 0,
+        "nutritionCompliance": null,
+        "clientWorkoutCompleted": 0,
+        "clientCardioCompleted": 0,
+        "habitsCompleted": 0,
+        "habitsMissed": 0,
+        "habitsCompliance": null,
+        "numberOfSignIn": 0,
+        "goal": null
+      }
+    ],
+    "currentSubscription": null,
+    "nextSubscription": null,
+    "defaultCard": null
+  }
+]

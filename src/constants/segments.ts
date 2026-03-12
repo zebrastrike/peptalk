@@ -98,7 +98,7 @@ export const DASHBOARD_SEGMENTS: DashboardSegment[] = [
   },
 
   // ── FEMALE 30-44: "HOME & HEALTH" ────────────────────────────────────────
-  // White picket fence. SBB branding. Science for the women who hold it all together.
+  // White picket fence. Science for the women who hold it all together.
   {
     id: 'female-30-44',
     gender: 'Female',

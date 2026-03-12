@@ -1,19 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find:*)",
-      "Bash(ls:*)",
-      "Bash(head:*)",
-      "Bash(npx tsc:*)",
-      "WebFetch(domain:openclaw.ai)",
-      "WebFetch(domain:docs.x.ai)",
-      "Bash(node -e:*)",
-      "Bash(npm install:*)",
-      "Bash(npx ts-node:*)",
-      "Bash(grep:*)",
-      "Bash(du:*)",
-      "Bash(wc:*)",
-      "Bash(git config:*)"
+      "Bash(npx tsc --noEmit)",
+      "Bash(python3 -c \":*)",
+      "Bash(/c/Python314/python -c \":*)",
+      "Bash(/c/Python314/python -m pip install openpyxl)",
+      "Bash(/c/Python314/python:*)",
+      "Bash(PYTHONIOENCODING=utf-8 /c/Python314/python -c \":*)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(npx expo install expo-haptics)",
+      "Bash(npm install expo-haptics --legacy-peer-deps)",
+      "Bash(wc -l src/data/*.ts)"
     ]
   }
 }

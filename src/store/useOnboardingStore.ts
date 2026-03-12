@@ -4,6 +4,7 @@ import {
   AgeRange,
   Ethnicity,
   Gender,
+  GoalType,
   MaritalStatus,
   OnboardingProfile,
   PeptideCategory,
@@ -20,6 +21,8 @@ interface OnboardingStore {
   setEthnicity: (ethnicity: Ethnicity) => void;
   setMaritalStatus: (status: MaritalStatus) => void;
   setReferralSource: (source: ReferralSource) => void;
+  setHealthGoals: (goals: GoalType[]) => void;
+  toggleHealthGoal: (goal: GoalType) => void;
   setInterestCategories: (categories: PeptideCategory[]) => void;
   toggleInterestCategory: (category: PeptideCategory) => void;
   setAcceptedSafety: (accepted: boolean) => void;
@@ -34,6 +37,7 @@ const emptyProfile: OnboardingProfile = {
   ethnicity: null,
   maritalStatus: null,
   referralSource: null,
+  healthGoals: [],
   interestCategories: [],
   acceptedSafety: false,
   dataShareConsent: false,
@@ -56,6 +60,17 @@ export const useOnboardingStore = create<OnboardingStore>()(
         set((state) => ({ profile: { ...state.profile, maritalStatus } })),
       setReferralSource: (referralSource) =>
         set((state) => ({ profile: { ...state.profile, referralSource } })),
+      setHealthGoals: (healthGoals) =>
+        set((state) => ({ profile: { ...state.profile, healthGoals } })),
+      toggleHealthGoal: (goal) => {
+        const { profile } = get();
+        const next = profile.healthGoals.includes(goal)
+          ? profile.healthGoals.filter((g) => g !== goal)
+          : [...profile.healthGoals, goal];
+        set((state) => ({
+          profile: { ...state.profile, healthGoals: next },
+        }));
+      },
       setInterestCategories: (interestCategories) =>
         set((state) => ({
           profile: { ...state.profile, interestCategories },
@@ -88,9 +103,10 @@ export const useOnboardingStore = create<OnboardingStore>()(
         const safeProfile = {
           ...emptyProfile,
           ...state?.profile,
+          healthGoals: state?.profile?.healthGoals ?? [],
           interestCategories: state?.profile?.interestCategories ?? [],
         };
-        set({
+        useOnboardingStore.setState({
           profile: safeProfile,
           isComplete: state?.isComplete ?? false,
           hasHydrated: true,

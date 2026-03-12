@@ -1,0 +1,133 @@
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { secureStorage } from '../services/secureStorage';
+import { NotificationPreferences } from '../types';
+
+// ─── Store Interface ─────────────────────────────────────────────────────────
+
+interface NotificationStore {
+  preferences: NotificationPreferences;
+  pushToken: string | null;
+  setEnabled: (enabled: boolean) => void;
+  setDailyCheckInReminder: (enabled: boolean) => void;
+  setCheckInReminderTime: (time: string) => void;
+  setDoseReminders: (enabled: boolean) => void;
+  setWeeklyReport: (enabled: boolean) => void;
+  setPushToken: (token: string) => void;
+  setWorkoutReminderEnabled: (enabled: boolean) => void;
+  setWorkoutReminder: (time: string, days: number[]) => void;
+  setWorkoutReminderTime: (time: string) => void;
+  setMealRemindersEnabled: (enabled: boolean) => void;
+  setMealReminderTime: (meal: string, time: string) => void;
+  toggleWeeklyReport: () => void;
+}
+
+// ─── Default Preferences ─────────────────────────────────────────────────────
+
+const DEFAULT_PREFERENCES: NotificationPreferences = {
+  enabled: true,
+  dailyCheckInReminder: true,
+  checkInReminderTime: '09:00',
+  doseReminders: true,
+  weeklyReport: false,
+  workoutReminderEnabled: false,
+  workoutReminderTime: '08:00',
+  workoutReminderDays: [2, 4, 6], // Mon, Wed, Fri
+  mealRemindersEnabled: false,
+  mealReminderTimes: { breakfast: '07:00', lunch: '12:00', dinner: '18:00' },
+  weeklyReportEnabled: false,
+};
+
+// ─── Store ───────────────────────────────────────────────────────────────────
+
+export const useNotificationStore = create<NotificationStore>()(
+  persist(
+    (set) => ({
+      // ── Initial State ──────────────────────────────────────────────────────
+      preferences: { ...DEFAULT_PREFERENCES },
+      pushToken: null,
+
+      // ── Actions ────────────────────────────────────────────────────────────
+
+      setEnabled: (enabled: boolean) =>
+        set((state) => ({
+          preferences: { ...state.preferences, enabled },
+        })),
+
+      setDailyCheckInReminder: (enabled: boolean) =>
+        set((state) => ({
+          preferences: { ...state.preferences, dailyCheckInReminder: enabled },
+        })),
+
+      setCheckInReminderTime: (time: string) =>
+        set((state) => ({
+          preferences: { ...state.preferences, checkInReminderTime: time },
+        })),
+
+      setDoseReminders: (enabled: boolean) =>
+        set((state) => ({
+          preferences: { ...state.preferences, doseReminders: enabled },
+        })),
+
+      setWeeklyReport: (enabled: boolean) =>
+        set((state) => ({
+          preferences: { ...state.preferences, weeklyReport: enabled },
+        })),
+
+      setPushToken: (token: string) =>
+        set({ pushToken: token }),
+
+      setWorkoutReminderEnabled: (enabled: boolean) =>
+        set((state) => ({
+          preferences: { ...state.preferences, workoutReminderEnabled: enabled },
+        })),
+
+      setWorkoutReminder: (time: string, days: number[]) =>
+        set((state) => ({
+          preferences: { ...state.preferences, workoutReminderTime: time, workoutReminderDays: days },
+        })),
+
+      setWorkoutReminderTime: (time: string) =>
+        set((state) => ({
+          preferences: { ...state.preferences, workoutReminderTime: time },
+        })),
+
+      setMealRemindersEnabled: (enabled: boolean) =>
+        set((state) => ({
+          preferences: { ...state.preferences, mealRemindersEnabled: enabled },
+        })),
+
+      setMealReminderTime: (meal: string, time: string) =>
+        set((state) => ({
+          preferences: {
+            ...state.preferences,
+            mealReminderTimes: { ...state.preferences.mealReminderTimes, [meal]: time },
+          },
+        })),
+
+      toggleWeeklyReport: () =>
+        set((state) => ({
+          preferences: {
+            ...state.preferences,
+            weeklyReportEnabled: !state.preferences.weeklyReportEnabled,
+          },
+        })),
+    }),
+    {
+      name: 'peptalk-notifications',
+      storage: createJSONStorage(() => secureStorage),
+      partialize: (state) => ({
+        preferences: state.preferences,
+        pushToken: state.pushToken,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        // Ensure all preference keys exist after rehydration (handles
+        // migrations when new fields are added in future updates).
+        useNotificationStore.setState({
+          preferences: { ...DEFAULT_PREFERENCES, ...state.preferences },
+        });
+      },
+    },
+  ),
+);

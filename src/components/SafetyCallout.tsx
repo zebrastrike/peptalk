@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '../constants/theme';
 
 interface SafetyCalloutProps {
   title?: string;
@@ -8,13 +9,13 @@ interface SafetyCalloutProps {
 }
 
 export const SafetyCallout: React.FC<SafetyCalloutProps> = ({
-  title = 'Research-Only Guidance',
-  subtitle = 'Buy clean, US-made research chemicals with real COAs. Know your source.',
+  title = 'Educational Companion',
+  subtitle = 'PepTalk provides educational information only. Always consult your healthcare provider for medical decisions.',
 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <Ionicons name="shield-checkmark-outline" size={18} color="#0f1720" />
+        <Ionicons name="shield-checkmark-outline" size={18} color="#fff" />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.title}>{title}</Text>
@@ -29,10 +30,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
-    backgroundColor: 'rgba(240, 214, 138, 0.12)',
+    backgroundColor: Colors.glassBlue,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(240, 214, 138, 0.35)',
+    borderColor: Colors.glassBlueBorder,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f0d68a',
+    backgroundColor: Colors.pepBlue,
   },
   textContainer: {
     flex: 1,

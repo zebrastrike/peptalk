@@ -1,36 +1,80 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
   ScrollView,
   Modal,
   TextInput,
   StyleSheet,
   SafeAreaView,
   Alert,
-  Platform,
+  Animated,
+  Dimensions,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useDoseLogStore } from '../../src/store/useDoseLogStore';
 import { useCheckinStore } from '../../src/store/useCheckinStore';
-import { getPeptideById, PEPTIDES } from '../../src/data/peptides';
-import { getProtocolsByPeptide } from '../../src/data/protocols';
+import { useJournalStore } from '../../src/store/useJournalStore';
+import { useWorkoutStore } from '../../src/store/useWorkoutStore';
+import { GlassCard } from '../../src/components/GlassCard';
+import { GradientButton } from '../../src/components/GradientButton';
+import { DOSE_LOG_GATE_DISCLAIMER } from '../../src/constants/legal';
 import {
   DoseLogEntry,
   DoseUnit,
   AdministrationRoute,
   ActiveProtocol,
   HealthAlert,
+  JournalCategory,
 } from '../../src/types';
 import {
   Colors,
   FontSizes,
   Spacing,
   BorderRadius,
+  Gradients,
 } from '../../src/constants/theme';
+
+// ---------------------------------------------------------------------------
+// Dosing tips — contextual timing/protocol reminders after logging
+// ---------------------------------------------------------------------------
+
+const DOSING_TIPS: Record<string, string> = {
+  'bpc-157': 'BPC-157 works best on an empty stomach. Allow 20-30 min before eating.',
+  'bpc 157': 'BPC-157 works best on an empty stomach. Allow 20-30 min before eating.',
+  'tb-500': 'TB-500 can be taken any time. Many users dose before bed to support overnight repair.',
+  'tb500': 'TB-500 can be taken any time. Many users dose before bed to support overnight repair.',
+  'ipamorelin': 'GH peptides like Ipamorelin work best fasted. Avoid eating 30 min before and after.',
+  'cjc-1295': 'CJC-1295 + Ipamorelin combo is best taken before bed, fasted, to maximize GH pulse.',
+  'cjc 1295': 'CJC-1295 + Ipamorelin combo is best taken before bed, fasted, to maximize GH pulse.',
+  'sermorelin': 'Sermorelin is best dosed before bed on an empty stomach for peak GH release.',
+  'mk-677': 'MK-677 can cause hunger — many take it before bed. Stay hydrated throughout the day.',
+  'mk677': 'MK-677 can cause hunger — many take it before bed. Stay hydrated throughout the day.',
+  'semaglutide': 'Semaglutide is typically dosed once weekly. Note any GI side effects in your check-in.',
+  'tirzepatide': 'Tirzepatide is dosed once weekly. Start low and titrate. Log side effects carefully.',
+  'pt-141': 'PT-141 takes 2-4 hours to take effect. Plan accordingly and note response.',
+  'pt141': 'PT-141 takes 2-4 hours to take effect. Plan accordingly and note response.',
+  'ghk-cu': 'GHK-Cu is great for skin/hair. Track visual changes in your journal over weeks.',
+  'thymosin alpha': 'Thymosin Alpha-1 boosts immune function. Best taken subcutaneously.',
+  'mots-c': 'MOTS-c supports metabolic function. Track energy and workout performance.',
+  'ss-31': 'SS-31 supports mitochondrial health. Note energy levels in check-ins.',
+  'nad+': 'NAD+ is best administered in a fasted state for optimal absorption.',
+  'epithalon': 'Epithalon is typically run in 10-20 day cycles. Track sleep quality changes.',
+};
+
+function getDosingTip(substanceName: string): string | null {
+  const lower = substanceName.toLowerCase().trim();
+  // Direct match
+  if (DOSING_TIPS[lower]) return DOSING_TIPS[lower];
+  // Partial match
+  for (const [key, tip] of Object.entries(DOSING_TIPS)) {
+    if (lower.includes(key) || key.includes(lower)) return tip;
+  }
+  return null;
+}
 
 // ---------------------------------------------------------------------------
 // Date helpers
@@ -83,6 +127,111 @@ const ROUTES: AdministrationRoute[] = [
 
 const UNITS: DoseUnit[] = ['mcg', 'mg', 'IU', 'ml'];
 
+const JOURNAL_CATEGORY_COLORS: Record<JournalCategory, string> = {
+  protocol_notes: '#3b82f6',
+  side_effects: '#ef4444',
+  mood: '#10b981',
+  progress: '#8b5cf6',
+  research: '#06b6d4',
+  questions: '#f59e0b',
+  goals: '#ec4899',
+  general: '#6b7280',
+};
+
+const JOURNAL_CATEGORY_LABELS: Record<JournalCategory, string> = {
+  protocol_notes: 'Protocol Notes',
+  side_effects: 'Side Effects',
+  mood: 'Mood',
+  progress: 'Progress',
+  research: 'Research',
+  questions: 'Questions',
+  goals: 'Goals',
+  general: 'General',
+};
+
+const ratingLabel = (v: number): string => {
+  switch (v) {
+    case 1: return 'Very Low';
+    case 2: return 'Low';
+    case 3: return 'Moderate';
+    case 4: return 'Good';
+    case 5: return 'Excellent';
+    default: return `${v}/5`;
+  }
+};
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const DAY_CELL_SIZE = (SCREEN_WIDTH - Spacing.md * 4) / 7;
+
+// ---------------------------------------------------------------------------
+// Animated Day Detail Panel
+// ---------------------------------------------------------------------------
+function DayDetailPanel({ children, selectedDate }: { children: React.ReactNode; selectedDate: string }) {
+  const anim = useRef(new Animated.Value(0)).current;
+  const prevDate = useRef(selectedDate);
+
+  useEffect(() => {
+    if (prevDate.current !== selectedDate) {
+      anim.setValue(0);
+      Animated.timing(anim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+      prevDate.current = selectedDate;
+    } else {
+      anim.setValue(1);
+    }
+  }, [selectedDate]);
+
+  return (
+    <Animated.View
+      style={{
+        opacity: anim,
+        transform: [
+          {
+            translateY: anim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [12, 0],
+            }),
+          },
+        ],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Today Glow Cell
+// ---------------------------------------------------------------------------
+function TodayGlow() {
+  const glow = useRef(new Animated.Value(0.4)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glow, { toValue: 1, duration: 1500, useNativeDriver: true }),
+        Animated.timing(glow, { toValue: 0.4, duration: 1500, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
+
+  return (
+    <Animated.View
+      style={[
+        StyleSheet.absoluteFillObject,
+        {
+          borderRadius: BorderRadius.md,
+          backgroundColor: 'rgba(227, 167, 161, 0.15)',
+          opacity: glow,
+        },
+      ]}
+    />
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -95,14 +244,13 @@ export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState(toDateKey(now));
   const [showLogModal, setShowLogModal] = useState(false);
 
-  // Log form state
-  const [logPeptideId, setLogPeptideId] = useState('');
+  // Log form state -- free-text substance name for plausible deniability
+  const [logSubstanceName, setLogSubstanceName] = useState('');
   const [logAmount, setLogAmount] = useState('');
   const [logUnit, setLogUnit] = useState<DoseUnit>('mcg');
   const [logRoute, setLogRoute] = useState<AdministrationRoute>('subcutaneous');
   const [logSite, setLogSite] = useState('');
   const [logNotes, setLogNotes] = useState('');
-  const [showPeptidePicker, setShowPeptidePicker] = useState(false);
 
   const {
     doses,
@@ -114,19 +262,48 @@ export default function CalendarScreen() {
     getDosesByDate,
     getActiveProtocols,
     getDatesWithDoses,
+    hasAcceptedDoseDisclaimer,
+    acceptDoseDisclaimer,
   } = useDoseLogStore();
 
   const checkins = useCheckinStore((s) => s.entries);
+  const journalEntries = useJournalStore((s) => s.entries);
+  const getJournalByDate = useJournalStore((s) => s.getEntriesByDate);
+  const workoutLogs = useWorkoutStore((s) => s.logs);
+  const getWorkoutLogsByDate = useWorkoutStore((s) => s.getLogsByDate);
 
   const datesWithDoses = useMemo(() => getDatesWithDoses(), [doses]);
   const checkinDates = useMemo(
     () => new Set(checkins.map((c) => c.date)),
     [checkins]
   );
+  const journalDates = useMemo(
+    () => new Set(journalEntries.map((j) => j.date)),
+    [journalEntries]
+  );
+  const workoutDates = useMemo(
+    () => new Set(workoutLogs.map((l) => l.date)),
+    [workoutLogs]
+  );
 
   const selectedDayDoses = useMemo(
     () => getDosesByDate(selectedDate),
     [selectedDate, doses]
+  );
+
+  const selectedDayCheckin = useMemo(
+    () => checkins.find((c) => c.date === selectedDate) ?? null,
+    [selectedDate, checkins]
+  );
+
+  const selectedDayJournal = useMemo(
+    () => getJournalByDate(selectedDate),
+    [selectedDate, journalEntries]
+  );
+
+  const selectedDayWorkouts = useMemo(
+    () => getWorkoutLogsByDate(selectedDate),
+    [selectedDate, workoutLogs]
   );
 
   const activeProtocols = useMemo(() => getActiveProtocols(), [protocols]);
@@ -159,20 +336,20 @@ export default function CalendarScreen() {
     }
   };
 
-  const handleLogDose = () => {
-    if (!logPeptideId || !logAmount) {
-      Alert.alert('Missing Info', 'Select a peptide and enter an amount.');
+  const handleLogEntry = () => {
+    if (!logSubstanceName.trim() || !logAmount) {
+      Alert.alert('Missing Info', 'Enter a substance name and amount.');
       return;
     }
 
     const amount = parseFloat(logAmount);
     if (isNaN(amount) || amount <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid dose amount.');
+      Alert.alert('Invalid Amount', 'Please enter a valid amount.');
       return;
     }
 
     logDose({
-      peptideId: logPeptideId,
+      peptideId: logSubstanceName.trim(),
       amount,
       unit: logUnit,
       route: logRoute,
@@ -181,12 +358,28 @@ export default function CalendarScreen() {
       notes: logNotes || undefined,
     });
 
+    // Protocol-specific timing tip after logging
+    const name = logSubstanceName.trim().toLowerCase();
+    const timingTip = getDosingTip(name);
+
     // Reset form
-    setLogPeptideId('');
+    setLogSubstanceName('');
     setLogAmount('');
     setLogSite('');
     setLogNotes('');
     setShowLogModal(false);
+
+    if (timingTip) {
+      Alert.alert('Dose Logged ✓', timingTip, [
+        { text: 'Got It' },
+        { text: 'Check In', onPress: () => router.push('/(tabs)/check-in') },
+      ]);
+    } else {
+      Alert.alert('Dose Logged', 'Entry saved. Track how you feel with a check-in.', [
+        { text: 'OK' },
+        { text: 'Check In', onPress: () => router.push('/(tabs)/check-in') },
+      ]);
+    }
   };
 
   const alertLevelColor = (level: HealthAlert['level']) => {
@@ -198,13 +391,50 @@ export default function CalendarScreen() {
     }
   };
 
+  const hasAnyEvents =
+    selectedDayDoses.length > 0 ||
+    selectedDayCheckin !== null ||
+    selectedDayJournal.length > 0 ||
+    selectedDayWorkouts.length > 0;
+
+  // -- Dose Disclaimer Gate
+  if (!hasAcceptedDoseDisclaimer) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.disclaimerGate}>
+          <Ionicons name="journal-outline" size={48} color={Colors.pepBlue} />
+          <Text style={styles.disclaimerGateTitle}>Wellness Journal</Text>
+          <Text style={styles.disclaimerGateSubtitle}>
+            Before you begin, please read and acknowledge the following:
+          </Text>
+          <GlassCard variant="glow" glowColor={Colors.pepBlue}>
+            <Text style={styles.disclaimerGateText}>
+              {DOSE_LOG_GATE_DISCLAIMER}
+            </Text>
+          </GlassCard>
+          <GradientButton
+            label="I Understand & Accept"
+            onPress={acceptDoseDisclaimer}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>My Calendar</Text>
-          <Text style={styles.headerSub}>Dose tracking & protocols</Text>
+          <View style={styles.headerRow}>
+            <View>
+              <Text style={styles.headerTitle}>My Calendar</Text>
+              <Text style={styles.headerSub}>Wellness journal & personal tracking</Text>
+            </View>
+            <View style={styles.headerIconWrap}>
+              <Ionicons name="calendar" size={22} color={Colors.rose} />
+            </View>
+          </View>
         </View>
 
         {/* Health Alerts */}
@@ -232,25 +462,39 @@ export default function CalendarScreen() {
         )}
 
         {/* Calendar Grid */}
-        <View style={styles.calendarCard}>
+        <GlassCard variant="elevated" style={styles.calendarCard}>
+          {/* Month Navigation */}
           <View style={styles.calendarNav}>
-            <TouchableOpacity onPress={prevMonth} style={styles.navBtn}>
-              <Ionicons name="chevron-back" size={20} color={Colors.darkText} />
+            <TouchableOpacity onPress={prevMonth} style={styles.navBtn} activeOpacity={0.7}>
+              <LinearGradient
+                colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)']}
+                style={styles.navBtnGradient}
+              >
+                <Ionicons name="chevron-back" size={18} color={Colors.darkText} />
+              </LinearGradient>
             </TouchableOpacity>
-            <Text style={styles.calendarMonth}>
-              {MONTHS[viewMonth]} {viewYear}
-            </Text>
-            <TouchableOpacity onPress={nextMonth} style={styles.navBtn}>
-              <Ionicons name="chevron-forward" size={20} color={Colors.darkText} />
+            <View style={styles.monthYearWrap}>
+              <Text style={styles.calendarMonth}>{MONTHS[viewMonth]}</Text>
+              <Text style={styles.calendarYear}>{viewYear}</Text>
+            </View>
+            <TouchableOpacity onPress={nextMonth} style={styles.navBtn} activeOpacity={0.7}>
+              <LinearGradient
+                colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)']}
+                style={styles.navBtnGradient}
+              >
+                <Ionicons name="chevron-forward" size={18} color={Colors.darkText} />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
 
+          {/* Day of week headers */}
           <View style={styles.dowRow}>
             {DOW.map((d) => (
               <Text key={d} style={styles.dowText}>{d}</Text>
             ))}
           </View>
 
+          {/* Day grid */}
           <View style={styles.daysGrid}>
             {monthDays.map((date, idx) => {
               const key = toDateKey(date);
@@ -259,149 +503,480 @@ export default function CalendarScreen() {
               const isSelected = key === selectedDate;
               const hasDose = datesWithDoses.has(key);
               const hasCheckin = checkinDates.has(key);
+              const hasJournal = journalDates.has(key);
+              const hasWorkout = workoutDates.has(key);
 
               return (
                 <TouchableOpacity
                   key={idx}
-                  style={[
-                    styles.dayCell,
-                    isSelected && styles.dayCellSelected,
-                    isToday && !isSelected && styles.dayCellToday,
-                  ]}
+                  style={styles.dayCell}
                   onPress={() => setSelectedDate(key)}
+                  activeOpacity={0.7}
                 >
-                  <Text
-                    style={[
-                      styles.dayText,
-                      !isCurrentMonth && styles.dayTextMuted,
-                      isSelected && styles.dayTextSelected,
-                    ]}
-                  >
-                    {date.getDate()}
-                  </Text>
+                  {/* Today pulsing glow */}
+                  {isToday && !isSelected && <TodayGlow />}
+
+                  {/* Selected gradient ring */}
+                  {isSelected && (
+                    <LinearGradient
+                      colors={[Colors.rose, '#c98a84']}
+                      style={styles.selectedRing}
+                    >
+                      <View style={styles.selectedInner}>
+                        <Text style={styles.dayTextSelected}>
+                          {date.getDate()}
+                        </Text>
+                      </View>
+                    </LinearGradient>
+                  )}
+
+                  {/* Today (not selected) ring */}
+                  {isToday && !isSelected && (
+                    <View style={styles.todayRing}>
+                      <Text style={styles.dayTextToday}>
+                        {date.getDate()}
+                      </Text>
+                    </View>
+                  )}
+
+                  {/* Normal day text */}
+                  {!isSelected && !isToday && (
+                    <Text
+                      style={[
+                        styles.dayText,
+                        !isCurrentMonth && styles.dayTextMuted,
+                      ]}
+                    >
+                      {date.getDate()}
+                    </Text>
+                  )}
+
+                  {/* Dot indicators */}
                   <View style={styles.dotRow}>
                     {hasDose && <View style={[styles.dot, styles.dotDose]} />}
                     {hasCheckin && <View style={[styles.dot, styles.dotCheckin]} />}
+                    {hasJournal && <View style={[styles.dot, styles.dotJournal]} />}
+                    {hasWorkout && <View style={[styles.dot, styles.dotWorkout]} />}
                   </View>
                 </TouchableOpacity>
               );
             })}
           </View>
 
+          {/* Legend */}
           <View style={styles.legend}>
             <View style={styles.legendItem}>
-              <View style={[styles.dot, styles.dotDose]} />
-              <Text style={styles.legendText}>Dose logged</Text>
+              <View style={[styles.legendDot, styles.dotDose]} />
+              <Text style={styles.legendText}>Doses</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.dot, styles.dotCheckin]} />
+              <View style={[styles.legendDot, styles.dotCheckin]} />
               <Text style={styles.legendText}>Check-in</Text>
             </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, styles.dotJournal]} />
+              <Text style={styles.legendText}>Journal</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, styles.dotWorkout]} />
+              <Text style={styles.legendText}>Workout</Text>
+            </View>
           </View>
-        </View>
+        </GlassCard>
 
-        {/* Selected Day Detail */}
-        <View style={styles.dayDetail}>
-          <View style={styles.dayDetailHeader}>
-            <Text style={styles.dayDetailTitle}>
-              {new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </Text>
-            <TouchableOpacity
-              style={styles.logDoseBtn}
-              onPress={() => setShowLogModal(true)}
-            >
-              <Ionicons name="add" size={18} color={Colors.darkBg} />
-              <Text style={styles.logDoseBtnText}>Log Dose</Text>
-            </TouchableOpacity>
-          </View>
-
-          {selectedDayDoses.length === 0 ? (
-            <Text style={styles.noDoses}>No doses logged for this day.</Text>
-          ) : (
-            selectedDayDoses.map((dose) => {
-              const peptide = getPeptideById(dose.peptideId);
-              return (
-                <View key={dose.id} style={styles.doseCard}>
-                  <View style={styles.doseCardLeft}>
-                    <Text style={styles.dosePeptideName}>
-                      {peptide?.name || dose.peptideId}
-                    </Text>
-                    <Text style={styles.doseInfo}>
-                      {dose.amount} {dose.unit} · {dose.route}
-                      {dose.injectionSite ? ` · ${dose.injectionSite}` : ''}
-                    </Text>
-                    <Text style={styles.doseTime}>{dose.time}</Text>
-                    {dose.notes && (
-                      <Text style={styles.doseNotes}>{dose.notes}</Text>
-                    )}
-                  </View>
-                  <TouchableOpacity
-                    onPress={() =>
-                      Alert.alert('Delete Dose', 'Remove this dose log?', [
-                        { text: 'Cancel', style: 'cancel' },
-                        {
-                          text: 'Delete',
-                          style: 'destructive',
-                          onPress: () => deleteDose(dose.id),
-                        },
-                      ])
-                    }
-                  >
-                    <Ionicons name="trash-outline" size={18} color={Colors.darkTextSecondary} />
-                  </TouchableOpacity>
+        {/* Selected Day Detail -- Unified Timeline */}
+        <DayDetailPanel selectedDate={selectedDate}>
+          <View style={styles.dayDetail}>
+            <View style={styles.dayDetailHeader}>
+              <Text style={styles.dayDetailTitle}>
+                {new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </Text>
+              {hasAnyEvents && (
+                <View style={styles.eventCountBadge}>
+                  <Text style={styles.eventCountText}>
+                    {selectedDayDoses.length +
+                      (selectedDayCheckin ? 1 : 0) +
+                      selectedDayJournal.length +
+                      selectedDayWorkouts.length}
+                  </Text>
                 </View>
-              );
-            })
-          )}
-        </View>
+              )}
+            </View>
 
-        {/* Active Protocols */}
+            {/* Empty state */}
+            {!hasAnyEvents && (
+              <GlassCard style={styles.emptyStateCard}>
+                <View style={styles.emptyStateInner}>
+                  <View style={styles.emptyIconWrap}>
+                    <Ionicons name="calendar-outline" size={36} color={Colors.darkTextSecondary} />
+                  </View>
+                  <Text style={styles.emptyStateTitle}>No events yet</Text>
+                  <Text style={styles.emptyStateText}>
+                    Tap a quick-add button below to log your first entry for this day.
+                  </Text>
+                </View>
+              </GlassCard>
+            )}
+
+            {/* -- Check-in Summary */}
+            {selectedDayCheckin && (
+              <GlassCard variant="glow" glowColor={Colors.powder} style={styles.eventCard}>
+                <View style={styles.eventCardHeader}>
+                  <View style={[styles.eventIconWrap, { backgroundColor: 'rgba(199, 215, 230, 0.15)' }]}>
+                    <Ionicons name="heart-circle" size={20} color={Colors.powder} />
+                  </View>
+                  <View style={styles.eventCardHeaderText}>
+                    <Text style={styles.eventCardTitle}>Check-in</Text>
+                    <Text style={styles.eventCardTime}>Daily wellness check</Text>
+                  </View>
+                </View>
+                <View style={styles.checkinBadgeRow}>
+                  <LinearGradient
+                    colors={['rgba(199, 215, 230, 0.15)', 'rgba(199, 215, 230, 0.05)']}
+                    style={styles.checkinBadge}
+                  >
+                    <Text style={styles.checkinBadgeLabel}>Mood</Text>
+                    <Text style={styles.checkinBadgeValue}>{ratingLabel(selectedDayCheckin.mood)}</Text>
+                  </LinearGradient>
+                  <LinearGradient
+                    colors={['rgba(199, 215, 230, 0.15)', 'rgba(199, 215, 230, 0.05)']}
+                    style={styles.checkinBadge}
+                  >
+                    <Text style={styles.checkinBadgeLabel}>Energy</Text>
+                    <Text style={styles.checkinBadgeValue}>{ratingLabel(selectedDayCheckin.energy)}</Text>
+                  </LinearGradient>
+                  <LinearGradient
+                    colors={['rgba(199, 215, 230, 0.15)', 'rgba(199, 215, 230, 0.05)']}
+                    style={styles.checkinBadge}
+                  >
+                    <Text style={styles.checkinBadgeLabel}>Sleep</Text>
+                    <Text style={styles.checkinBadgeValue}>{ratingLabel(selectedDayCheckin.sleepQuality)}</Text>
+                  </LinearGradient>
+                </View>
+                {selectedDayCheckin.emotionTags && selectedDayCheckin.emotionTags.length > 0 && (
+                  <View style={styles.emotionTagRow}>
+                    {selectedDayCheckin.emotionTags.map((tag) => (
+                      <View key={tag} style={styles.emotionTag}>
+                        <Text style={styles.emotionTagText}>
+                          {tag.replace('_', ' ')}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+                {selectedDayCheckin.overallFeeling ? (
+                  <Text style={styles.checkinFeeling}>
+                    "{selectedDayCheckin.overallFeeling}"
+                  </Text>
+                ) : null}
+              </GlassCard>
+            )}
+
+            {/* -- Workout Logs */}
+            {selectedDayWorkouts.length > 0 && (
+              <View style={styles.timelineSection}>
+                {selectedDayWorkouts.map((wlog) => {
+                  const completedSets = wlog.sets.filter((s) => s.completed).length;
+                  return (
+                    <TouchableOpacity
+                      key={wlog.id}
+                      activeOpacity={0.8}
+                      onPress={() => router.push('/workouts/history')}
+                    >
+                      <GlassCard variant="glow" glowColor={Colors.pepTeal} style={styles.eventCard}>
+                        <View style={styles.eventCardHeader}>
+                          <View style={[styles.eventIconWrap, { backgroundColor: 'rgba(6, 182, 212, 0.15)' }]}>
+                            <Ionicons name="barbell" size={20} color={Colors.pepTeal} />
+                          </View>
+                          <View style={styles.eventCardHeaderText}>
+                            <Text style={styles.eventCardTitle}>
+                              {wlog.dayId
+                                ? `Week ${wlog.weekNumber} · ${wlog.dayId}`
+                                : 'Freestyle Workout'}
+                            </Text>
+                            <Text style={styles.eventCardTime}>Workout</Text>
+                          </View>
+                          <Ionicons name="chevron-forward" size={16} color={Colors.darkTextSecondary} />
+                        </View>
+                        <View style={styles.workoutMetaRow}>
+                          <View style={styles.workoutMetaItem}>
+                            <Ionicons name="time-outline" size={14} color={Colors.pepTeal} />
+                            <Text style={styles.workoutMetaText}>{wlog.durationMinutes} min</Text>
+                          </View>
+                          <View style={styles.workoutMetaItem}>
+                            <Ionicons name="checkmark-circle-outline" size={14} color={Colors.pepTeal} />
+                            <Text style={styles.workoutMetaText}>{completedSets} sets</Text>
+                          </View>
+                          {wlog.rating && (
+                            <View style={styles.workoutMetaItem}>
+                              <Ionicons name="star" size={14} color="#f59e0b" />
+                              <Text style={styles.workoutMetaText}>{wlog.rating}/5</Text>
+                            </View>
+                          )}
+                        </View>
+                      </GlassCard>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
+
+            {/* -- Supplement Entries */}
+            {selectedDayDoses.length > 0 && (
+              <View style={styles.timelineSection}>
+                {selectedDayDoses.map((dose) => {
+                  return (
+                    <GlassCard key={dose.id} variant="glow" glowColor={Colors.rose} style={styles.eventCard}>
+                      <View style={styles.eventCardHeader}>
+                        <View style={[styles.eventIconWrap, { backgroundColor: 'rgba(227, 167, 161, 0.15)' }]}>
+                          <Ionicons name="flask" size={20} color={Colors.rose} />
+                        </View>
+                        <View style={styles.eventCardHeaderText}>
+                          <Text style={styles.eventCardTitle}>
+                            {dose.peptideId}
+                          </Text>
+                          <Text style={styles.eventCardTime}>{dose.time}</Text>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() =>
+                            Alert.alert('Delete Entry', 'Remove this journal entry?', [
+                              { text: 'Cancel', style: 'cancel' },
+                              {
+                                text: 'Delete',
+                                style: 'destructive',
+                                onPress: () => deleteDose(dose.id),
+                              },
+                            ])
+                          }
+                          style={styles.deleteBtn}
+                        >
+                          <Ionicons name="trash-outline" size={16} color={Colors.darkTextSecondary} />
+                        </TouchableOpacity>
+                      </View>
+                      <Text style={styles.doseInfo}>
+                        {dose.amount} {dose.unit} · {dose.route}
+                        {dose.injectionSite ? ` · ${dose.injectionSite}` : ''}
+                      </Text>
+                      {dose.notes && (
+                        <Text style={styles.doseNotes}>{dose.notes}</Text>
+                      )}
+                    </GlassCard>
+                  );
+                })}
+              </View>
+            )}
+
+            {/* -- Journal Entries */}
+            {selectedDayJournal.length > 0 && (
+              <View style={styles.timelineSection}>
+                {selectedDayJournal.map((entry) => (
+                  <GlassCard key={entry.id} variant="glow" glowColor="#8b5cf6" style={styles.eventCard}>
+                    <View style={styles.eventCardHeader}>
+                      <View style={[styles.eventIconWrap, { backgroundColor: 'rgba(139, 92, 246, 0.15)' }]}>
+                        <Ionicons name="journal" size={20} color="#8b5cf6" />
+                      </View>
+                      <View style={styles.eventCardHeaderText}>
+                        <Text style={styles.eventCardTitle}>{entry.title}</Text>
+                        <Text style={styles.eventCardTime}>{entry.time}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.journalCardHeader}>
+                      <View
+                        style={[
+                          styles.journalCategoryBadge,
+                          { backgroundColor: `${JOURNAL_CATEGORY_COLORS[entry.category]}20` },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.journalCategoryText,
+                            { color: JOURNAL_CATEGORY_COLORS[entry.category] },
+                          ]}
+                        >
+                          {JOURNAL_CATEGORY_LABELS[entry.category]}
+                        </Text>
+                      </View>
+                    </View>
+                    {entry.content.length > 0 && (
+                      <Text style={styles.journalPreview} numberOfLines={2}>
+                        {entry.content}
+                      </Text>
+                    )}
+                    {entry.tags.length > 0 && (
+                      <View style={styles.journalTagRow}>
+                        {entry.tags.slice(0, 4).map((t) => (
+                          <View key={t} style={styles.journalTag}>
+                            <Text style={styles.journalTagText}>{t}</Text>
+                          </View>
+                        ))}
+                        {entry.tags.length > 4 && (
+                          <Text style={styles.journalTagMore}>+{entry.tags.length - 4}</Text>
+                        )}
+                      </View>
+                    )}
+                  </GlassCard>
+                ))}
+              </View>
+            )}
+
+            {/* -- Side Effects (from check-in) */}
+            {selectedDayCheckin?.sideEffectTags && selectedDayCheckin.sideEffectTags.length > 0 && (
+              <GlassCard variant="glow" glowColor={Colors.error} style={styles.eventCard}>
+                <View style={styles.eventCardHeader}>
+                  <View style={[styles.eventIconWrap, { backgroundColor: 'rgba(239, 68, 68, 0.15)' }]}>
+                    <Ionicons name="warning" size={20} color={Colors.error} />
+                  </View>
+                  <View style={styles.eventCardHeaderText}>
+                    <Text style={styles.eventCardTitle}>Side Effects</Text>
+                    <Text style={styles.eventCardTime}>Reported today</Text>
+                  </View>
+                </View>
+                <View style={styles.sideEffectRow}>
+                  {selectedDayCheckin.sideEffectTags.map((se) => (
+                    <View key={se} style={styles.sideEffectChip}>
+                      <Text style={styles.sideEffectChipText}>
+                        {se.replace(/_/g, ' ')}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </GlassCard>
+            )}
+
+            {/* -- Quick Add Buttons (Gradient Pills) */}
+            <View style={styles.quickAddRow}>
+              <TouchableOpacity
+                style={styles.quickAddBtn}
+                onPress={() => setShowLogModal(true)}
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={[Colors.rose, Colors.roseDark]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.quickAddGradient}
+                >
+                  <Ionicons name="flask-outline" size={16} color="#fff" />
+                  <Text style={styles.quickAddBtnText}>Add Entry</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.quickAddBtn}
+                onPress={() =>
+                  router.push({
+                    pathname: '/(tabs)/check-in',
+                    params: { date: selectedDate },
+                  } as any)
+                }
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={['#22c55e', '#16a34a']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.quickAddGradient}
+                >
+                  <Ionicons name="heart-circle-outline" size={16} color="#fff" />
+                  <Text style={styles.quickAddBtnText}>Check In</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.quickAddRow}>
+              <TouchableOpacity
+                style={styles.quickAddBtn}
+                onPress={() =>
+                  router.push({
+                    pathname: '/journal/new',
+                    params: { date: selectedDate },
+                  } as any)
+                }
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={['#8b5cf6', '#7c3aed']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.quickAddGradient}
+                >
+                  <Ionicons name="journal-outline" size={16} color="#fff" />
+                  <Text style={styles.quickAddBtnText}>Journal</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.quickAddBtn}
+                onPress={() => router.push('/workouts')}
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={[Colors.pepTeal, '#0891b2']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.quickAddGradient}
+                >
+                  <Ionicons name="barbell-outline" size={16} color="#fff" />
+                  <Text style={styles.quickAddBtnText}>Workout</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </DayDetailPanel>
+
+        {/* Personal Schedules */}
         <View style={styles.protocolSection}>
-          <Text style={styles.sectionTitle}>Active Protocols</Text>
+          <Text style={styles.sectionTitle}>My Schedules</Text>
           {activeProtocols.length === 0 ? (
-            <Text style={styles.noDoses}>
-              No active protocols. Start one from a peptide's detail page or the
-              PepTalk bot.
-            </Text>
+            <GlassCard style={styles.emptyProtocolCard}>
+              <Ionicons name="clipboard-outline" size={24} color={Colors.darkTextSecondary} />
+              <Text style={styles.noDoses}>
+                No active schedules. Create one to track your personal routine.
+              </Text>
+            </GlassCard>
           ) : (
             activeProtocols.map((proto) => {
-              const peptide = getPeptideById(proto.peptideId);
               return (
-                <View key={proto.id} style={styles.protocolCard}>
-                  <Text style={styles.protocolName}>
-                    {peptide?.name || proto.peptideId}
-                  </Text>
-                  <Text style={styles.protocolInfo}>
-                    {proto.dose} {proto.unit} · {proto.route} · {proto.frequency}
-                  </Text>
+                <GlassCard key={proto.id} style={styles.protocolCard}>
+                  <View style={styles.protocolHeader}>
+                    <View style={[styles.eventIconWrap, { backgroundColor: 'rgba(185, 203, 182, 0.15)' }]}>
+                      <Ionicons name="repeat" size={18} color={Colors.sage} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.protocolName}>
+                        {proto.peptideId}
+                      </Text>
+                      <Text style={styles.protocolInfo}>
+                        {proto.dose} {proto.unit} · {proto.route} · {proto.frequency}
+                      </Text>
+                    </View>
+                  </View>
                   <Text style={styles.protocolDates}>
                     Started {proto.startDate}
                     {proto.endDate ? ` · Ends ${proto.endDate}` : ''}
                   </Text>
-                </View>
+                </GlassCard>
               );
             })
           )}
         </View>
 
-        {/* Medical disclaimer */}
+        {/* Journal disclaimer */}
         <View style={styles.disclaimerBox}>
-          <Ionicons name="medkit" size={16} color={Colors.warning} />
+          <Ionicons name="shield-checkmark" size={16} color={Colors.pepBlue} />
           <Text style={styles.disclaimerText}>
-            If your logged effects indicate concerning symptoms, please consult
-            your healthcare provider. PepTalk data can help guide your
-            conversation with your doctor.
+            This is your personal wellness journal. Entries are private and
+            stored only on your device. PepTalk does not recommend, prescribe,
+            or endorse any substances. Consult your healthcare provider for
+            medical decisions.
           </Text>
         </View>
 
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* ── Log Dose Modal ──────────────────────────────────────────────── */}
+      {/* -- Add Entry Modal */}
       <Modal
         visible={showLogModal}
         animationType="slide"
@@ -411,9 +986,9 @@ export default function CalendarScreen() {
         <SafeAreaView style={styles.modalSafe}>
           <ScrollView contentContainerStyle={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Log Dose</Text>
-              <TouchableOpacity onPress={() => setShowLogModal(false)}>
-                <Ionicons name="close" size={24} color={Colors.darkText} />
+              <Text style={styles.modalTitle}>Add Entry</Text>
+              <TouchableOpacity onPress={() => setShowLogModal(false)} style={styles.modalCloseBtn}>
+                <Ionicons name="close" size={22} color={Colors.darkText} />
               </TouchableOpacity>
             </View>
 
@@ -425,27 +1000,19 @@ export default function CalendarScreen() {
               })}
             </Text>
 
-            {/* Peptide selector */}
-            <Text style={styles.fieldLabel}>Peptide</Text>
-            <TouchableOpacity
-              style={styles.pickerBtn}
-              onPress={() => setShowPeptidePicker(true)}
-            >
-              <Text
-                style={[
-                  styles.pickerBtnText,
-                  !logPeptideId && { color: Colors.darkTextSecondary },
-                ]}
-              >
-                {logPeptideId
-                  ? getPeptideById(logPeptideId)?.name || logPeptideId
-                  : 'Select peptide...'}
-              </Text>
-              <Ionicons name="chevron-down" size={18} color={Colors.darkTextSecondary} />
-            </TouchableOpacity>
+            {/* Substance / supplement -- free text */}
+            <Text style={styles.fieldLabel}>Substance / Supplement</Text>
+            <TextInput
+              style={styles.textInput}
+              value={logSubstanceName}
+              onChangeText={setLogSubstanceName}
+              placeholder="Type what you took..."
+              placeholderTextColor={Colors.darkTextSecondary}
+              autoCapitalize="words"
+            />
 
             {/* Amount + Unit */}
-            <Text style={styles.fieldLabel}>Amount</Text>
+            <Text style={styles.fieldLabel}>Amount Noted</Text>
             <View style={styles.amountRow}>
               <TextInput
                 style={[styles.textInput, { flex: 1 }]}
@@ -465,14 +1032,16 @@ export default function CalendarScreen() {
                     ]}
                     onPress={() => setLogUnit(u)}
                   >
-                    <Text
-                      style={[
-                        styles.unitChipText,
-                        logUnit === u && styles.unitChipTextActive,
-                      ]}
-                    >
-                      {u}
-                    </Text>
+                    {logUnit === u ? (
+                      <LinearGradient
+                        colors={[Colors.rose, Colors.roseDark]}
+                        style={styles.unitChipGradient}
+                      >
+                        <Text style={styles.unitChipTextActive}>{u}</Text>
+                      </LinearGradient>
+                    ) : (
+                      <Text style={styles.unitChipText}>{u}</Text>
+                    )}
                   </TouchableOpacity>
                 ))}
               </View>
@@ -523,86 +1092,27 @@ export default function CalendarScreen() {
               multiline
             />
 
-            {/* Protocol suggestion */}
-            {logPeptideId && (
-              <View style={styles.protoSuggest}>
-                {(() => {
-                  const protos = getProtocolsByPeptide(logPeptideId);
-                  if (protos.length === 0) return null;
-                  const proto = protos[0];
-                  return (
-                    <>
-                      <Text style={styles.protoSuggestTitle}>
-                        Research Protocol Reference
-                      </Text>
-                      <Text style={styles.protoSuggestInfo}>
-                        {proto.name}: {proto.typicalDose.min}-{proto.typicalDose.max}
-                        {proto.typicalDose.unit} · {proto.frequencyLabel}
-                      </Text>
-                      {proto.timing && (
-                        <Text style={styles.protoSuggestNote}>
-                          Timing: {proto.timing}
-                        </Text>
-                      )}
-                      <Text style={styles.protoSuggestDisclaimer}>
-                        Informational only — consult your provider
-                      </Text>
-                    </>
-                  );
-                })()}
-              </View>
-            )}
+            {/* Journal disclaimer in modal */}
+            <View style={styles.modalDisclaimer}>
+              <Ionicons name="shield-checkmark-outline" size={14} color={Colors.pepBlue} />
+              <Text style={styles.modalDisclaimerText}>
+                This is your personal record. PepTalk does not recommend or
+                endorse any substance.
+              </Text>
+            </View>
 
-            <TouchableOpacity style={styles.saveBtn} onPress={handleLogDose}>
-              <Text style={styles.saveBtnText}>Log Dose</Text>
+            <TouchableOpacity onPress={handleLogEntry} activeOpacity={0.8}>
+              <LinearGradient
+                colors={[Colors.rose, Colors.roseDark]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.saveBtn}
+              >
+                <Text style={styles.saveBtnText}>Save Entry</Text>
+              </LinearGradient>
             </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
-
-        {/* Peptide Picker Sub-Modal */}
-        <Modal
-          visible={showPeptidePicker}
-          animationType="slide"
-          presentationStyle="pageSheet"
-          onRequestClose={() => setShowPeptidePicker(false)}
-        >
-          <SafeAreaView style={styles.modalSafe}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Select Peptide</Text>
-              <TouchableOpacity onPress={() => setShowPeptidePicker(false)}>
-                <Ionicons name="close" size={24} color={Colors.darkText} />
-              </TouchableOpacity>
-            </View>
-            <FlatList
-              data={PEPTIDES}
-              keyExtractor={(item) => item.id}
-              contentContainerStyle={{ paddingHorizontal: Spacing.md }}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.peptidePickerItem,
-                    logPeptideId === item.id && styles.peptidePickerItemActive,
-                  ]}
-                  onPress={() => {
-                    setLogPeptideId(item.id);
-                    // Auto-set unit/route from protocol if available
-                    const protos = getProtocolsByPeptide(item.id);
-                    if (protos.length > 0) {
-                      setLogUnit(protos[0].typicalDose.unit);
-                      setLogRoute(protos[0].route);
-                    }
-                    setShowPeptidePicker(false);
-                  }}
-                >
-                  <Text style={styles.peptidePickerName}>{item.name}</Text>
-                  <Text style={styles.peptidePickerCats}>
-                    {item.categories.join(', ')}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
-          </SafeAreaView>
-        </Modal>
       </Modal>
     </SafeAreaView>
   );
@@ -614,9 +1124,19 @@ export default function CalendarScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.darkBg },
+
+  // Header
   header: { paddingHorizontal: Spacing.md, paddingTop: Spacing.md },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.darkText },
+  headerRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+  },
+  headerTitle: { fontSize: FontSizes.xxl, fontWeight: '800', color: Colors.darkText, letterSpacing: -0.5 },
   headerSub: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 2 },
+  headerIconWrap: {
+    width: 44, height: 44, borderRadius: 22,
+    backgroundColor: 'rgba(227, 167, 161, 0.12)',
+    alignItems: 'center', justifyContent: 'center',
+  },
 
   // Alerts
   alertSection: { paddingHorizontal: Spacing.md, marginTop: Spacing.md, gap: Spacing.sm },
@@ -629,91 +1149,258 @@ const styles = StyleSheet.create({
   alertMessage: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 6, lineHeight: 20 },
   alertAction: { fontSize: FontSizes.sm, color: Colors.rose, fontWeight: '600', marginTop: 8 },
 
-  // Calendar
+  // Calendar Card
   calendarCard: {
-    backgroundColor: Colors.darkCard, borderRadius: BorderRadius.lg,
-    margin: Spacing.md, padding: Spacing.md,
-    borderWidth: 1, borderColor: Colors.darkCardBorder,
+    margin: Spacing.md,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.sm,
   },
   calendarNav: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.md, paddingHorizontal: Spacing.sm,
   },
-  navBtn: { padding: Spacing.xs },
-  calendarMonth: { fontSize: FontSizes.lg, fontWeight: '700', color: Colors.darkText },
-  dowRow: { flexDirection: 'row', marginBottom: Spacing.xs },
+  navBtn: {},
+  navBtnGradient: {
+    width: 36, height: 36, borderRadius: 18,
+    alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
+  },
+  monthYearWrap: { alignItems: 'center' },
+  calendarMonth: {
+    fontSize: FontSizes.xl, fontWeight: '800', color: Colors.darkText, letterSpacing: -0.3,
+  },
+  calendarYear: {
+    fontSize: FontSizes.xs, fontWeight: '600', color: Colors.darkTextSecondary, marginTop: 1,
+  },
+
+  // Day of week
+  dowRow: { flexDirection: 'row', marginBottom: Spacing.xs, paddingHorizontal: 2 },
   dowText: {
     flex: 1, textAlign: 'center', fontSize: FontSizes.xs,
-    fontWeight: '600', color: Colors.darkTextSecondary,
+    fontWeight: '700', color: Colors.rose, textTransform: 'uppercase', letterSpacing: 0.5,
   },
-  daysGrid: { flexDirection: 'row', flexWrap: 'wrap' },
+
+  // Days grid
+  daysGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 2 },
   dayCell: {
     width: '14.28%', aspectRatio: 1, alignItems: 'center', justifyContent: 'center',
-    borderRadius: BorderRadius.sm,
+    borderRadius: BorderRadius.md, position: 'relative',
   },
-  dayCellSelected: { backgroundColor: Colors.rose },
-  dayCellToday: { borderWidth: 1, borderColor: Colors.rose },
+
+  // Selected day gradient ring
+  selectedRing: {
+    width: 38, height: 38, borderRadius: 19,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  selectedInner: {
+    width: 32, height: 32, borderRadius: 16,
+    backgroundColor: Colors.darkBg,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  dayTextSelected: { fontSize: FontSizes.sm, color: Colors.rose, fontWeight: '800' },
+
+  // Today ring
+  todayRing: {
+    width: 34, height: 34, borderRadius: 17,
+    borderWidth: 1.5, borderColor: 'rgba(227, 167, 161, 0.5)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  dayTextToday: { fontSize: FontSizes.sm, color: Colors.rose, fontWeight: '700' },
+
+  // Normal day
   dayText: { fontSize: FontSizes.sm, color: Colors.darkText, fontWeight: '500' },
-  dayTextMuted: { color: Colors.darkTextSecondary, opacity: 0.4 },
-  dayTextSelected: { color: Colors.darkBg, fontWeight: '700' },
-  dotRow: { flexDirection: 'row', gap: 3, marginTop: 2, height: 6 },
+  dayTextMuted: { color: Colors.darkTextSecondary, opacity: 0.35 },
+
+  // Dot indicators
+  dotRow: { flexDirection: 'row', gap: 3, marginTop: 2, height: 6, position: 'absolute', bottom: 4 },
   dot: { width: 5, height: 5, borderRadius: 2.5 },
-  dotDose: { backgroundColor: Colors.sage },
-  dotCheckin: { backgroundColor: Colors.powder },
+  dotDose: { backgroundColor: Colors.rose },
+  dotCheckin: { backgroundColor: '#22c55e' },
+  dotJournal: { backgroundColor: '#8b5cf6' },
+  dotWorkout: { backgroundColor: Colors.pepTeal },
+
+  // Legend
   legend: {
-    flexDirection: 'row', gap: Spacing.md, marginTop: Spacing.sm,
-    justifyContent: 'center',
+    flexDirection: 'row', gap: Spacing.md, marginTop: Spacing.md,
+    justifyContent: 'center', paddingTop: Spacing.sm,
+    borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.06)',
   },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  legendText: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  legendDot: { width: 7, height: 7, borderRadius: 3.5 },
+  legendText: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary, fontWeight: '500' },
 
   // Day detail
   dayDetail: { paddingHorizontal: Spacing.md, marginTop: Spacing.sm },
   dayDetailHeader: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.md,
   },
-  dayDetailTitle: { fontSize: FontSizes.lg, fontWeight: '700', color: Colors.darkText },
-  logDoseBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: Colors.rose, borderRadius: BorderRadius.full,
-    paddingVertical: 8, paddingHorizontal: 14,
+  dayDetailTitle: {
+    fontSize: FontSizes.lg, fontWeight: '800', color: Colors.darkText, letterSpacing: -0.3,
   },
-  logDoseBtnText: { fontSize: FontSizes.sm, fontWeight: '700', color: Colors.darkBg },
-  noDoses: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, fontStyle: 'italic' },
-  doseCard: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.darkCard,
-    borderRadius: BorderRadius.md, padding: Spacing.md, marginBottom: Spacing.sm,
-    borderWidth: 1, borderColor: Colors.darkCardBorder,
+  eventCountBadge: {
+    width: 28, height: 28, borderRadius: 14,
+    backgroundColor: 'rgba(227, 167, 161, 0.2)',
+    alignItems: 'center', justifyContent: 'center',
   },
-  doseCardLeft: { flex: 1 },
-  dosePeptideName: { fontSize: FontSizes.md, fontWeight: '600', color: Colors.darkText },
-  doseInfo: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 2 },
-  doseTime: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary, marginTop: 2 },
+  eventCountText: { fontSize: FontSizes.sm, fontWeight: '800', color: Colors.rose },
+
+  // Empty state
+  emptyStateCard: { paddingVertical: Spacing.xl },
+  emptyStateInner: { alignItems: 'center', gap: Spacing.sm },
+  emptyIconWrap: {
+    width: 64, height: 64, borderRadius: 32,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center', justifyContent: 'center', marginBottom: Spacing.xs,
+  },
+  emptyStateTitle: {
+    fontSize: FontSizes.lg, fontWeight: '700', color: Colors.darkText,
+  },
+  emptyStateText: {
+    fontSize: FontSizes.sm, color: Colors.darkTextSecondary, textAlign: 'center',
+    lineHeight: 20, paddingHorizontal: Spacing.lg,
+  },
+
+  // Event cards (glass cards in detail)
+  eventCard: { marginBottom: Spacing.sm },
+  eventCardHeader: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing.sm, marginBottom: Spacing.sm,
+  },
+  eventIconWrap: {
+    width: 36, height: 36, borderRadius: 12,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  eventCardHeaderText: { flex: 1 },
+  eventCardTitle: { fontSize: FontSizes.md, fontWeight: '700', color: Colors.darkText },
+  eventCardTime: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary, marginTop: 1 },
+
+  deleteBtn: {
+    width: 32, height: 32, borderRadius: 16,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+
+  // Dose info
+  doseInfo: {
+    fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 2,
+    paddingLeft: 48,
+  },
   doseNotes: {
     fontSize: FontSizes.xs, color: Colors.sage, fontStyle: 'italic', marginTop: 4,
+    paddingLeft: 48,
   },
+
+  // Timeline sections
+  timelineSection: { marginTop: Spacing.xs },
+
+  // Check-in summary
+  checkinBadgeRow: { flexDirection: 'row', gap: Spacing.sm, flexWrap: 'wrap' },
+  checkinBadge: {
+    borderRadius: BorderRadius.sm,
+    paddingVertical: 8, paddingHorizontal: 12, alignItems: 'center',
+    flex: 1, minWidth: 80,
+  },
+  checkinBadgeLabel: {
+    fontSize: FontSizes.xs, color: Colors.darkTextSecondary, fontWeight: '600',
+  },
+  checkinBadgeValue: {
+    fontSize: FontSizes.sm, color: Colors.powder, fontWeight: '800', marginTop: 2,
+  },
+  emotionTagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: Spacing.sm },
+  emotionTag: {
+    backgroundColor: 'rgba(199, 215, 230, 0.12)', borderRadius: BorderRadius.full,
+    paddingVertical: 4, paddingHorizontal: 10,
+    borderWidth: 1, borderColor: 'rgba(199, 215, 230, 0.2)',
+  },
+  emotionTagText: {
+    fontSize: FontSizes.xs, color: Colors.powder, fontWeight: '600', textTransform: 'capitalize',
+  },
+  checkinFeeling: {
+    fontSize: FontSizes.sm, color: Colors.darkTextSecondary, fontStyle: 'italic',
+    marginTop: Spacing.sm, lineHeight: 20,
+  },
+
+  // Workout meta
+  workoutMetaRow: {
+    flexDirection: 'row', gap: Spacing.md, marginTop: 2, paddingLeft: 48,
+  },
+  workoutMetaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  workoutMetaText: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary, fontWeight: '500' },
+
+  // Journal entries
+  journalCardHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginBottom: 6,
+  },
+  journalCategoryBadge: {
+    borderRadius: BorderRadius.full, paddingVertical: 3, paddingHorizontal: 10,
+  },
+  journalCategoryText: { fontSize: FontSizes.xs, fontWeight: '700' },
+  journalPreview: {
+    fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 4, lineHeight: 20,
+  },
+  journalTagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: Spacing.sm },
+  journalTag: {
+    backgroundColor: 'rgba(245, 158, 11, 0.12)', borderRadius: BorderRadius.full,
+    paddingVertical: 3, paddingHorizontal: 8,
+    borderWidth: 1, borderColor: 'rgba(245, 158, 11, 0.2)',
+  },
+  journalTagText: { fontSize: FontSizes.xs, color: '#f59e0b', fontWeight: '600' },
+  journalTagMore: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary, alignSelf: 'center' },
+
+  // Side effects
+  sideEffectRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: Spacing.xs },
+  sideEffectChip: {
+    backgroundColor: 'rgba(239, 68, 68, 0.15)', borderRadius: BorderRadius.full,
+    paddingVertical: 6, paddingHorizontal: 12,
+    borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.25)',
+  },
+  sideEffectChipText: {
+    fontSize: FontSizes.xs, color: Colors.error, fontWeight: '700', textTransform: 'capitalize',
+  },
+
+  // Quick add buttons
+  quickAddRow: {
+    flexDirection: 'row', gap: Spacing.sm, marginTop: Spacing.sm,
+  },
+  quickAddBtn: { flex: 1 },
+  quickAddGradient: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 6, borderRadius: BorderRadius.full,
+    paddingVertical: 12,
+  },
+  quickAddBtnText: { fontSize: FontSizes.sm, fontWeight: '700', color: '#fff' },
 
   // Protocols
   protocolSection: { paddingHorizontal: Spacing.md, marginTop: Spacing.lg },
-  sectionTitle: { fontSize: FontSizes.lg, fontWeight: '700', color: Colors.darkText, marginBottom: Spacing.sm },
-  protocolCard: {
-    backgroundColor: Colors.darkCard, borderRadius: BorderRadius.md,
-    padding: Spacing.md, marginBottom: Spacing.sm,
-    borderWidth: 1, borderColor: Colors.darkCardBorder,
+  sectionTitle: {
+    fontSize: FontSizes.lg, fontWeight: '800', color: Colors.darkText,
+    marginBottom: Spacing.sm, letterSpacing: -0.3,
   },
-  protocolName: { fontSize: FontSizes.md, fontWeight: '600', color: Colors.darkText },
-  protocolInfo: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 4 },
-  protocolDates: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary, marginTop: 2 },
+  protocolCard: { marginBottom: Spacing.sm },
+  protocolHeader: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing.sm,
+  },
+  protocolName: { fontSize: FontSizes.md, fontWeight: '700', color: Colors.darkText },
+  protocolInfo: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 2 },
+  protocolDates: {
+    fontSize: FontSizes.xs, color: Colors.darkTextSecondary, marginTop: Spacing.xs,
+    paddingLeft: 48,
+  },
+  emptyProtocolCard: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing.sm,
+    paddingVertical: Spacing.lg,
+  },
+  noDoses: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, fontStyle: 'italic', flex: 1 },
 
   // Disclaimer
   disclaimerBox: {
     flexDirection: 'row', gap: Spacing.sm, alignItems: 'flex-start',
-    backgroundColor: 'rgba(245, 158, 11, 0.1)', borderRadius: BorderRadius.md,
+    backgroundColor: 'rgba(59, 130, 246, 0.08)', borderRadius: BorderRadius.md,
     padding: Spacing.md, marginHorizontal: Spacing.md, marginTop: Spacing.lg,
-    borderWidth: 1, borderColor: 'rgba(245, 158, 11, 0.2)',
+    borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.15)',
   },
-  disclaimerText: { flex: 1, fontSize: FontSizes.xs, color: Colors.warning, lineHeight: 18 },
+  disclaimerText: { flex: 1, fontSize: FontSizes.xs, color: Colors.darkTextSecondary, lineHeight: 18 },
 
   // Modal
   modalSafe: { flex: 1, backgroundColor: Colors.darkBg },
@@ -723,20 +1410,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md, paddingVertical: Spacing.md,
     borderBottomWidth: 1, borderBottomColor: Colors.darkCardBorder,
   },
-  modalTitle: { fontSize: FontSizes.xl, fontWeight: '700', color: Colors.darkText },
+  modalTitle: { fontSize: FontSizes.xl, fontWeight: '800', color: Colors.darkText },
+  modalCloseBtn: {
+    width: 36, height: 36, borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    alignItems: 'center', justifyContent: 'center',
+  },
   modalDate: {
-    fontSize: FontSizes.md, color: Colors.darkTextSecondary, marginBottom: Spacing.lg,
+    fontSize: FontSizes.md, color: Colors.darkTextSecondary, marginBottom: Spacing.lg, marginTop: Spacing.sm,
   },
   fieldLabel: {
-    fontSize: FontSizes.sm, fontWeight: '600', color: Colors.darkText,
-    marginBottom: 6, marginTop: Spacing.md,
+    fontSize: FontSizes.xs, fontWeight: '700', color: Colors.darkTextSecondary,
+    marginBottom: 6, marginTop: Spacing.md, textTransform: 'uppercase', letterSpacing: 0.5,
   },
-  pickerBtn: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    backgroundColor: Colors.darkCard, borderRadius: BorderRadius.md,
-    padding: Spacing.md, borderWidth: 1, borderColor: Colors.darkCardBorder,
-  },
-  pickerBtnText: { fontSize: FontSizes.md, color: Colors.darkText },
   textInput: {
     backgroundColor: Colors.darkCard, borderRadius: BorderRadius.md,
     padding: Spacing.md, color: Colors.darkText, fontSize: FontSizes.md,
@@ -745,13 +1431,17 @@ const styles = StyleSheet.create({
   amountRow: { gap: Spacing.sm },
   unitRow: { flexDirection: 'row', gap: Spacing.xs },
   unitChip: {
-    flex: 1, alignItems: 'center', paddingVertical: 8,
+    flex: 1, alignItems: 'center',
     borderRadius: BorderRadius.md, backgroundColor: Colors.darkCard,
     borderWidth: 1, borderColor: Colors.darkCardBorder,
+    overflow: 'hidden',
   },
-  unitChipActive: { backgroundColor: Colors.rose, borderColor: Colors.rose },
-  unitChipText: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, fontWeight: '600' },
-  unitChipTextActive: { color: Colors.darkBg },
+  unitChipActive: { borderColor: Colors.rose, borderWidth: 0 },
+  unitChipGradient: {
+    width: '100%', alignItems: 'center', paddingVertical: 8,
+  },
+  unitChipText: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary, fontWeight: '600', paddingVertical: 8 },
+  unitChipTextActive: { fontSize: FontSizes.sm, color: '#fff', fontWeight: '700' },
   routeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.xs },
   routeChip: {
     paddingVertical: 8, paddingHorizontal: 12,
@@ -760,35 +1450,54 @@ const styles = StyleSheet.create({
   },
   routeChipActive: { backgroundColor: Colors.sage, borderColor: Colors.sage },
   routeChipText: { fontSize: FontSizes.sm, color: Colors.darkTextSecondary },
-  routeChipTextActive: { color: Colors.darkBg, fontWeight: '600' },
-  protoSuggest: {
-    backgroundColor: 'rgba(185, 203, 182, 0.1)', borderRadius: BorderRadius.md,
-    padding: Spacing.md, marginTop: Spacing.md,
-    borderWidth: 1, borderColor: 'rgba(185, 203, 182, 0.2)',
-  },
-  protoSuggestTitle: { fontSize: FontSizes.sm, fontWeight: '700', color: Colors.sage },
-  protoSuggestInfo: {
-    fontSize: FontSizes.sm, color: Colors.darkTextSecondary, marginTop: 4,
-  },
-  protoSuggestNote: {
-    fontSize: FontSizes.xs, color: Colors.darkTextSecondary, marginTop: 2,
-  },
-  protoSuggestDisclaimer: {
-    fontSize: FontSizes.xs, color: Colors.darkTextSecondary, fontStyle: 'italic',
-    marginTop: 6, opacity: 0.6,
-  },
+  routeChipTextActive: { color: Colors.darkBg, fontWeight: '700' },
   saveBtn: {
-    backgroundColor: Colors.rose, borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.md,
     paddingVertical: 16, alignItems: 'center', marginTop: Spacing.lg,
   },
-  saveBtnText: { fontSize: FontSizes.lg, fontWeight: '700', color: Colors.darkBg },
+  saveBtnText: { fontSize: FontSizes.lg, fontWeight: '800', color: '#fff' },
 
-  // Peptide picker
-  peptidePickerItem: {
-    paddingVertical: Spacing.sm + 4, paddingHorizontal: Spacing.md,
-    borderBottomWidth: 1, borderBottomColor: Colors.darkCardBorder,
+  // Modal disclaimer
+  modalDisclaimer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    backgroundColor: 'rgba(59, 130, 246, 0.08)',
+    borderRadius: BorderRadius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginTop: Spacing.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.15)',
   },
-  peptidePickerItemActive: { backgroundColor: 'rgba(227, 167, 161, 0.15)' },
-  peptidePickerName: { fontSize: FontSizes.md, fontWeight: '600', color: Colors.darkText },
-  peptidePickerCats: { fontSize: FontSizes.xs, color: Colors.darkTextSecondary, marginTop: 2 },
+  modalDisclaimerText: {
+    flex: 1,
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    lineHeight: 16,
+  },
+
+  // Disclaimer gate
+  disclaimerGate: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.lg,
+    gap: 16,
+  },
+  disclaimerGateTitle: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: Colors.darkText,
+  },
+  disclaimerGateSubtitle: {
+    fontSize: FontSizes.md,
+    color: Colors.darkTextSecondary,
+    textAlign: 'center',
+  },
+  disclaimerGateText: {
+    fontSize: FontSizes.sm,
+    color: Colors.darkTextSecondary,
+    lineHeight: 20,
+  },
 });

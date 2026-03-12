@@ -37,7 +37,32 @@ export const Colors = {
   // Glass
   glassWhite: 'rgba(255,255,255,0.12)',
   glassBorder: 'rgba(255,255,255,0.18)',
+
+  // PepTalk Character Palette
+  pepBlue: '#3B82F6',
+  pepBlueDark: '#2563EB',
+  pepBlueLight: '#60A5FA',
+  pepTeal: '#06B6D4',
+  pepTealLight: '#22D3EE',
+  pepCyan: '#67E8F9',
+
+  // Glow
+  glowBlue: 'rgba(59, 130, 246, 0.35)',
+  glowTeal: 'rgba(6, 182, 212, 0.25)',
+  glowRose: 'rgba(227, 167, 161, 0.30)',
+
+  // Glass blue
+  glassBlue: 'rgba(59, 130, 246, 0.10)',
+  glassBlueBorder: 'rgba(59, 130, 246, 0.20)',
 } as const;
+
+export const Gradients = {
+  primary: ['#3B82F6', '#06B6D4'] as const,
+  character: ['#2563EB', '#0891B2'] as const,
+  card: ['rgba(59,130,246,0.12)', 'rgba(6,182,212,0.06)'] as const,
+  accent: ['#3B82F6', '#8B5CF6'] as const,
+  warm: ['#e3a7a1', '#f59e0b'] as const,
+};
 
 export const CategoryColors: Record<string, string> = {
   Metabolic: '#e3a7a1',

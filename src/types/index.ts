@@ -143,6 +143,7 @@ export interface OnboardingProfile {
   ethnicity: Ethnicity | null;
   maritalStatus: MaritalStatus | null;
   referralSource: ReferralSource | null;
+  healthGoals: GoalType[];
   interestCategories: PeptideCategory[];
   acceptedSafety: boolean;
   dataShareConsent: boolean;
@@ -171,6 +172,11 @@ export interface DashboardSegment {
 
 export type CheckInRating = 1 | 2 | 3 | 4 | 5;
 
+export type EmotionTag =
+  | 'happy' | 'calm' | 'grateful' | 'motivated' | 'focused'
+  | 'anxious' | 'irritable' | 'sad' | 'fatigued' | 'brain_fog'
+  | 'confident' | 'social' | 'creative' | 'overwhelmed' | 'numb';
+
 export interface CheckInEntry {
   id: string;
   date: string; // YYYY-MM-DD (local date)
@@ -185,6 +191,10 @@ export interface CheckInEntry {
   restingHeartRate?: number;
   steps?: number;
   notes?: string;
+  emotionTags?: EmotionTag[];
+  overallFeeling?: string;
+  peptideEffects?: PeptideEffect[];
+  sideEffectTags?: string[];
 }
 
 export interface ResearchArticle {
@@ -209,6 +219,15 @@ export interface ChatMessage {
   timestamp: string;
   relatedPeptideIds?: string[];
   quickReplies?: string[];
+  /** Auto-generated journal entry from conversational logging */
+  journalEntry?: {
+    category: JournalCategory;
+    title: string;
+    content: string;
+    tags: string[];
+    relatedPeptideIds?: string[];
+    mood?: CheckInRating;
+  };
 }
 
 export type BotIntent =
@@ -221,9 +240,16 @@ export type BotIntent =
   | 'side_effects'
   | 'storage'
   | 'health_suggest'
+  | 'goal_suggest'
   | 'stack_help'
+  | 'knowledge_topic'
   | 'greeting'
-  | 'general';
+  | 'general'
+  | 'create_plan'
+  | 'modify_plan'
+  | 'workout_suggest'
+  | 'meal_suggest'
+  | 'journal_log';
 
 export interface BotContext {
   userProfile: OnboardingProfile | null;
@@ -568,6 +594,31 @@ export interface HowToGuide {
   lastUpdated: string;
 }
 
+// ─── Knowledge Topics (Interactive Learn Section) ────────────────────────────
+
+export type TopicId =
+  | 'peptide-care'
+  | 'how-to-use'
+  | 'safety'
+  | 'storage'
+  | 'buying-quality'
+  | 'regulations';
+
+export interface KnowledgeTopic {
+  id: TopicId;
+  title: string;
+  icon: string; // Ionicons name
+  subtitle: string;
+  color: string; // Accent color for the topic
+  sections: {
+    question: string;
+    answer: string;
+  }[];
+  relatedGuideIds?: string[];
+  relatedArticleIds?: string[];
+  botPrompt: string; // Pre-filled prompt for "Ask PepTalk"
+}
+
 // ─── Safety & Clinical Data ──────────────────────────────────────────────────
 
 export interface SafetyProfile {
@@ -592,4 +643,90 @@ export interface ClinicalTrial {
   keyFindings?: string;
   publicationDOI?: string;
   publicationPMID?: string;
+}
+
+// ─── Notification Preferences ─────────────────────────────────────────────────
+
+export interface NotificationPreferences {
+  enabled: boolean;
+  dailyCheckInReminder: boolean;
+  checkInReminderTime: string; // HH:mm
+  doseReminders: boolean;
+  weeklyReport: boolean;
+  workoutReminderEnabled: boolean;
+  workoutReminderTime: string; // HH:mm
+  workoutReminderDays: number[]; // Expo weekday numbers: 1=Sun … 7=Sat
+  mealRemindersEnabled: boolean;
+  mealReminderTimes: Record<string, string>; // e.g. { breakfast: '07:00', lunch: '12:00', dinner: '18:00' }
+  weeklyReportEnabled: boolean;
+}
+
+// ─── Nutrition Consultation Request ───────────────────────────────────────────
+
+export type ConsultationStatus = 'draft' | 'submitted' | 'reviewed';
+
+export interface NutritionRequest {
+  id: string;
+  date: string;
+  name: string;
+  email: string;
+  phone?: string;
+  healthSummary: string;
+  goals: string[];
+  dietaryRestrictions: string[];
+  currentPeptides: string[];
+  message: string;
+  status: ConsultationStatus;
+  createdAt: string;
+}
+
+// ─── Medical Journal ────────────────────────────────────────────────────────
+
+export type JournalCategory =
+  | 'protocol_notes'
+  | 'side_effects'
+  | 'mood'
+  | 'progress'
+  | 'research'
+  | 'questions'
+  | 'goals'
+  | 'general';
+
+export interface JournalEntry {
+  id: string;
+  date: string;           // YYYY-MM-DD
+  time: string;           // HH:mm
+  category: JournalCategory;
+  title: string;
+  content: string;
+  tags: string[];
+  relatedPeptideIds?: string[];
+  mood?: CheckInRating;
+  createdAt: string;
+}
+
+// ─── Health Plans ─────────────────────────────────────────────────────────────
+
+export interface HealthPlanItem {
+  id: string;
+  dayOfWeek: number;      // 0=Sun, 1=Mon...6=Sat
+  time: string;           // HH:mm
+  type: 'workout' | 'meal' | 'protocol' | 'checkin' | 'custom';
+  title: string;
+  description: string;
+  relatedId?: string;     // programId, peptideId, etc.
+  completed: boolean;
+}
+
+export interface HealthPlan {
+  id: string;
+  name: string;
+  startDate: string;      // YYYY-MM-DD
+  endDate: string;        // YYYY-MM-DD
+  goals: GoalType[];
+  schedule: HealthPlanItem[];
+  aiGenerated: boolean;
+  rawPlanText?: string;   // Full AI-generated plan text
+  createdAt: string;
+  updatedAt: string;
 }

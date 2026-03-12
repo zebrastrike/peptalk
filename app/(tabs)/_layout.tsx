@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
+import { selectionTick } from '../../src/utils/haptics';
 
 type TabIconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -14,9 +15,9 @@ interface TabConfig {
 const TAB_CONFIG: TabConfig[] = [
   {
     name: 'index',
-    title: 'Library',
-    icon: 'library-outline',
-    activeIcon: 'library',
+    title: 'Home',
+    icon: 'home-outline',
+    activeIcon: 'home',
   },
   {
     name: 'calendar',
@@ -49,8 +50,8 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#e3a7a1',
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarActiveTintColor: '#14b8a6',
+        tabBarInactiveTintColor: '#6b7280',
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
       }}
@@ -69,6 +70,9 @@ export default function TabsLayout() {
               />
             ),
           }}
+          listeners={{
+            tabPress: () => selectionTick(),
+          }}
         />
       ))}
       {/* Hidden tabs — still routable but not in tab bar */}
@@ -81,18 +85,22 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#0f1720',
+    backgroundColor: '#0a1018',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.08)',
-    paddingBottom: 4,
-    paddingTop: 4,
-    height: 60,
+    borderTopColor: 'rgba(255, 255, 255, 0.06)',
+    paddingBottom: 6,
+    paddingTop: 8,
+    height: 65,
     elevation: 0,
-    shadowOpacity: 0,
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: -4 },
   },
   tabBarLabel: {
     fontSize: 10,
-    fontWeight: '600',
-    letterSpacing: 0.2,
+    fontWeight: '700',
+    letterSpacing: 0.3,
+    marginTop: 2,
   },
 });

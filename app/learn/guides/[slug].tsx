@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -32,8 +32,18 @@ function getCategoryColor(category: GuideCategory): string {
 export default function GuideDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
   const guide = getGuideBySlug(slug ?? '');
+
+  const toggleStep = (stepNumber: number) => {
+    setCompletedSteps((prev) => {
+      const next = new Set(prev);
+      if (next.has(stepNumber)) next.delete(stepNumber);
+      else next.add(stepNumber);
+      return next;
+    });
+  };
 
   if (!guide) {
     return (
@@ -90,34 +100,74 @@ export default function GuideDetailScreen() {
         <Text style={styles.title}>{guide.title}</Text>
         <Text style={styles.summary}>{guide.summary}</Text>
 
-        {/* Step Count Badge */}
-        <View style={styles.stepOverview}>
-          <Ionicons name="footsteps-outline" size={16} color="#b9cbb6" />
-          <Text style={styles.stepOverviewText}>
-            {guide.steps.length} steps
-          </Text>
+        {/* Progress Indicator */}
+        <View style={styles.progressSection}>
+          <View style={styles.progressHeader}>
+            <View style={styles.stepOverview}>
+              <Ionicons name="footsteps-outline" size={16} color="#b9cbb6" />
+              <Text style={styles.stepOverviewText}>
+                {completedSteps.size} of {guide.steps.length} steps
+              </Text>
+            </View>
+            <Text style={styles.progressPercent}>
+              {Math.round((completedSteps.size / guide.steps.length) * 100)}%
+            </Text>
+          </View>
+          <View style={styles.progressBarBg}>
+            <View
+              style={[
+                styles.progressBarFill,
+                {
+                  width: `${Math.round((completedSteps.size / guide.steps.length) * 100)}%` as any,
+                  backgroundColor: categoryColor,
+                },
+              ]}
+            />
+          </View>
         </View>
 
         {/* Steps */}
-        {guide.steps.map((step, index) => (
-          <View key={step.stepNumber} style={styles.stepRow}>
-            {/* Step Number Circle */}
-            <View style={styles.stepNumberContainer}>
-              <View style={styles.stepNumberCircle}>
-                <Text style={styles.stepNumberText}>{step.stepNumber}</Text>
+        {guide.steps.map((step, index) => {
+          const isDone = completedSteps.has(step.stepNumber);
+          return (
+            <View key={step.stepNumber} style={styles.stepRow}>
+              {/* Step Number Circle — tap to mark complete */}
+              <View style={styles.stepNumberContainer}>
+                <TouchableOpacity
+                  onPress={() => toggleStep(step.stepNumber)}
+                  activeOpacity={0.7}
+                  style={[
+                    styles.stepNumberCircle,
+                    isDone && {
+                      backgroundColor: `${categoryColor}40`,
+                      borderColor: categoryColor,
+                    },
+                  ]}
+                >
+                  {isDone ? (
+                    <Ionicons name="checkmark" size={16} color={categoryColor} />
+                  ) : (
+                    <Text style={styles.stepNumberText}>{step.stepNumber}</Text>
+                  )}
+                </TouchableOpacity>
+                {index < guide.steps.length - 1 && (
+                  <View
+                    style={[
+                      styles.stepConnector,
+                      isDone && { backgroundColor: `${categoryColor}50` },
+                    ]}
+                  />
+                )}
               </View>
-              {index < guide.steps.length - 1 && (
-                <View style={styles.stepConnector} />
-              )}
-            </View>
 
-            {/* Step Content */}
-            <GlassCard style={styles.stepCard}>
-              <Text style={styles.stepTitle}>{step.title}</Text>
-              <Text style={styles.stepContent}>{step.content}</Text>
-            </GlassCard>
-          </View>
-        ))}
+              {/* Step Content */}
+              <GlassCard style={styles.stepCard}>
+                <Text style={styles.stepTitle}>{step.title}</Text>
+                <Text style={styles.stepContent}>{step.content}</Text>
+              </GlassCard>
+            </View>
+          );
+        })}
 
         {/* Safety Warnings */}
         {guide.warnings && guide.warnings.length > 0 && (
@@ -231,17 +281,40 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // ── Step Overview ──────────────────────────────────────────
+  // ── Progress Section ──────────────────────────────────────
+  progressSection: {
+    marginBottom: 20,
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
   stepOverview: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 20,
   },
   stepOverviewText: {
     fontSize: 13,
     fontWeight: '600',
     color: '#b9cbb6',
+  },
+  progressPercent: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#e8e6e3',
+  },
+  progressBarBg: {
+    height: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: 6,
+    borderRadius: 3,
   },
 
   // ── Steps ──────────────────────────────────────────────────

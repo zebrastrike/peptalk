@@ -120,6 +120,10 @@ interface DoseLogStore {
   doses: DoseLogEntry[];
   protocols: ActiveProtocol[];
   alerts: HealthAlert[];
+  hasAcceptedDoseDisclaimer: boolean;
+
+  // Disclaimer gate
+  acceptDoseDisclaimer: () => void;
 
   // Dose logging
   logDose: (input: {
@@ -168,6 +172,11 @@ export const useDoseLogStore = create<DoseLogStore>()(
       doses: [],
       protocols: [],
       alerts: [],
+      hasAcceptedDoseDisclaimer: false,
+
+      // ── Disclaimer Gate ────────────────────────────────────────────────────
+
+      acceptDoseDisclaimer: () => set({ hasAcceptedDoseDisclaimer: true }),
 
       // ── Dose Logging ─────────────────────────────────────────────────────
 

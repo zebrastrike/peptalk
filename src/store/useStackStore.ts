@@ -141,7 +141,7 @@ export const useStackStore = create<StackStore>()(
       }),
       onRehydrateStorage: () => (state) => {
         if (!state) return;
-        set({
+        useStackStore.setState({
           savedStacks: mergeCuratedStacks(state.savedStacks ?? []),
           currentAnalysis: null,
           isAnalyzing: false,

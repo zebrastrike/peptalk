@@ -17,10 +17,38 @@ import {
   PeptideCategory,
   HealthProfile,
   ProtocolTemplate,
+  TopicId,
+  GoalType,
+  JournalCategory,
 } from '../types';
+import { getGoalLabel } from '../constants/goals';
+import { KNOWLEDGE_TOPICS } from '../data/knowledgeTopics';
 import { PEPTIDES, getPeptideById, getPeptidesByCategory } from '../data/peptides';
 import { analyzeStack, getKnownInteraction } from './analysisEngine';
 import { getProtocolsByPeptide, PROTOCOL_TEMPLATES } from '../data/protocols';
+import { BOT_MEDICAL_SUFFIX, BOT_INFO_SUFFIX } from '../constants/legal';
+
+// Intents that involve dosing, safety, or medical topics get a stronger disclaimer
+const MEDICAL_INTENTS: BotIntent[] = [
+  'dosing_protocol',
+  'side_effects',
+  'interaction_check',
+  'health_suggest',
+  'stack_help',
+];
+const INFO_INTENTS: BotIntent[] = [
+  'peptide_info',
+  'mechanism',
+  'comparison',
+  'category_explore',
+  'storage',
+  'knowledge_topic',
+  'goal_suggest',
+  'workout_suggest',
+  'meal_suggest',
+  'create_plan',
+  'modify_plan',
+];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -363,11 +391,85 @@ function detectIntent(message: string, peptides: Peptide[]): BotIntent {
     return 'category_explore';
   }
 
+  // Goal-based suggestions
+  if (
+    /\b(what (should|can) i take|recommend|suggest|peptide for|best for|help (me|with)|good for my)\b/i.test(lower) &&
+    peptides.length === 0
+  ) {
+    return 'goal_suggest';
+  }
+
   // Health-based suggestion
   if (
     /\b(my health|my check.?in|based on|my data|my metric|suggest|recommend)/i.test(lower)
   ) {
     return 'health_suggest';
+  }
+
+  // Knowledge topics (care, quality, regulations, general education)
+  if (
+    /\b(buy|buying|purchase|supplier|vendor|source|quality|purity|pure|hplc|coa|certificate|third.?party|test|lab|gmp)\b/i.test(lower) &&
+    peptides.length === 0
+  ) {
+    return 'knowledge_topic';
+  }
+  if (
+    /\b(legal|regulation|regulated|fda|law|lawful|prescription|compounding|research use|ruo)\b/i.test(lower)
+  ) {
+    return 'knowledge_topic';
+  }
+  if (
+    /\b(peptide care|handle|handling|prepare|preparation|travel with|carry)\b/i.test(lower) &&
+    peptides.length === 0
+  ) {
+    return 'knowledge_topic';
+  }
+  if (
+    /\b(how (do i|to) use|inject|injection technique|subcutaneous|reconstitut|bac water|bacteriostatic)\b/i.test(lower) &&
+    peptides.length === 0
+  ) {
+    return 'knowledge_topic';
+  }
+
+  // Journal logging — user reports an activity, experience, or observation
+  if (
+    /\b(i (did|took|had|felt|noticed|started|finished|completed|ate|drank|slept|woke|ran|walked|lifted|trained|injected|dosed|pinned))\b/i.test(lower) ||
+    /\b(just (finished|completed|did|took|had))\b/i.test(lower) ||
+    /\b(log (this|that|it)|write (this|that) down|note (this|that)|remember (this|that))\b/i.test(lower) ||
+    /\b(today i|this morning i|tonight i|yesterday i|last night i)\b/i.test(lower)
+  ) {
+    return 'journal_log';
+  }
+
+  // Workout suggestions
+  if (
+    /\b(workout|exercise|training|lift|gym|routine|program|sets?\b|reps?\b|split|push.?pull|upper.?lower|chest day|leg day|arm day)/i.test(lower)
+  ) {
+    return 'workout_suggest';
+  }
+
+  // Meal / nutrition suggestions
+  if (
+    /\b(meal|recipe|food|eat|nutrition|macro|calorie|protein|carb|diet|breakfast|lunch|dinner|snack|grocery|cook)/i.test(lower)
+  ) {
+    return 'meal_suggest';
+  }
+
+  // Create a health plan
+  if (
+    /\b(create|make|build|generate|start|new)\b.*\b(plan|schedule|program|routine)\b/i.test(lower) ||
+    /\b(plan|schedule|program|routine)\b.*\b(create|make|build|generate|start|new)\b/i.test(lower) ||
+    /\b(weekly plan|daily plan|health plan|fitness plan|my plan)\b/i.test(lower)
+  ) {
+    return 'create_plan';
+  }
+
+  // Modify existing plan
+  if (
+    /\b(change|modify|update|adjust|edit|tweak)\b.*\b(plan|schedule|program|routine)\b/i.test(lower) ||
+    /\b(plan|schedule|program|routine)\b.*\b(change|modify|update|adjust|edit|tweak)\b/i.test(lower)
+  ) {
+    return 'modify_plan';
   }
 
   // Peptide info (if a peptide was mentioned but no other intent matched)
@@ -390,14 +492,46 @@ function respondGreeting(context: BotContext): string {
     : `Hey there`;
 
   const parts = [
-    `${name}! I'm your PepTalk health companion. I can help you:`,
+    `${name}! I'm PepTalk, your friendly health companion! Here's what I can do for you:`,
     '',
-    `• **Learn about peptides** — mechanisms, interactions, protocols`,
-    `• **Track your doses** — "What's my BPC-157 history?"`,
-    `• **Analyze your health data** — "Based on my check-ins, what should I explore?"`,
+    `• **Learn about peptides** — I know all about mechanisms, interactions, and protocols`,
+    `• **Track your journey** — ask me about your dose history anytime`,
+    `• **Understand your health** — I'll connect your check-in data to helpful insights`,
     `• **Get protocol info** — "What's the dosing protocol for semaglutide?"`,
     `• **Check interactions** — "Can I stack CJC-1295 with Ipamorelin?"`,
   ];
+
+  // Goal-aware personalization
+  const onboardingGoals = context.userProfile?.healthGoals ?? [];
+  const profileGoals = hp?.primaryGoals ?? [];
+  const mergedGoals = [...new Set([...onboardingGoals, ...profileGoals])];
+
+  if (mergedGoals.length > 0) {
+    parts.push('');
+    parts.push(`**Your Goals:** ${mergedGoals.slice(0, 4).map(g => getGoalLabel(g as GoalType)).join(', ')}`);
+    // Show 1 peptide hint per top 2 goals
+    const goalToPeptides: Record<string, string> = {
+      'weight_loss': 'Semaglutide, Tirzepatide',
+      'muscle_gain': 'CJC-1295 + Ipamorelin',
+      'recovery': 'BPC-157, TB-500',
+      'longevity': 'Epithalon, NAD+',
+      'cognitive': 'Semax, Selank',
+      'sleep': 'DSIP',
+      'energy': 'MOTS-c, SS-31',
+      'immune': 'Thymosin Alpha-1',
+      'gut_health': 'BPC-157, KPV',
+      'skin_hair': 'GHK-Cu',
+      'hormonal': 'CJC-1295 + Ipamorelin',
+      'body_recomp': 'Tesamorelin',
+      'general_wellness': 'BPC-157, Epithalon',
+    };
+    for (const goal of mergedGoals.slice(0, 2)) {
+      const hint = goalToPeptides[goal];
+      if (hint) {
+        parts.push(`• ${getGoalLabel(goal as GoalType)} → explore ${hint}`);
+      }
+    }
+  }
 
   // Personalized status
   const doseCount = enhanced?.recentDoses?.length || 0;
@@ -436,8 +570,29 @@ function respondGreeting(context: BotContext): string {
     parts.push(`💡 **Tip:** Set up your Health Profile in the Profile tab so I can personalize recommendations and flag potential contraindications.`);
   }
 
+  // Smart daily suggestions — what hasn't been done today
+  const suggestions: string[] = [];
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const todayCheckIn = context.recentCheckIns.find(c => c.date === todayKey);
+  const todayDoses = enhanced?.recentDoses?.filter(d => d.date === todayKey) ?? [];
+
+  if (!todayCheckIn) suggestions.push('📋 **Check in** — log your mood, energy, and sleep');
+  if (todayDoses.length === 0 && (enhanced?.activeProtocols?.length ?? 0) > 0) {
+    suggestions.push('💉 **Log a dose** — you have active protocols to track');
+  }
+  suggestions.push('🍽️ **Log a meal** — keep your nutrition on track');
+  suggestions.push('🏋️ **Start a workout** — stay consistent with your training');
+
+  if (suggestions.length > 0) {
+    parts.push('');
+    parts.push('**Suggested for today:**');
+    for (const s of suggestions.slice(0, 3)) {
+      parts.push(s);
+    }
+  }
+
   parts.push('');
-  parts.push(`⚠️ *I provide research information + help you track your journey. I'm not a doctor. Always consult a qualified healthcare provider for medical decisions.*`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
 
   return parts.join('\n');
 }
@@ -479,7 +634,7 @@ function respondPeptideInfo(peptides: Peptide[]): string {
   }
 
   parts.push('');
-  parts.push(`⚠️ *This is research information only — not medical advice.*`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
 
   return parts.join('\n');
 }
@@ -508,7 +663,7 @@ function respondMechanism(peptides: Peptide[]): string {
   }
 
   parts.push('');
-  parts.push(`⚠️ *Research-level mechanistic data. Not clinical guidance.*`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
 
   return parts.join('\n');
 }
@@ -559,7 +714,7 @@ function respondComparison(peptides: Peptide[]): string {
   parts.push(`• ${b.name}: ${b.mechanismOfAction.substring(0, 200)}...`);
 
   parts.push('');
-  parts.push(`⚠️ *Research comparison only — not clinical guidance.*`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
 
   return parts.join('\n');
 }
@@ -672,7 +827,7 @@ function respondCategoryExplore(message: string): string {
 
   parts.push(`Ask me about any specific peptide for detailed research information.`);
   parts.push('');
-  parts.push(`⚠️ *Research information only — not medical advice.*`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
 
   return parts.join('\n');
 }
@@ -682,7 +837,7 @@ function respondDosingProtocol(peptides: Peptide[], context?: BotContext): strin
   const hp = enhanced?.healthProfile;
   const parts: string[] = [];
 
-  parts.push(`⚠️ **Important:** Dosing should only be determined by a qualified healthcare provider. The information below is from published research literature — not a prescription.`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions. The information below is from published research literature.`);
   parts.push('');
 
   if (peptides.length > 0) {
@@ -793,7 +948,7 @@ function respondSideEffects(peptides: Peptide[], context?: BotContext): string {
   const hp = enhanced?.healthProfile;
   const parts: string[] = [];
 
-  parts.push(`⚠️ **Safety is our priority.** Side effects and risks should always be discussed with a qualified healthcare provider.`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
   parts.push('');
 
   if (peptides.length > 0) {
@@ -937,8 +1092,11 @@ function respondHealthSuggest(context: BotContext): string {
   const hasDoses = enhanced?.recentDoses && enhanced.recentDoses.length > 0;
   const hasProfile = hp && hp.setupComplete;
 
+  // Merge goals from onboarding + health profile
+  const onboardingGoals = context.userProfile?.healthGoals ?? [];
+
   if (!hasCheckIns && !hasDoses && !hasProfile) {
-    parts.push(`I'd love to connect your health data to relevant research, but I don't see any data yet.`);
+    parts.push(`I'd love to give you personalized insights, but I don't see any data yet.`);
     parts.push('');
     parts.push(`Here's how to get started:`);
     parts.push(`• **Profile tab → Health Profile** — Set up your body metrics, conditions, and goals`);
@@ -947,7 +1105,7 @@ function respondHealthSuggest(context: BotContext): string {
     parts.push('');
     parts.push(`The more data you log, the smarter my suggestions become. I can spot trends, correlate your peptide use with how you feel, and flag anything that warrants a conversation with your doctor.`);
     parts.push('');
-    parts.push(`⚠️ *Research suggestions only — not medical advice.*`);
+    parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
     return parts.join('\n');
   }
 
@@ -981,6 +1139,30 @@ function respondHealthSuggest(context: BotContext): string {
         const peptideHints = goalToPeptides[goal];
         if (peptideHints) {
           // Filter out peptides that conflict with user's conditions
+          parts.push(`• **${goal.replace(/_/g, ' ')}** → ${peptideHints.join(', ')}`);
+        }
+      }
+      parts.push('');
+    } else if (onboardingGoals.length > 0) {
+      parts.push(`**Goal-Based Research Suggestions:**`);
+      const onboardingGoalToPeptides: Record<string, string[]> = {
+        'weight_loss': ['Semaglutide', 'Tirzepatide', 'Retatrutide', 'MOTS-c', 'Tesamorelin'],
+        'muscle_gain': ['CJC-1295 + Ipamorelin', 'IGF-1 LR3', 'Tesamorelin'],
+        'body_recomp': ['Tesamorelin', 'CJC-1295 + Ipamorelin', 'MOTS-c'],
+        'recovery': ['BPC-157', 'TB-500', 'GHK-Cu'],
+        'longevity': ['Epithalon', 'NAD+', 'GHK-Cu', 'SS-31'],
+        'cognitive': ['Semax', 'Selank', 'Dihexa'],
+        'sleep': ['DSIP', 'Epithalon'],
+        'energy': ['MOTS-c', 'SS-31', 'NAD+'],
+        'immune': ['Thymosin Alpha-1', 'LL-37'],
+        'gut_health': ['BPC-157', 'KPV'],
+        'skin_hair': ['GHK-Cu', 'SNAP-8'],
+        'hormonal': ['CJC-1295 + Ipamorelin', 'Kisspeptin', 'PT-141'],
+        'general_wellness': ['BPC-157', 'Epithalon', 'NAD+', 'Thymosin Alpha-1'],
+      };
+      for (const goal of onboardingGoals.slice(0, 3)) {
+        const peptideHints = onboardingGoalToPeptides[goal];
+        if (peptideHints) {
           parts.push(`• **${goal.replace(/_/g, ' ')}** → ${peptideHints.join(', ')}`);
         }
       }
@@ -1131,13 +1313,440 @@ function respondHealthSuggest(context: BotContext): string {
     }
   }
 
-  parts.push(`⚠️ *This analysis is based on your self-reported data and is NOT a medical assessment. If patterns concern you, please share this data with your healthcare provider — that's exactly what it's for.*`);
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
 
   return parts.join('\n');
 }
 
+function respondGoalSuggest(message: string, context: BotContext): string {
+  const enhanced = context as EnhancedBotContext | undefined;
+  const hp = enhanced?.healthProfile;
+  const parts: string[] = [];
+
+  // Merge goals from onboarding + health profile
+  const onboardingGoals = context.userProfile?.healthGoals ?? [];
+  const profileGoals = hp?.primaryGoals ?? [];
+  const allGoals = [...new Set([...onboardingGoals, ...profileGoals])];
+
+  const goalToPeptides: Record<string, { peptides: string[]; notes: string }> = {
+    'weight_loss': { peptides: ['Semaglutide', 'Tirzepatide', 'Retatrutide', 'MOTS-c', 'Tesamorelin'], notes: 'GLP-1 receptor agonists are the most studied for metabolic support.' },
+    'muscle_gain': { peptides: ['CJC-1295 + Ipamorelin', 'IGF-1 LR3', 'Tesamorelin', 'GHRP-2'], notes: 'GH axis peptides support lean mass through growth hormone pathways.' },
+    'body_recomp': { peptides: ['Tesamorelin', 'CJC-1295 + Ipamorelin', 'MOTS-c'], notes: 'Combines GH axis support with metabolic activation.' },
+    'recovery': { peptides: ['BPC-157', 'TB-500', 'GHK-Cu'], notes: 'BPC-157 + TB-500 is known as the "Wolverine Stack" for tissue repair.' },
+    'longevity': { peptides: ['Epithalon', 'NAD+', 'GHK-Cu', 'SS-31'], notes: 'Targets telomere maintenance, mitochondrial function, and cellular repair.' },
+    'cognitive': { peptides: ['Semax', 'Selank', 'Dihexa', 'Pinealon'], notes: 'Nootropic peptides supporting BDNF and neurotransmitter balance.' },
+    'sleep': { peptides: ['DSIP', 'Epithalon', 'Pinealon'], notes: 'DSIP is the primary sleep-targeted peptide in research.' },
+    'energy': { peptides: ['MOTS-c', 'SS-31', 'NAD+', 'CJC-1295'], notes: 'Mitochondrial peptides support cellular energy production.' },
+    'immune': { peptides: ['Thymosin Alpha-1', 'LL-37', 'KPV'], notes: 'Thymosin Alpha-1 is the most studied immune peptide.' },
+    'gut_health': { peptides: ['BPC-157', 'KPV', 'LL-37'], notes: 'BPC-157 has extensive research on GI tissue healing.' },
+    'skin_hair': { peptides: ['GHK-Cu', 'SNAP-8', 'Epithalon'], notes: 'GHK-Cu promotes collagen synthesis and skin remodeling.' },
+    'hormonal': { peptides: ['CJC-1295 + Ipamorelin', 'Kisspeptin', 'PT-141'], notes: 'These interact with endocrine pathways — provider supervision recommended.' },
+    'general_wellness': { peptides: ['BPC-157', 'Epithalon', 'NAD+', 'Thymosin Alpha-1'], notes: 'Broad-spectrum peptides covering repair, longevity, and immune support.' },
+  };
+
+  // Detect which goal the user is asking about from the message
+  const lower = message.toLowerCase();
+  let targetGoals: GoalType[] = [];
+
+  const goalKeywordMap: Record<string, GoalType> = {
+    'weight': 'weight_loss', 'fat': 'weight_loss', 'lose': 'weight_loss', 'slim': 'weight_loss',
+    'muscle': 'muscle_gain', 'bulk': 'muscle_gain', 'gain': 'muscle_gain', 'strength': 'muscle_gain',
+    'recomp': 'body_recomp',
+    'recover': 'recovery', 'heal': 'recovery', 'injury': 'recovery', 'repair': 'recovery',
+    'longev': 'longevity', 'aging': 'longevity', 'anti-aging': 'longevity',
+    'cognitive': 'cognitive', 'brain': 'cognitive', 'focus': 'cognitive', 'memory': 'cognitive',
+    'sleep': 'sleep', 'insomnia': 'sleep',
+    'energy': 'energy', 'fatigue': 'energy', 'tired': 'energy',
+    'immune': 'immune', 'sick': 'immune',
+    'gut': 'gut_health', 'digestive': 'gut_health', 'stomach': 'gut_health',
+    'skin': 'skin_hair', 'hair': 'skin_hair', 'collagen': 'skin_hair',
+    'hormon': 'hormonal',
+    'wellness': 'general_wellness', 'health': 'general_wellness',
+  };
+
+  for (const [keyword, goal] of Object.entries(goalKeywordMap)) {
+    if (lower.includes(keyword) && !targetGoals.includes(goal)) {
+      targetGoals.push(goal);
+    }
+  }
+
+  // If no specific goal detected in message, use their stored goals
+  if (targetGoals.length === 0 && allGoals.length > 0) {
+    targetGoals = allGoals.slice(0, 3) as GoalType[];
+  }
+
+  if (targetGoals.length === 0) {
+    parts.push(`I'd love to suggest peptides based on your goals, but I don't know your health objectives yet.`);
+    parts.push('');
+    parts.push(`Set your goals in **Settings → Onboarding** or tell me what you're looking for:`);
+    parts.push(`• "What should I take for recovery?"`, `• "Best peptides for sleep"`, `• "Help me with energy"`);
+    return parts.join('\n');
+  }
+
+  parts.push(`**Peptide Suggestions Based on Your Goals**`);
+  parts.push('');
+
+  for (const goal of targetGoals) {
+    const info = goalToPeptides[goal];
+    if (!info) continue;
+
+    parts.push(`**${getGoalLabel(goal)}**`);
+    parts.push(`Research peptides: ${info.peptides.join(', ')}`);
+    parts.push(`_${info.notes}_`);
+    parts.push('');
+  }
+
+  // Cross-reference with medical conditions
+  if (hp?.medical?.conditions?.length) {
+    parts.push(`**Note:** I've considered your health profile (${hp.medical.conditions.join(', ')}). Always discuss new peptides with your healthcare provider given your medical history.`);
+    parts.push('');
+  }
+
+  parts.push(`Ask me about any specific peptide for detailed protocols, mechanisms, and interactions.`);
+  parts.push('');
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
+
+  return parts.join('\n');
+}
+
+function respondKnowledgeTopic(userMessage: string): string {
+  const lower = userMessage.toLowerCase();
+
+  // Match user message to the most relevant topic
+  const topicKeywords: Record<TopicId, RegExp> = {
+    'peptide-care': /\b(care|handle|handling|prepare|preparation|supplies|travel)\b/i,
+    'how-to-use': /\b(how (do i|to) use|inject|injection|reconstitut|bac water|dose|dosing|calculate|route|subcutaneous|intramuscular|intranasal)\b/i,
+    'safety': /\b(safe|safety|side effect|contraindic|warning|danger|stop|medical|doctor|emergency)\b/i,
+    'storage': /\b(stor|refrigerat|temperature|shelf life|degrad|expire|freeze|stability|bac water|bacteriostatic)\b/i,
+    'buying-quality': /\b(buy|buying|purchase|supplier|vendor|source|quality|purity|pure|hplc|coa|certificate|third.?party|test|lab|gmp|janoshik|colmaric|red flag)\b/i,
+    'regulations': /\b(legal|regulation|regulated|fda|law|prescription|compounding|research use|ruo|approved|ind\b|dshea|dietary supplement)\b/i,
+  };
+
+  let bestTopic = KNOWLEDGE_TOPICS[0];
+  for (const topic of KNOWLEDGE_TOPICS) {
+    const regex = topicKeywords[topic.id];
+    if (regex && regex.test(lower)) {
+      bestTopic = topic;
+      break;
+    }
+  }
+
+  // Find the most relevant Q&A within the topic
+  const parts: string[] = [];
+  parts.push(`**${bestTopic.title}**\n`);
+
+  // Score each section by keyword overlap with the user's message
+  const words = lower.split(/\s+/);
+  const scored = bestTopic.sections.map((s, i) => {
+    const sectionWords = (s.question + ' ' + s.answer).toLowerCase();
+    const score = words.filter((w) => w.length > 3 && sectionWords.includes(w)).length;
+    return { section: s, score, index: i };
+  });
+  scored.sort((a, b) => b.score - a.score);
+
+  // Show top 2-3 most relevant Q&A pairs
+  const topSections = scored.slice(0, 3);
+  topSections.forEach(({ section }) => {
+    parts.push(`**${section.question}**`);
+    // Trim answer to keep response concise
+    const trimmed = section.answer.length > 400
+      ? section.answer.substring(0, 400) + '...'
+      : section.answer;
+    parts.push(trimmed + '\n');
+  });
+
+  parts.push(`\n*Check out the **Learn** section for the full ${bestTopic.title} topic with all ${bestTopic.sections.length} questions answered.*`);
+  parts.push(`\n⚕️ *This is research information only — always consult a qualified healthcare provider.*`);
+
+  return parts.join('\n');
+}
+
+function respondWorkoutSuggest(message: string, context: BotContext): string {
+  const parts: string[] = [];
+  const lower = message.toLowerCase();
+
+  parts.push(`**Workout Suggestions**`);
+  parts.push('');
+
+  // Detect what type of workout they're asking about
+  const isBodypart = /\b(chest|back|legs?|arms?|shoulders?|bicep|tricep|core|abs|glute)/i.test(lower);
+  const isProgram = /\b(program|routine|split|plan)\b/i.test(lower);
+
+  if (isBodypart) {
+    const bodypartMap: Record<string, string[]> = {
+      'chest': ['Bench Press', 'Incline Dumbbell Press', 'Cable Flyes', 'Push-Ups'],
+      'back': ['Pull-Ups', 'Barbell Rows', 'Lat Pulldown', 'Seated Cable Row'],
+      'legs': ['Barbell Squat', 'Romanian Deadlift', 'Leg Press', 'Walking Lunges'],
+      'shoulders': ['Overhead Press', 'Lateral Raises', 'Face Pulls', 'Arnold Press'],
+      'arms': ['Barbell Curl', 'Tricep Pushdown', 'Hammer Curls', 'Skull Crushers'],
+      'core': ['Planks', 'Cable Woodchops', 'Hanging Leg Raises', 'Ab Wheel Rollouts'],
+      'glutes': ['Hip Thrust', 'Bulgarian Split Squat', 'Cable Kickbacks', 'Sumo Deadlift'],
+    };
+
+    for (const [part, exercises] of Object.entries(bodypartMap)) {
+      if (lower.includes(part)) {
+        parts.push(`**${part.charAt(0).toUpperCase() + part.slice(1)} Exercises:**`);
+        exercises.forEach((e) => parts.push(`• ${e}`));
+        parts.push('');
+        break;
+      }
+    }
+  } else if (isProgram) {
+    parts.push(`We have **42 workout programs** available in the Workouts tab:`);
+    parts.push('');
+    parts.push(`• **Push/Pull/Legs** — Classic 6-day split for muscle growth`);
+    parts.push(`• **Upper/Lower** — 4-day balanced split`);
+    parts.push(`• **Full Body** — 3-day for beginners or busy schedules`);
+    parts.push(`• **Strength Focus** — Powerlifting-style compound movements`);
+    parts.push(`• **Metabolic Conditioning** — HIIT + circuits for fat loss`);
+    parts.push('');
+    parts.push(`Head to the **Workouts** tab to browse all programs with video demos.`);
+  } else {
+    parts.push(`I can help you find the right workout! Here are some options:`);
+    parts.push('');
+    parts.push(`• **Browse Programs** — 42 structured programs in the Workouts tab`);
+    parts.push(`• **Exercise Library** — 3,000+ exercises with video demos`);
+    parts.push(`• **By Body Part** — Ask me about chest, back, legs, etc.`);
+    parts.push('');
+    parts.push(`**Peptide Synergies for Training:**`);
+    parts.push(`• **Pre-workout GH boost:** CJC-1295 + Ipamorelin (30 min before)`);
+    parts.push(`• **Recovery:** BPC-157 + TB-500 (post-training or before bed)`);
+    parts.push(`• **Endurance:** MOTS-c (mitochondrial performance)`);
+  }
+
+  parts.push('');
+  parts.push(`Check out the **Workouts** tab for full programs with progress tracking.`);
+
+  return parts.join('\n');
+}
+
+function respondMealSuggest(message: string, context: BotContext): string {
+  const enhanced = context as EnhancedBotContext | undefined;
+  const parts: string[] = [];
+  const lower = message.toLowerCase();
+
+  parts.push(`**Nutrition Guidance**`);
+  parts.push('');
+
+  const isMealType = /\b(breakfast|lunch|dinner|snack|pre.?workout|post.?workout)\b/i.test(lower);
+  const isDiet = /\b(keto|vegan|vegetarian|paleo|carnivore|mediterranean|high.?protein|low.?carb)\b/i.test(lower);
+  const isRecipe = /\b(recipe|cook|make|prepare)\b/i.test(lower);
+  const isMacro = /\b(macro|calorie|protein|carb|fat|track|count)\b/i.test(lower);
+
+  if (isRecipe) {
+    parts.push(`Head to the **Nutrition → Recipe Generator** to get AI-powered recipes tailored to your macro targets and dietary preferences.`);
+    parts.push('');
+    parts.push(`The generator creates recipes optimized for your daily targets and can filter by diet type.`);
+  } else if (isMacro) {
+    parts.push(`**Quick Macro Tips for Peptide Users:**`);
+    parts.push('');
+    parts.push(`• **Protein:** Aim for 0.8-1.2g per pound of body weight`);
+    parts.push(`• **On GH peptides:** Higher protein supports growth hormone's anabolic effects`);
+    parts.push(`• **On GLP-1s:** Prioritize protein first since appetite is reduced`);
+    parts.push(`• **Fasting windows:** Many GH peptides work best on an empty stomach`);
+    parts.push('');
+    parts.push(`Set your targets in **Nutrition → Macro Targets** for personalized tracking.`);
+  } else if (isMealType) {
+    const mealTips: Record<string, string[]> = {
+      'breakfast': ['High-protein breakfast supports morning GH peptide dosing', 'Try: eggs, Greek yogurt, or protein smoothie (30-40g protein)'],
+      'lunch': ['Balanced plate: palm-size protein + fist of veggies + thumb of healthy fats', 'Good time for complex carbs if training in the afternoon'],
+      'dinner': ['Lighter carbs if taking GH peptides before bed (fasting state preferred)', 'Focus on protein + vegetables for satiety'],
+      'snack': ['Pre-workout: banana + protein shake 30-60 min before', 'Post-workout: fast-digesting protein within 30 min'],
+    };
+
+    for (const [meal, tips] of Object.entries(mealTips)) {
+      if (lower.includes(meal)) {
+        parts.push(`**${meal.charAt(0).toUpperCase() + meal.slice(1)} Tips:**`);
+        tips.forEach((t) => parts.push(`• ${t}`));
+        parts.push('');
+        break;
+      }
+    }
+  } else {
+    parts.push(`I can help with nutrition planning! Check out these features:`);
+    parts.push('');
+    parts.push(`• **Nutrition Tab** — Track meals, macros, and water intake`);
+    parts.push(`• **Recipe Generator** — AI-powered recipes matching your targets`);
+    parts.push(`• **Meal Planning** — Plan meals ahead and build grocery lists`);
+    parts.push(`• **Macro Targets** — Set calories, protein, carbs, fat, and fiber goals`);
+    parts.push('');
+    parts.push(`**Peptide + Nutrition Tips:**`);
+    parts.push(`• GH peptides work best on an empty stomach (2+ hours fasted)`);
+    parts.push(`• GLP-1 agonists reduce appetite — prioritize nutrient density`);
+    parts.push(`• BPC-157 can be taken with or without food`);
+  }
+
+  parts.push('');
+  parts.push(`Visit the **Nutrition** tab for full meal tracking and AI recipes.`);
+
+  return parts.join('\n');
+}
+
+function respondCreatePlan(context: BotContext): string {
+  const enhanced = context as EnhancedBotContext | undefined;
+  const hp = enhanced?.healthProfile;
+  const parts: string[] = [];
+
+  parts.push(`**Health Plan Builder**`);
+  parts.push('');
+
+  if (hp && hp.setupComplete) {
+    const goals = hp.primaryGoals.length > 0
+      ? hp.primaryGoals.map((g) => g.replace(/_/g, ' ')).join(', ')
+      : 'general wellness';
+
+    parts.push(`Based on your profile, here's what I'd suggest for your plan:`);
+    parts.push('');
+    parts.push(`**Your Goals:** ${goals}`);
+    parts.push('');
+    parts.push(`**Recommended Plan Components:**`);
+    parts.push(`• **Workouts:** 3-5x/week based on your experience level`);
+    parts.push(`• **Nutrition:** Macros aligned to your goals (${hp.primaryGoals.includes('weight_loss') ? 'calorie deficit' : hp.primaryGoals.includes('muscle_gain') ? 'calorie surplus' : 'maintenance calories'})`);
+
+    // Protocol timing suggestions
+    if (enhanced?.activeProtocols && enhanced.activeProtocols.length > 0) {
+      parts.push(`• **Protocol Schedule:** Optimized timing for your ${enhanced.activeProtocols.length} active protocol(s)`);
+    }
+
+    parts.push(`• **Check-ins:** Daily mood/energy tracking to monitor progress`);
+    parts.push('');
+    parts.push(`The AI can generate a detailed weekly plan for you. Use the **PepTalk Chat** with AI enabled to say "Create a weekly health plan" for a fully personalized schedule.`);
+  } else {
+    parts.push(`To create a personalized health plan, I need to know more about you:`);
+    parts.push('');
+    parts.push(`1. **Complete your Health Profile** (Profile tab → Health Profile)`);
+    parts.push(`2. **Set your goals** — weight loss, muscle gain, recovery, etc.`);
+    parts.push(`3. **Log some check-ins** so I can see your baseline`);
+    parts.push('');
+    parts.push(`Once your profile is set, I can create a plan combining:`);
+    parts.push(`• Weekly workout schedule (from 42+ programs)`);
+    parts.push(`• Meal plan framework with macro targets`);
+    parts.push(`• Peptide protocol timing (if applicable)`);
+    parts.push(`• Daily check-in reminders`);
+  }
+
+  parts.push('');
+  parts.push(`Remember, I'm here to educate — always chat with your doctor for medical decisions.`);
+
+  return parts.join('\n');
+}
+
+function respondModifyPlan(context: BotContext): string {
+  const enhanced = context as EnhancedBotContext | undefined;
+  const parts: string[] = [];
+
+  parts.push(`**Modify Your Plan**`);
+  parts.push('');
+
+  if (enhanced?.activeProtocols && enhanced.activeProtocols.length > 0) {
+    parts.push(`**Current Active Protocols:**`);
+    enhanced.activeProtocols.forEach((p) => {
+      const name = getPeptideById(p.peptideId)?.name || p.peptideId;
+      parts.push(`• ${name}: ${p.dose} ${p.unit}, ${p.frequency}`);
+    });
+    parts.push('');
+  }
+
+  parts.push(`You can adjust your plan in several ways:`);
+  parts.push('');
+  parts.push(`• **Workouts** — Change program, adjust frequency, swap exercises in the Workouts tab`);
+  parts.push(`• **Nutrition** — Update macro targets, change meal plan in the Nutrition tab`);
+  parts.push(`• **Protocols** — Modify doses, timing, or add/remove peptides in your Stack`);
+  parts.push(`• **Schedule** — View and edit your full timeline in the Calendar tab`);
+  parts.push('');
+  parts.push(`Tell me what you'd like to change, or use the specific tabs to make adjustments directly.`);
+  parts.push('');
+  parts.push(`For AI-powered plan modifications, enable AI in the chat and describe what you want to change.`);
+
+  return parts.join('\n');
+}
+
+function detectJournalCategory(message: string): JournalCategory {
+  const lower = message.toLowerCase();
+  if (/\b(dose|dosed|injected|pinned|took|protocol|mg\b|mcg\b|iu\b)/i.test(lower)) return 'protocol_notes';
+  if (/\b(side effect|nausea|headache|dizzy|rash|pain|swelling|reaction)/i.test(lower)) return 'side_effects';
+  if (/\b(feel|felt|mood|happy|sad|anxious|stressed|calm|great|terrible)/i.test(lower)) return 'mood';
+  if (/\b(progress|lost|gained|pr\b|personal record|milestone|achieved|hit)/i.test(lower)) return 'progress';
+  if (/\b(read|research|study|found|learned|article)/i.test(lower)) return 'research';
+  if (/\b(goal|target|plan|want to|going to|aim)/i.test(lower)) return 'goals';
+  return 'general';
+}
+
+function extractJournalTitle(message: string): string {
+  // Take the first meaningful clause, max 60 chars
+  const cleaned = message
+    .replace(/^(hey|hi|yo|ok|so|well|um|uh)\s*/i, '')
+    .replace(/^(i |just |today )/i, '')
+    .trim();
+  const title = cleaned.length > 60 ? cleaned.substring(0, 57) + '...' : cleaned;
+  return title.charAt(0).toUpperCase() + title.slice(1);
+}
+
+function respondJournalLog(
+  message: string,
+  peptides: Peptide[],
+  context: BotContext,
+): { content: string; journalEntry: ChatMessage['journalEntry'] } {
+  const category = detectJournalCategory(message);
+  const title = extractJournalTitle(message);
+  const tags: string[] = [];
+
+  // Extract tags from message
+  if (/\b(workout|exercise|gym|training|lift)/i.test(message)) tags.push('workout');
+  if (/\b(meal|food|eat|ate|nutrition|breakfast|lunch|dinner)/i.test(message)) tags.push('nutrition');
+  if (/\b(sleep|slept|nap|rest)/i.test(message)) tags.push('sleep');
+  if (/\b(dose|injection|protocol)/i.test(message)) tags.push('protocol');
+  if (/\b(cardio|run|walk|bike|swim)/i.test(message)) tags.push('cardio');
+  if (/\b(weight|scale|body)/i.test(message)) tags.push('body');
+
+  // Detect mood from message
+  let mood: 1 | 2 | 3 | 4 | 5 | undefined;
+  if (/\b(amazing|incredible|fantastic|awesome|great|excellent)\b/i.test(message)) mood = 5;
+  else if (/\b(good|nice|well|better|solid|strong)\b/i.test(message)) mood = 4;
+  else if (/\b(okay|ok|fine|alright|decent|normal)\b/i.test(message)) mood = 3;
+  else if (/\b(bad|rough|poor|tired|sore|off)\b/i.test(message)) mood = 2;
+  else if (/\b(terrible|awful|horrible|worst|miserable)\b/i.test(message)) mood = 1;
+
+  const categoryLabels: Record<JournalCategory, string> = {
+    protocol_notes: 'Protocol Notes',
+    side_effects: 'Side Effects',
+    mood: 'Mood',
+    progress: 'Progress',
+    research: 'Research',
+    questions: 'Questions',
+    goals: 'Goals',
+    general: 'General',
+  };
+
+  const parts: string[] = [];
+  parts.push(`Got it! I've logged that to your journal.`);
+  parts.push('');
+  parts.push(`**Journal Entry Created:**`);
+  parts.push(`**Category:** ${categoryLabels[category]}`);
+  parts.push(`**Title:** ${title}`);
+  if (tags.length > 0) parts.push(`**Tags:** ${tags.join(', ')}`);
+  if (mood) parts.push(`**Mood:** ${'★'.repeat(mood)}${'☆'.repeat(5 - mood)}`);
+  if (peptides.length > 0) {
+    parts.push(`**Related Peptides:** ${peptides.map(p => p.name).join(', ')}`);
+  }
+  parts.push('');
+  parts.push(`You can view and edit this entry in your **Journal**.`);
+
+  return {
+    content: parts.join('\n'),
+    journalEntry: {
+      category,
+      title,
+      content: message,
+      tags,
+      relatedPeptideIds: peptides.map(p => p.id),
+      mood,
+    },
+  };
+}
+
 function respondGeneral(): string {
-  return `I'm your PepTalk research assistant. Here's what I can help with:\n\n• **Peptide Information** — "Tell me about BPC-157"\n• **Mechanisms** — "How does semaglutide work?"\n• **Interactions** — "Can I stack CJC-1295 with Ipamorelin?"\n• **Category Browsing** — "What peptides help with sleep?"\n• **Comparisons** — "BPC-157 vs TB-500"\n• **Stack Building** — "Suggest a recovery stack"\n• **Storage Info** — "How do I store BPC-157?"\n• **Health Insights** — "Based on my check-ins, what should I explore?"\n\nI have data on ${PEPTIDES.length} research peptides. What would you like to know?`;
+  return `I'm your PepTalk health companion. Here's what I can help with:\n\n• **Peptide Information** — "Tell me about BPC-157"\n• **Mechanisms** — "How does semaglutide work?"\n• **Interactions** — "Can I stack CJC-1295 with Ipamorelin?"\n• **Category Browsing** — "What peptides help with sleep?"\n• **Comparisons** — "BPC-157 vs TB-500"\n• **Stack Building** — "Suggest a recovery stack"\n• **Storage Info** — "How do I store BPC-157?"\n• **Quality & Buying** — "What should I look for when buying peptides?"\n• **Safety** — "Are peptides safe?"\n• **Regulations** — "Are peptides legal?"\n• **Health Insights** — "Based on my check-ins, what should I explore?"\n\nI have data on ${PEPTIDES.length} research peptides. What would you like to know?`;
 }
 
 // ---------------------------------------------------------------------------
@@ -1194,6 +1803,48 @@ function getQuickReplies(intent: BotIntent, peptides: Peptide[]): string[] {
         'Tell me more about the first suggestion',
         'Log a check-in',
         'Show me popular stacks',
+      ];
+    case 'knowledge_topic':
+      return [
+        'How do I store peptides?',
+        'What makes a quality peptide?',
+        'Are peptides legal?',
+      ];
+    case 'goal_suggest':
+      return [
+        'Tell me more about the first one',
+        'Show me protocols',
+        'Based on my check-ins',
+      ];
+    case 'workout_suggest':
+      return [
+        'Show me a program',
+        'Best exercises for chest',
+        'Create a weekly plan',
+      ];
+    case 'meal_suggest':
+      return [
+        'Generate a recipe',
+        'Help me set macro targets',
+        'Create a meal plan',
+      ];
+    case 'create_plan':
+      return [
+        'Show me workout programs',
+        'Set my macro targets',
+        'What peptides match my goals?',
+      ];
+    case 'modify_plan':
+      return [
+        'Change my workout program',
+        'Update my nutrition targets',
+        'Adjust my protocol timing',
+      ];
+    case 'journal_log':
+      return [
+        'View my journal',
+        'Log another entry',
+        'How am I doing this week?',
       ];
     default:
       return [
@@ -1255,8 +1906,48 @@ export function generateLocalBotResponse(
     case 'health_suggest':
       content = respondHealthSuggest(context);
       break;
+    case 'knowledge_topic':
+      content = respondKnowledgeTopic(userMessage);
+      break;
+    case 'goal_suggest':
+      content = respondGoalSuggest(userMessage, context);
+      break;
+    case 'workout_suggest':
+      content = respondWorkoutSuggest(userMessage, context);
+      break;
+    case 'meal_suggest':
+      content = respondMealSuggest(userMessage, context);
+      break;
+    case 'create_plan':
+      content = respondCreatePlan(context);
+      break;
+    case 'modify_plan':
+      content = respondModifyPlan(context);
+      break;
+    case 'journal_log': {
+      const journalResult = respondJournalLog(userMessage, mentionedPeptides, context);
+      content = journalResult.content;
+      const quickReplies = getQuickReplies(intent, mentionedPeptides);
+      // Return early with journal entry attached
+      return {
+        id: uid(),
+        role: 'bot',
+        content,
+        timestamp: new Date().toISOString(),
+        relatedPeptideIds: mentionedPeptides.map((p) => p.id),
+        quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+        journalEntry: journalResult.journalEntry,
+      };
+    }
     default:
       content = respondGeneral();
+  }
+
+  // Append compliance disclaimer based on intent risk level
+  if (MEDICAL_INTENTS.includes(intent)) {
+    content += BOT_MEDICAL_SUFFIX;
+  } else if (INFO_INTENTS.includes(intent)) {
+    content += BOT_INFO_SUFFIX;
   }
 
   const quickReplies = getQuickReplies(intent, mentionedPeptides);

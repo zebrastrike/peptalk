@@ -17,7 +17,7 @@ import { useStackStore } from '../../src/store/useStackStore';
 import { GlassCard } from '../../src/components/GlassCard';
 import { getCategoryColor } from '../../src/constants/categories';
 import { Disclaimer } from '../../src/components/Disclaimer';
-import { trackPeptideView } from '../../src/services/sbbEvents';
+import { trackPeptideView } from '../../src/services/analyticsEvents';
 import { getProtocolsByPeptide } from '../../src/data/protocols';
 import { getTrialsByPeptideId } from '../../src/data/clinicalTrials';
 import { getSafetyProfileByPeptideId } from '../../src/data/safetyProfiles';
@@ -473,6 +473,9 @@ export default function PeptideDetailScreen() {
                 <Text style={styles.sectionText}>{safetyProfile.pregnancyCategory}</Text>
               </View>
             )}
+            <View style={{ marginTop: 12 }}>
+              <Disclaimer variant="safety" />
+            </View>
           </GlassCard>
         )}
 
@@ -518,6 +521,7 @@ export default function PeptideDetailScreen() {
               <Ionicons name="clipboard-outline" size={18} color="#b9cbb6" />
               <Text style={styles.sectionTitle}>Protocol Templates</Text>
             </View>
+            <Disclaimer variant="dosing" />
             {protocols.map((proto) => (
               <View key={proto.id} style={styles.protocolCard}>
                 <Text style={styles.protocolName}>{proto.name}</Text>
