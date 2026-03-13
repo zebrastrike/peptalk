@@ -42,3 +42,7 @@ yarn-error.*
 # secrets
 *.secret
 credentials.json
+
+# Scraped exercise videos (stored locally, will be served via CDN in production)
+# JSON manifests, CSVs, and scripts are still tracked
+_elevate_audit/**/*.mp4
