@@ -19,7 +19,7 @@ interface TalkToMeBarProps {
 export const TalkToMeBar: React.FC<TalkToMeBarProps> = ({
   onPress,
   label = 'Talk to me',
-  helperText = 'Your peptide companion',
+  helperText = 'Ask Pepe anything',
 }) => {
   return (
     <TouchableOpacity

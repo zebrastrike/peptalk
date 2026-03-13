@@ -27,7 +27,7 @@ const TAB_CONFIG: TabConfig[] = [
   },
   {
     name: 'peptalk',
-    title: 'PepTalk',
+    title: 'Pepe',
     icon: 'chatbubbles-outline',
     activeIcon: 'chatbubbles',
   },

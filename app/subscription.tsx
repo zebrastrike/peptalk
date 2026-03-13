@@ -1,5 +1,5 @@
 /**
- * Subscription / Paywall screen — shows tier comparison and upgrade CTA.
+ * Subscription / Paywall screen — 3-tier plan comparison with upgrade CTAs.
  */
 
 import React from 'react';
@@ -29,10 +29,12 @@ interface TierInfo {
   tier: SubscriptionTier;
   name: string;
   price: string;
+  period: string;
   description: string;
   features: string[];
   colors: [string, string];
   icon: string;
+  badge?: string;
 }
 
 const TIERS: TierInfo[] = [
@@ -40,66 +42,63 @@ const TIERS: TierInfo[] = [
     tier: 'free',
     name: 'Free',
     price: '$0',
-    description: 'Get started with core features',
+    period: '',
+    description: 'Get started with core peptide tools',
     features: [
       'Public workout programs',
-      'Basic exercise library',
+      'Basic exercise library (50 exercises)',
       'Manual meal logging',
       'Basic macro targets',
-      'Peptide education',
-      'Wellness journal',
-      'Daily check-ins',
+      'Peptide education hub',
+      'Wellness journal (3/week)',
+      'Daily check-ins & dose logging',
+      'AI chat (5 messages/day)',
     ],
     colors: ['#6b7280', '#9ca3af'],
     icon: 'person-outline',
   },
   {
-    tier: 'basic',
-    name: 'Basic',
-    price: '$9.99/mo',
-    description: 'Unlock AI and full library access',
+    tier: 'plus',
+    name: 'Plus',
+    price: '$9.99',
+    period: '/mo',
+    description: 'Full library, AI tools, and no ads',
     features: [
       'Everything in Free',
-      'AI Recipe Generator',
       'Full 288+ exercise library',
       'All workout programs',
-      'Progress photo tracking',
+      'AI Recipe Generator',
+      'Custom meal plans & grocery list',
+      'Unlimited AI chat',
+      'Unlimited journal entries',
+      'Basic health reports',
+      'Health device sync',
+      'No ads',
+      'Progress photos',
       'Advanced analytics',
     ],
     colors: [Colors.pepBlue, Colors.pepCyan],
     icon: 'flash-outline',
+    badge: 'Most Popular',
   },
   {
-    tier: 'premium',
-    name: 'Premium',
-    price: '$19.99/mo',
-    description: 'Full access with AI coaching',
+    tier: 'pro',
+    name: 'Pro',
+    price: '$24.99',
+    period: '/mo',
+    description: 'AI health planner, nutritionist access, full reports',
     features: [
-      'Everything in Basic',
-      'Trainer-designed programs',
-      'Custom meal plans',
-      'AI workout suggestions',
-      'Unlimited AI chat',
-      'Body measurements',
-      'Export your data',
-    ],
-    colors: [Colors.pepTeal, Colors.pepBlue],
-    icon: 'diamond-outline',
-  },
-  {
-    tier: 'trainer',
-    name: 'Trainer',
-    price: '$39.99/mo',
-    description: '1-on-1 with Jamie Esposito',
-    features: [
-      'Everything in Premium',
-      'Direct trainer messaging',
-      'Custom programming',
-      'Nutritionist consult',
+      'Everything in Plus',
+      'AI Health Planner',
+      'Nutritionist consultation',
+      'Full health reports',
+      'AI Workout Builder',
+      'Export all your data',
       'Priority support',
     ],
     colors: ['#f59e0b', '#ef4444'],
     icon: 'star-outline',
+    badge: 'Best Value',
   },
 ];
 
@@ -108,12 +107,8 @@ const TIERS: TierInfo[] = [
 // ---------------------------------------------------------------------------
 
 function TierCard({ info, isActive }: { info: TierInfo; isActive: boolean }) {
-  const router = useRouter();
-  const { activate } = useSubscriptionStore();
-
   const handleUpgrade = () => {
     if (info.tier === 'free') return;
-    // In production, this would go through RevenueCat
     Alert.alert(
       'Coming Soon',
       `${info.name} plan will be available when the app launches on the App Store. Your interest has been noted!`,
@@ -122,9 +117,23 @@ function TierCard({ info, isActive }: { info: TierInfo; isActive: boolean }) {
 
   return (
     <GlassCard
-      variant={isActive ? 'glow' : 'default'}
+      variant={isActive ? 'glow' : info.badge ? 'elevated' : 'default'}
       glowColor={info.colors[0]}
     >
+      {/* Badge */}
+      {info.badge && !isActive && (
+        <View style={styles.badgeWrap}>
+          <LinearGradient
+            colors={info.colors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.badge}
+          >
+            <Text style={styles.badgeText}>{info.badge}</Text>
+          </LinearGradient>
+        </View>
+      )}
+
       {/* Header */}
       <View style={styles.tierHeader}>
         <LinearGradient colors={info.colors} style={styles.tierIcon}>
@@ -135,11 +144,16 @@ function TierCard({ info, isActive }: { info: TierInfo; isActive: boolean }) {
             <Text style={styles.tierName}>{info.name}</Text>
             {isActive && (
               <View style={styles.currentBadge}>
-                <Text style={styles.currentText}>Current</Text>
+                <Text style={styles.currentText}>Current Plan</Text>
               </View>
             )}
           </View>
-          <Text style={styles.tierPrice}>{info.price}</Text>
+          <View style={styles.priceRow}>
+            <Text style={styles.tierPrice}>{info.price}</Text>
+            {info.period ? (
+              <Text style={styles.tierPeriod}>{info.period}</Text>
+            ) : null}
+          </View>
         </View>
       </View>
 
@@ -199,8 +213,7 @@ export default function SubscriptionScreen() {
         <View style={styles.hero}>
           <Text style={styles.heroTitle}>Choose Your Plan</Text>
           <Text style={styles.heroDesc}>
-            Unlock premium features, AI-powered tools, and direct access to
-            Jamie Esposito's training expertise.
+            Unlock AI-powered tools, unlimited access, and professional health features.
           </Text>
         </View>
 
@@ -268,6 +281,25 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
+  // Badge
+  badgeWrap: {
+    alignItems: 'center',
+    marginBottom: Spacing.sm,
+    marginTop: -4,
+  },
+  badge: {
+    paddingHorizontal: 14,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.full,
+  },
+  badgeText: {
+    fontSize: FontSizes.xs,
+    fontWeight: '700',
+    color: '#fff',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+
   // Tier cards
   tierWrap: {
     paddingHorizontal: Spacing.lg,
@@ -308,11 +340,21 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.success,
   },
-  tierPrice: {
-    fontSize: FontSizes.md,
-    fontWeight: '700',
-    color: Colors.pepTeal,
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
     marginTop: 2,
+  },
+  tierPrice: {
+    fontSize: FontSizes.xl,
+    fontWeight: '800',
+    color: Colors.pepTeal,
+  },
+  tierPeriod: {
+    fontSize: FontSizes.sm,
+    fontWeight: '500',
+    color: Colors.darkTextSecondary,
+    marginLeft: 2,
   },
   tierDesc: {
     fontSize: FontSizes.sm,

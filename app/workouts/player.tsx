@@ -335,19 +335,10 @@ export default function WorkoutPlayerScreen() {
   const handleFinish = () => {
     Alert.alert(
       'Workout Complete!',
-      `Great work! ${Math.floor(timer.seconds / 60)} minutes of effort logged.\n\nWhat would you like to do next?`,
+      `Great session! ${Math.floor(timer.seconds / 60)} minutes of effort logged.\n\nWhat's next?`,
       [
         {
-          text: 'Just Finish',
-          onPress: () => {
-            timer.pause();
-            finishWorkout(undefined, undefined);
-            advanceDay();
-            router.back();
-          },
-        },
-        {
-          text: 'Log a Meal',
+          text: 'Log Meal',
           onPress: () => {
             timer.pause();
             finishWorkout(undefined, undefined);
@@ -362,6 +353,15 @@ export default function WorkoutPlayerScreen() {
             finishWorkout(undefined, undefined);
             advanceDay();
             router.replace('/(tabs)/check-in');
+          },
+        },
+        {
+          text: 'Ask Pepe',
+          onPress: () => {
+            timer.pause();
+            finishWorkout(undefined, undefined);
+            advanceDay();
+            router.replace('/(tabs)/peptalk');
           },
         },
       ],

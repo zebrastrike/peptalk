@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Platform, ViewStyle } from 'react-native';
 import { BANNER_AD_UNIT, isAdModuleAvailable } from '../services/adService';
 import { Colors } from '../constants/theme';
+import { useSubscriptionStore } from '../store/useSubscriptionStore';
 
 // ---------------------------------------------------------------------------
 // Dynamic module loading — safe for Expo Go
@@ -40,8 +41,14 @@ interface AdBannerProps {
 // ---------------------------------------------------------------------------
 
 export default function AdBanner({ style }: AdBannerProps) {
+  const tier = useSubscriptionStore((s) => s.tier);
   const [adLoaded, setAdLoaded] = useState(false);
   const [adFailed, setAdFailed] = useState(false);
+
+  // No ads for paid users
+  if (tier === 'plus' || tier === 'pro') {
+    return null;
+  }
 
   // Don't render if native module unavailable, on web, or ad failed
   if (!isAdModuleAvailable() || !BannerAd || Platform.OS === 'web' || adFailed) {

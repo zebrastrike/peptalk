@@ -245,24 +245,111 @@ function QuickLogModal({
 }
 
 // ---------------------------------------------------------------------------
-// Water Tracker
+// Water Ring (SVG-free circular progress)
 // ---------------------------------------------------------------------------
+
+function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
+  const clampedPct = Math.min(100, Math.max(0, pct));
+  const ringSize = size;
+  const thickness = 8;
+  const innerSize = ringSize - thickness * 2;
+
+  return (
+    <View
+      style={{
+        width: ringSize,
+        height: ringSize,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {/* Track */}
+      <View
+        style={{
+          width: ringSize,
+          height: ringSize,
+          borderRadius: ringSize / 2,
+          borderWidth: thickness,
+          borderColor: 'rgba(6, 182, 212, 0.12)',
+          position: 'absolute',
+        }}
+      />
+      {/* Fill — we simulate a ring fill using a clipped approach */}
+      <View
+        style={{
+          width: ringSize,
+          height: ringSize,
+          borderRadius: ringSize / 2,
+          borderWidth: thickness,
+          borderColor: Colors.pepCyan,
+          position: 'absolute',
+          borderTopColor:
+            clampedPct >= 25 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          borderRightColor:
+            clampedPct >= 50 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          borderBottomColor:
+            clampedPct >= 75 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          borderLeftColor:
+            clampedPct > 0 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          transform: [{ rotate: '-90deg' }],
+        }}
+      />
+      {/* Inner circle */}
+      <View
+        style={{
+          width: innerSize,
+          height: innerSize,
+          borderRadius: innerSize / 2,
+          backgroundColor: Colors.darkBg,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Ionicons name="water" size={20} color={Colors.pepCyan} />
+        <Text
+          style={{
+            fontSize: FontSizes.lg,
+            fontWeight: '800',
+            color: Colors.darkText,
+            marginTop: 2,
+          }}
+        >
+          {clampedPct}%
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Water Tracker (enhanced)
+// ---------------------------------------------------------------------------
+
+const WATER_QUICK_ADD: { oz: number; label: string; icon: string }[] = [
+  { oz: 4, label: '4 oz', icon: 'cafe-outline' },
+  { oz: 8, label: '8 oz', icon: 'water-outline' },
+  { oz: 12, label: '12 oz', icon: 'pint-outline' },
+  { oz: 16, label: '16 oz', icon: 'beer-outline' },
+];
 
 function WaterTracker() {
   const { logWater, getWater, targets } = useMealStore();
   const dateKey = today();
   const current = getWater(dateKey);
   const target = targets.waterOz ?? 100;
-  const glasses = Math.floor(current / 8); // 8oz per glass
   const pct = Math.min(100, Math.round((current / target) * 100));
+  const remaining = Math.max(0, target - current);
 
   return (
     <GlassCard>
-      <View style={styles.waterRow}>
-        <View style={styles.waterInfo}>
-          <Text style={styles.waterTitle}>Water</Text>
+      {/* Top section: ring + stats */}
+      <View style={styles.waterTop}>
+        <WaterRing pct={pct} size={100} />
+        <View style={styles.waterStats}>
+          <Text style={styles.waterTitle}>Hydration</Text>
           <Text style={styles.waterValue}>
-            {current} oz <Text style={styles.waterTarget}>/ {target} oz</Text>
+            {current} oz{' '}
+            <Text style={styles.waterTarget}>/ {target} oz</Text>
           </Text>
           <View style={styles.macroBarTrack}>
             <View
@@ -272,14 +359,39 @@ function WaterTracker() {
               ]}
             />
           </View>
+          <Text style={styles.waterRemaining}>
+            {remaining > 0
+              ? `${remaining} oz remaining`
+              : 'Daily target reached!'}
+          </Text>
         </View>
-        <TouchableOpacity
-          style={styles.waterBtn}
-          onPress={() => logWater(dateKey, 8)}
-        >
-          <Ionicons name="water-outline" size={20} color={Colors.pepCyan} />
-          <Text style={styles.waterBtnText}>+8 oz</Text>
-        </TouchableOpacity>
+      </View>
+
+      {/* Quick-add buttons */}
+      <View style={styles.waterQuickRow}>
+        {WATER_QUICK_ADD.map((btn) => (
+          <TouchableOpacity
+            key={btn.oz}
+            style={styles.waterQuickBtn}
+            onPress={() => logWater(dateKey, btn.oz)}
+            activeOpacity={0.7}
+          >
+            <Ionicons name={btn.icon as any} size={18} color={Colors.pepCyan} />
+            <Text style={styles.waterQuickLabel}>+{btn.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Today's target info */}
+      <View style={styles.waterFooter}>
+        <Ionicons
+          name="flag-outline"
+          size={14}
+          color={Colors.darkTextSecondary}
+        />
+        <Text style={styles.waterFooterText}>
+          Daily target: {target} oz ({Math.round(target / 8)} glasses)
+        </Text>
       </View>
     </GlassCard>
   );
@@ -619,13 +731,14 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
 
-  // Water
-  waterRow: {
+  // Water — enhanced
+  waterTop: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 16,
+    marginBottom: 14,
   },
-  waterInfo: { flex: 1 },
+  waterStats: { flex: 1 },
   waterTitle: {
     fontSize: FontSizes.md,
     fontWeight: '700',
@@ -642,19 +755,44 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: Colors.darkTextSecondary,
   },
-  waterBtn: {
+  waterRemaining: {
+    fontSize: FontSizes.xs,
+    color: Colors.pepCyan,
+    fontWeight: '600',
+    marginTop: 6,
+  },
+  waterQuickRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 10,
+  },
+  waterQuickBtn: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(6, 206, 255, 0.1)',
+    backgroundColor: 'rgba(6, 182, 212, 0.10)',
     borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     gap: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(6, 182, 212, 0.20)',
   },
-  waterBtnText: {
+  waterQuickLabel: {
     fontSize: FontSizes.xs,
     color: Colors.pepCyan,
     fontWeight: '700',
+  },
+  waterFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.06)',
+  },
+  waterFooterText: {
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
   },
 
   // Meals

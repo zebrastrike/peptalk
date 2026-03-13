@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { JournalCategory, JournalEntry } from '../types';
 import { secureStorage } from '../services/secureStorage';
+import { useSubscriptionStore } from './useSubscriptionStore';
 
 const uid = () =>
   `journal-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -18,6 +19,18 @@ const toDateKey = (date: Date) => {
   return `${y}-${m}-${day}`;
 };
 
+const FREE_WEEKLY_ENTRY_LIMIT = 3;
+
+/** Get the Monday-based week start date string (YYYY-MM-DD). */
+const getWeekStart = (): string => {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun, 6=Sat
+  const diff = day === 0 ? 6 : day - 1; // days since Monday
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - diff);
+  return toDateKey(monday);
+};
+
 interface JournalInput {
   date?: string;
   time?: string;
@@ -31,6 +44,9 @@ interface JournalInput {
 
 interface JournalStore {
   entries: JournalEntry[];
+  weeklyEntryCount: number;
+  weekStartDate: string;
+
   addEntry: (input: JournalInput) => JournalEntry;
   updateEntry: (id: string, updates: Partial<JournalInput>) => void;
   deleteEntry: (id: string) => void;
@@ -39,12 +55,16 @@ interface JournalStore {
   getEntriesInRange: (start: string, end: string) => JournalEntry[];
   searchEntries: (query: string) => JournalEntry[];
   clearAll: () => void;
+  incrementEntryCount: () => void;
+  canCreateEntry: () => boolean;
 }
 
 export const useJournalStore = create<JournalStore>()(
   persist(
     (set, get) => ({
       entries: [],
+      weeklyEntryCount: 0,
+      weekStartDate: '',
 
       addEntry: (input) => {
         const entry: JournalEntry = {
@@ -113,12 +133,37 @@ export const useJournalStore = create<JournalStore>()(
         );
       },
 
-      clearAll: () => set({ entries: [] }),
+      clearAll: () => set({ entries: [], weeklyEntryCount: 0, weekStartDate: '' }),
+
+      incrementEntryCount: () => {
+        const currentWeekStart = getWeekStart();
+        const { weekStartDate, weeklyEntryCount } = get();
+        if (weekStartDate !== currentWeekStart) {
+          // New week — reset counter
+          set({ weeklyEntryCount: 1, weekStartDate: currentWeekStart });
+        } else {
+          set({ weeklyEntryCount: weeklyEntryCount + 1 });
+        }
+      },
+
+      canCreateEntry: () => {
+        const tier = useSubscriptionStore.getState().tier;
+        if (tier === 'plus' || tier === 'pro') return true;
+
+        const currentWeekStart = getWeekStart();
+        const { weekStartDate, weeklyEntryCount } = get();
+        if (weekStartDate !== currentWeekStart) return true; // new week, count resets
+        return weeklyEntryCount < FREE_WEEKLY_ENTRY_LIMIT;
+      },
     }),
     {
       name: 'peptalk-journal',
       storage: createJSONStorage(() => secureStorage),
-      partialize: (state) => ({ entries: state.entries }),
-    }
-  )
+      partialize: (state) => ({
+        entries: state.entries,
+        weeklyEntryCount: state.weeklyEntryCount,
+        weekStartDate: state.weekStartDate,
+      }),
+    },
+  ),
 );

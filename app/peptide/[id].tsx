@@ -631,6 +631,31 @@ export default function PeptideDetailScreen() {
           </Text>
         </TouchableOpacity>
 
+        {/* Quick Actions */}
+        <View style={styles.quickActionRow}>
+          <TouchableOpacity
+            style={styles.quickActionBtn}
+            onPress={() => router.push('/(tabs)/calendar')}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="add-circle-outline" size={18} color="#14b8a6" />
+            <Text style={styles.quickActionText}>Log Dose</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.quickActionBtn}
+            onPress={() =>
+              router.push({
+                pathname: '/(tabs)/peptalk',
+                params: { prefill: `Tell me about ${peptide.name} dosing` },
+              } as any)
+            }
+            activeOpacity={0.8}
+          >
+            <Ionicons name="chatbubble-outline" size={18} color="#8b5cf6" />
+            <Text style={styles.quickActionText}>Ask Pepe</Text>
+          </TouchableOpacity>
+        </View>
+
         {/* PubMed Links */}
         {peptide.pubmedLinks && peptide.pubmedLinks.length > 0 && (
           <GlassCard style={styles.section}>
@@ -1157,6 +1182,30 @@ const styles = StyleSheet.create({
   },
   addToStackTextActive: {
     color: '#b9cbb6',
+  },
+
+  // ── Quick Actions ──────────────────────────────────────────
+  quickActionRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  quickActionBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+  quickActionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#e2e8f0',
   },
 
   // ── PubMed Links ────────────────────────────────────────────

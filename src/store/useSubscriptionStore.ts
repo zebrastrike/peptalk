@@ -36,6 +36,31 @@ interface SubscriptionActions {
 }
 
 // ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Recursively collect all features for a tier, resolving inheritance. */
+function collectFeatures(tier: SubscriptionTier, visited = new Set<string>()): Set<string> {
+  const features = new Set<string>();
+  if (visited.has(tier)) return features;
+  visited.add(tier);
+
+  for (const f of TIER_FEATURES[tier] ?? []) {
+    if (f.startsWith('all_') && f.endsWith('_features')) {
+      const parentTier = f.replace('all_', '').replace('_features', '') as SubscriptionTier;
+      if (TIER_FEATURES[parentTier]) {
+        for (const pf of collectFeatures(parentTier, visited)) {
+          features.add(pf);
+        }
+      }
+    } else {
+      features.add(f);
+    }
+  }
+  return features;
+}
+
+// ---------------------------------------------------------------------------
 // Store
 // ---------------------------------------------------------------------------
 
@@ -49,17 +74,7 @@ export const useSubscriptionStore = create<SubscriptionState & SubscriptionActio
 
       hasFeature: (feature) => {
         const { tier } = get();
-        const features = TIER_FEATURES[tier] ?? TIER_FEATURES.free;
-        // Check current tier and all inherited tiers
-        if (features.includes(feature)) return true;
-        // Check if any "all_*_features" entry covers it
-        for (const f of features) {
-          if (f.startsWith('all_')) {
-            const parentTier = f.replace('all_', '').replace('_features', '') as SubscriptionTier;
-            if (TIER_FEATURES[parentTier]?.includes(feature)) return true;
-          }
-        }
-        return false;
+        return collectFeatures(tier).has(feature);
       },
 
       activate: (tier, productId, expiresAt) =>
@@ -82,19 +97,7 @@ export const useSubscriptionStore = create<SubscriptionState & SubscriptionActio
 
       getFeatures: () => {
         const { tier } = get();
-        const features = new Set<string>();
-        const collect = (t: SubscriptionTier) => {
-          for (const f of TIER_FEATURES[t] ?? []) {
-            if (f.startsWith('all_')) {
-              const parentTier = f.replace('all_', '').replace('_features', '') as SubscriptionTier;
-              collect(parentTier);
-            } else {
-              features.add(f);
-            }
-          }
-        };
-        collect(tier);
-        return Array.from(features);
+        return Array.from(collectFeatures(tier));
       },
     }),
     {

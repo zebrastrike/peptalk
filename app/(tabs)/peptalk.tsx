@@ -11,7 +11,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
@@ -81,6 +81,7 @@ const JournalToast: React.FC = () => {
 /* ─── Main Screen ────────────────────────────────────────────────── */
 
 export default function PepTalkScreen() {
+  const router = useRouter();
   const { prefill, message: prefillMessage } = useLocalSearchParams<{
     prefill?: string;
     message?: string;
@@ -291,6 +292,7 @@ export default function PepTalkScreen() {
   // Get quick replies from the last bot message
   const lastBotMessage = [...messages].reverse().find((m) => m.role === 'bot');
   const quickReplies = lastBotMessage?.quickReplies || [];
+  const botActions = lastBotMessage?.actions || [];
   const lastBotHasJournal = !!lastBotMessage?.journalEntry;
 
   const renderMessage = useCallback(
@@ -304,7 +306,7 @@ export default function PepTalkScreen() {
         <View style={styles.emptyIconWrap}>
           <PepTalkCharacter size={100} variant="full" animated />
         </View>
-        <Text style={styles.emptyTitle}>PepTalk</Text>
+        <Text style={styles.emptyTitle}>Pepe</Text>
         <Text style={styles.emptySubtitle}>
           Your personal health companion
         </Text>
@@ -440,6 +442,41 @@ export default function PepTalkScreen() {
                   style={styles.quickReplyGradient}
                 >
                   <Text style={styles.quickReplyText}>{reply}</Text>
+                </LinearGradient>
+              </AnimatedPress>
+            ))}
+          </View>
+        )}
+
+        {/* ── Action Buttons ────────────────────────────────── */}
+        {botActions.length > 0 && !isTyping && (
+          <View style={styles.actionBtns}>
+            {botActions.map((action, idx) => (
+              <AnimatedPress
+                key={`${action.route}-${idx}`}
+                style={styles.actionBtn}
+                onPress={() => {
+                  tapMedium();
+                  router.push(action.route as any);
+                }}
+                scaleTo={0.95}
+              >
+                <LinearGradient
+                  colors={['rgba(139,92,246,0.18)', 'rgba(59,130,246,0.10)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.actionBtnGradient}
+                >
+                  {action.icon && (
+                    <Ionicons
+                      name={action.icon as any}
+                      size={16}
+                      color="#a78bfa"
+                      style={{ marginRight: 6 }}
+                    />
+                  )}
+                  <Text style={styles.actionBtnText}>{action.label}</Text>
+                  <Ionicons name="chevron-forward" size={14} color="rgba(167,139,250,0.6)" />
                 </LinearGradient>
               </AnimatedPress>
             ))}
@@ -655,6 +692,35 @@ const styles = StyleSheet.create({
     color: Colors.pepBlueLight,
     fontSize: FontSizes.sm,
     fontWeight: '500',
+  },
+
+  /* ── Action buttons ── */
+  actionBtns: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    paddingHorizontal: Spacing.md,
+    paddingBottom: Spacing.xs,
+  },
+  actionBtn: {
+    borderRadius: BorderRadius.md,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(139,92,246,0.25)',
+  },
+  actionBtnGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: BorderRadius.md,
+    gap: 2,
+  },
+  actionBtnText: {
+    color: '#c4b5fd',
+    fontSize: FontSizes.sm,
+    fontWeight: '600',
+    marginRight: 4,
   },
 
   /* ── Journal toast ── */

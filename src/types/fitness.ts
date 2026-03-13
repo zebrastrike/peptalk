@@ -110,7 +110,21 @@ export type ProgramCategory =
   | 'full_body'
   | 'upper_body'
   | 'lower_body'
-  | 'challenge';
+  | 'challenge'
+  | 'glutes'
+  | 'posture'
+  | 'corrective'
+  | 'starter'
+  | 'trial'
+  | 'functional'
+  | 'trx'
+  | 'hiit'
+  | 'conditioning'
+  | 'compound'
+  | 'nutrition'
+  | 'education'
+  | 'wellness'
+  | 'recomp';
 
 export interface WorkoutWeek {
   weekNumber: number;
@@ -296,7 +310,7 @@ export interface BodyMeasurement {
 // Subscription / Paywall
 // ---------------------------------------------------------------------------
 
-export type SubscriptionTier = 'free' | 'basic' | 'premium' | 'trainer';
+export type SubscriptionTier = 'free' | 'plus' | 'pro';
 
 export interface SubscriptionState {
   tier: SubscriptionTier;
@@ -316,29 +330,32 @@ export const TIER_FEATURES: Record<SubscriptionTier, string[]> = {
     'peptide_education',
     'wellness_journal',
     'check_ins',
+    'dose_logging',
+    'learn_hub',
+    'basic_ai_chat',
   ],
-  basic: [
+  plus: [
     'all_free_features',
-    'ai_recipe_generator',
     'full_exercise_library',
     'workout_programs',
+    'ai_recipe_generator',
+    'custom_meal_plans',
+    'grocery_list',
+    'unlimited_ai_chat',
+    'unlimited_journal',
+    'health_reports_basic',
+    'health_device_sync',
+    'no_ads',
     'progress_photos',
     'advanced_analytics',
   ],
-  premium: [
-    'all_basic_features',
-    'trainer_programs',
-    'custom_meal_plans',
-    'ai_workout_suggestions',
-    'unlimited_ai_chat',
-    'body_measurements',
-    'export_data',
-  ],
-  trainer: [
-    'all_premium_features',
-    'direct_trainer_messaging',
-    'custom_programming',
+  pro: [
+    'all_plus_features',
+    'ai_health_planner',
     'nutritionist_consult',
+    'health_reports_full',
+    'export_data',
+    'ai_workout_builder',
     'priority_support',
   ],
 };
@@ -366,4 +383,25 @@ export interface HabitLog {
   date: string; // YYYY-MM-DD
   count: number;
   completed: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Grocery List
+// ---------------------------------------------------------------------------
+
+export type GroceryCategory =
+  | 'produce'
+  | 'protein'
+  | 'dairy'
+  | 'grains'
+  | 'supplements'
+  | 'other';
+
+export interface GroceryItem {
+  id: string;
+  name: string;
+  category: GroceryCategory;
+  checked: boolean;
+  /** Where the item was added from (e.g. recipe name) */
+  addedFrom?: string;
 }

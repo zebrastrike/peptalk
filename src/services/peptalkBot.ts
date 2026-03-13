@@ -9,6 +9,7 @@
  */
 
 import {
+  BotAction,
   BotIntent,
   BotContext,
   EnhancedBotContext,
@@ -492,7 +493,7 @@ function respondGreeting(context: BotContext): string {
     : `Hey there`;
 
   const parts = [
-    `${name}! I'm PepTalk, your friendly health companion! Here's what I can do for you:`,
+    `${name}! I'm Pepe, your friendly health companion! Here's what I can do for you:`,
     '',
     `• **Learn about peptides** — I know all about mechanisms, interactions, and protocols`,
     `• **Track your journey** — ask me about your dose history anytime`,
@@ -1746,7 +1747,7 @@ function respondJournalLog(
 }
 
 function respondGeneral(): string {
-  return `I'm your PepTalk health companion. Here's what I can help with:\n\n• **Peptide Information** — "Tell me about BPC-157"\n• **Mechanisms** — "How does semaglutide work?"\n• **Interactions** — "Can I stack CJC-1295 with Ipamorelin?"\n• **Category Browsing** — "What peptides help with sleep?"\n• **Comparisons** — "BPC-157 vs TB-500"\n• **Stack Building** — "Suggest a recovery stack"\n• **Storage Info** — "How do I store BPC-157?"\n• **Quality & Buying** — "What should I look for when buying peptides?"\n• **Safety** — "Are peptides safe?"\n• **Regulations** — "Are peptides legal?"\n• **Health Insights** — "Based on my check-ins, what should I explore?"\n\nI have data on ${PEPTIDES.length} research peptides. What would you like to know?`;
+  return `I'm Pepe, your health companion. Here's what I can help with:\n\n• **Peptide Information** — "Tell me about BPC-157"\n• **Mechanisms** — "How does semaglutide work?"\n• **Interactions** — "Can I stack CJC-1295 with Ipamorelin?"\n• **Category Browsing** — "What peptides help with sleep?"\n• **Comparisons** — "BPC-157 vs TB-500"\n• **Stack Building** — "Suggest a recovery stack"\n• **Storage Info** — "How do I store BPC-157?"\n• **Quality & Buying** — "What should I look for when buying peptides?"\n• **Safety** — "Are peptides safe?"\n• **Regulations** — "Are peptides legal?"\n• **Health Insights** — "Based on my check-ins, what should I explore?"\n\nI have data on ${PEPTIDES.length} research peptides. What would you like to know?`;
 }
 
 // ---------------------------------------------------------------------------
@@ -1856,6 +1857,114 @@ function getQuickReplies(intent: BotIntent, peptides: Peptide[]): string[] {
 }
 
 // ---------------------------------------------------------------------------
+// Action buttons for in-app navigation
+// ---------------------------------------------------------------------------
+
+function getActions(intent: BotIntent, peptides: Peptide[], context: BotContext): BotAction[] {
+  const p = peptides[0];
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const enhanced = context as EnhancedBotContext;
+  const hasTodayCheckIn = context.recentCheckIns?.some((c) => c.date === todayKey);
+  const hasTodayDose = enhanced?.recentDoses?.some((d: { date: string }) => d.date === todayKey);
+
+  switch (intent) {
+    case 'greeting': {
+      const actions: BotAction[] = [];
+      if (!hasTodayCheckIn) actions.push({ label: 'Check In', route: '/(tabs)/check-in', icon: 'heart-outline' });
+      if (!hasTodayDose) actions.push({ label: 'Log Dose', route: '/(tabs)/calendar', icon: 'flask-outline' });
+      actions.push({ label: 'Start Workout', route: '/workouts', icon: 'barbell-outline' });
+      return actions.slice(0, 3);
+    }
+    case 'peptide_info':
+      return p
+        ? [
+            { label: `View ${p.name}`, route: `/peptide/${p.id}`, icon: 'flask-outline' },
+            { label: 'Check Interactions', route: '/(tabs)/stack-builder', icon: 'git-merge-outline' },
+          ]
+        : [{ label: 'Browse Library', route: '/(tabs)/index', icon: 'library-outline' }];
+    case 'mechanism':
+      return p
+        ? [
+            { label: `Full Profile`, route: `/peptide/${p.id}`, icon: 'flask-outline' },
+            { label: 'Compare Peptides', route: '/(tabs)/index', icon: 'swap-horizontal-outline' },
+          ]
+        : [];
+    case 'dosing_protocol':
+      return [
+        ...(p ? [{ label: 'Log Dose', route: '/(tabs)/calendar', icon: 'add-circle-outline' } as BotAction] : []),
+        ...(p ? [{ label: `View ${p.name}`, route: `/peptide/${p.id}`, icon: 'document-text-outline' } as BotAction] : []),
+        { label: 'Ask Pepe More', route: '/(tabs)/peptalk', icon: 'chatbubble-outline' },
+      ].slice(0, 3);
+    case 'interaction_check':
+      return [
+        { label: 'Build Stack', route: '/(tabs)/stack-builder', icon: 'layers-outline' },
+        { label: 'Browse Stacks', route: '/(tabs)/my-stacks', icon: 'albums-outline' },
+      ];
+    case 'category_explore':
+      return [
+        { label: 'Browse Library', route: '/(tabs)/index', icon: 'library-outline' },
+        ...(p ? [{ label: `View ${p.name}`, route: `/peptide/${p.id}`, icon: 'flask-outline' } as BotAction] : []),
+      ];
+    case 'side_effects':
+      return [
+        ...(p ? [{ label: `View ${p.name}`, route: `/peptide/${p.id}`, icon: 'flask-outline' } as BotAction] : []),
+        { label: 'Check In', route: '/(tabs)/check-in', icon: 'heart-outline' },
+      ];
+    case 'storage':
+      return p
+        ? [{ label: `View ${p.name}`, route: `/peptide/${p.id}`, icon: 'flask-outline' }]
+        : [{ label: 'Learn More', route: '/learn', icon: 'book-outline' }];
+    case 'stack_help':
+      return [
+        { label: 'Stack Builder', route: '/(tabs)/stack-builder', icon: 'layers-outline' },
+        { label: 'My Stacks', route: '/(tabs)/my-stacks', icon: 'albums-outline' },
+      ];
+    case 'health_suggest':
+      return [
+        { label: 'Check In', route: '/(tabs)/check-in', icon: 'heart-outline' },
+        { label: 'Health Report', route: '/health-report', icon: 'analytics-outline' },
+      ];
+    case 'knowledge_topic':
+      return [
+        { label: 'Learn Hub', route: '/learn', icon: 'book-outline' },
+        { label: 'Watch Videos', route: '/learn', icon: 'play-circle-outline' },
+      ];
+    case 'goal_suggest':
+      return [
+        { label: 'Browse Stacks', route: '/(tabs)/my-stacks', icon: 'albums-outline' },
+        { label: 'Start Program', route: '/workouts', icon: 'barbell-outline' },
+      ];
+    case 'workout_suggest':
+      return [
+        { label: 'Start Workout', route: '/workouts', icon: 'barbell-outline' },
+        { label: 'Browse Programs', route: '/workouts', icon: 'list-outline' },
+      ];
+    case 'meal_suggest':
+      return [
+        { label: 'Recipe Generator', route: '/nutrition/recipe-generator', icon: 'restaurant-outline' },
+        { label: 'Log Meal', route: '/nutrition', icon: 'nutrition-outline' },
+      ];
+    case 'create_plan':
+    case 'modify_plan':
+      return [
+        { label: 'View Calendar', route: '/(tabs)/calendar', icon: 'calendar-outline' },
+        { label: 'Workouts', route: '/workouts', icon: 'barbell-outline' },
+        { label: 'Nutrition', route: '/nutrition', icon: 'nutrition-outline' },
+      ];
+    case 'journal_log':
+      return [
+        { label: 'View Journal', route: '/journal', icon: 'book-outline' },
+        { label: 'Check In', route: '/(tabs)/check-in', icon: 'heart-outline' },
+      ];
+    default:
+      return [
+        { label: 'Browse Peptides', route: '/(tabs)/index', icon: 'flask-outline' },
+        { label: 'Learn Hub', route: '/learn', icon: 'book-outline' },
+      ];
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main response generator
 // ---------------------------------------------------------------------------
 
@@ -1928,6 +2037,7 @@ export function generateLocalBotResponse(
       const journalResult = respondJournalLog(userMessage, mentionedPeptides, context);
       content = journalResult.content;
       const quickReplies = getQuickReplies(intent, mentionedPeptides);
+      const journalActions = getActions(intent, mentionedPeptides, context);
       // Return early with journal entry attached
       return {
         id: uid(),
@@ -1936,6 +2046,7 @@ export function generateLocalBotResponse(
         timestamp: new Date().toISOString(),
         relatedPeptideIds: mentionedPeptides.map((p) => p.id),
         quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+        actions: journalActions.length > 0 ? journalActions : undefined,
         journalEntry: journalResult.journalEntry,
       };
     }
@@ -1951,6 +2062,7 @@ export function generateLocalBotResponse(
   }
 
   const quickReplies = getQuickReplies(intent, mentionedPeptides);
+  const actions = getActions(intent, mentionedPeptides, context);
 
   return {
     id: uid(),
@@ -1959,6 +2071,7 @@ export function generateLocalBotResponse(
     timestamp: new Date().toISOString(),
     relatedPeptideIds: mentionedPeptides.map((p) => p.id),
     quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+    actions: actions.length > 0 ? actions : undefined,
   };
 }
 

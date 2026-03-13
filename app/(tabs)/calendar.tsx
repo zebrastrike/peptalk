@@ -19,6 +19,7 @@ import { useDoseLogStore } from '../../src/store/useDoseLogStore';
 import { useCheckinStore } from '../../src/store/useCheckinStore';
 import { useJournalStore } from '../../src/store/useJournalStore';
 import { useWorkoutStore } from '../../src/store/useWorkoutStore';
+import { useMealStore } from '../../src/store/useMealStore';
 import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
 import { DOSE_LOG_GATE_DISCLAIMER } from '../../src/constants/legal';
@@ -271,6 +272,8 @@ export default function CalendarScreen() {
   const getJournalByDate = useJournalStore((s) => s.getEntriesByDate);
   const workoutLogs = useWorkoutStore((s) => s.logs);
   const getWorkoutLogsByDate = useWorkoutStore((s) => s.getLogsByDate);
+  const meals = useMealStore((s) => s.meals);
+  const getMealsByDate = useMealStore((s) => s.getMealsByDate);
 
   const datesWithDoses = useMemo(() => getDatesWithDoses(), [doses]);
   const checkinDates = useMemo(
@@ -284,6 +287,10 @@ export default function CalendarScreen() {
   const workoutDates = useMemo(
     () => new Set(workoutLogs.map((l) => l.date)),
     [workoutLogs]
+  );
+  const mealDates = useMemo(
+    () => new Set(meals.map((m) => m.date)),
+    [meals]
   );
 
   const selectedDayDoses = useMemo(
@@ -304,6 +311,11 @@ export default function CalendarScreen() {
   const selectedDayWorkouts = useMemo(
     () => getWorkoutLogsByDate(selectedDate),
     [selectedDate, workoutLogs]
+  );
+
+  const selectedDayMeals = useMemo(
+    () => getMealsByDate(selectedDate),
+    [selectedDate, meals]
   );
 
   const activeProtocols = useMemo(() => getActiveProtocols(), [protocols]);
@@ -369,16 +381,44 @@ export default function CalendarScreen() {
     setLogNotes('');
     setShowLogModal(false);
 
+    // Build alert buttons based on today's activity
+    const todayStr = toDateKey(new Date());
+    const hasCheckinToday = checkins.some((c) => c.date === todayStr);
+
     if (timingTip) {
-      Alert.alert('Dose Logged ✓', timingTip, [
+      const buttons: { text: string; onPress?: () => void }[] = [
         { text: 'Got It' },
-        { text: 'Check In', onPress: () => router.push('/(tabs)/check-in') },
-      ]);
+      ];
+      if (!hasCheckinToday) {
+        buttons.push({
+          text: 'Check In',
+          onPress: () => router.push('/(tabs)/check-in'),
+        });
+      }
+      buttons.push({
+        text: 'Ask Pepe',
+        onPress: () => router.push('/(tabs)/peptalk'),
+      });
+      Alert.alert('Dose Logged', timingTip, buttons);
     } else {
-      Alert.alert('Dose Logged', 'Entry saved. Track how you feel with a check-in.', [
+      const buttons: { text: string; onPress?: () => void }[] = [
         { text: 'OK' },
-        { text: 'Check In', onPress: () => router.push('/(tabs)/check-in') },
-      ]);
+      ];
+      if (!hasCheckinToday) {
+        buttons.push({
+          text: 'Check In',
+          onPress: () => router.push('/(tabs)/check-in'),
+        });
+      }
+      buttons.push({
+        text: 'Ask Pepe',
+        onPress: () => router.push('/(tabs)/peptalk'),
+      });
+      Alert.alert(
+        'Dose Logged',
+        'Entry saved. Track how you feel with a check-in.',
+        buttons,
+      );
     }
   };
 
@@ -395,7 +435,8 @@ export default function CalendarScreen() {
     selectedDayDoses.length > 0 ||
     selectedDayCheckin !== null ||
     selectedDayJournal.length > 0 ||
-    selectedDayWorkouts.length > 0;
+    selectedDayWorkouts.length > 0 ||
+    selectedDayMeals.length > 0;
 
   // -- Dose Disclaimer Gate
   if (!hasAcceptedDoseDisclaimer) {
@@ -505,6 +546,7 @@ export default function CalendarScreen() {
               const hasCheckin = checkinDates.has(key);
               const hasJournal = journalDates.has(key);
               const hasWorkout = workoutDates.has(key);
+              const hasMeal = mealDates.has(key);
 
               return (
                 <TouchableOpacity
@@ -557,6 +599,7 @@ export default function CalendarScreen() {
                     {hasCheckin && <View style={[styles.dot, styles.dotCheckin]} />}
                     {hasJournal && <View style={[styles.dot, styles.dotJournal]} />}
                     {hasWorkout && <View style={[styles.dot, styles.dotWorkout]} />}
+                    {hasMeal && <View style={[styles.dot, styles.dotMeal]} />}
                   </View>
                 </TouchableOpacity>
               );
@@ -581,6 +624,10 @@ export default function CalendarScreen() {
               <View style={[styles.legendDot, styles.dotWorkout]} />
               <Text style={styles.legendText}>Workout</Text>
             </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, styles.dotMeal]} />
+              <Text style={styles.legendText}>Meal</Text>
+            </View>
           </View>
         </GlassCard>
 
@@ -601,7 +648,8 @@ export default function CalendarScreen() {
                     {selectedDayDoses.length +
                       (selectedDayCheckin ? 1 : 0) +
                       selectedDayJournal.length +
-                      selectedDayWorkouts.length}
+                      selectedDayWorkouts.length +
+                      selectedDayMeals.length}
                   </Text>
                 </View>
               )}
@@ -717,6 +765,42 @@ export default function CalendarScreen() {
                               <Text style={styles.workoutMetaText}>{wlog.rating}/5</Text>
                             </View>
                           )}
+                        </View>
+                      </GlassCard>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
+
+            {/* -- Meal Logs */}
+            {selectedDayMeals.length > 0 && (
+              <View style={styles.timelineSection}>
+                {selectedDayMeals.map((meal) => {
+                  const totalCal =
+                    meal.foods.reduce((sum, f) => sum + f.calories, 0) +
+                    (meal.quickLog?.calories ?? 0);
+                  return (
+                    <TouchableOpacity
+                      key={meal.id}
+                      activeOpacity={0.8}
+                      onPress={() => router.push('/nutrition')}
+                    >
+                      <GlassCard variant="glow" glowColor="#f59e0b" style={styles.eventCard}>
+                        <View style={styles.eventCardHeader}>
+                          <View style={[styles.eventIconWrap, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+                            <Ionicons name="nutrition" size={20} color="#f59e0b" />
+                          </View>
+                          <View style={styles.eventCardHeaderText}>
+                            <Text style={styles.eventCardTitle}>
+                              {meal.mealType.charAt(0).toUpperCase() +
+                                meal.mealType.slice(1)}
+                            </Text>
+                            <Text style={styles.eventCardTime}>
+                              {totalCal} cal
+                            </Text>
+                          </View>
+                          <Ionicons name="chevron-forward" size={16} color={Colors.darkTextSecondary} />
                         </View>
                       </GlassCard>
                     </TouchableOpacity>
@@ -1218,6 +1302,7 @@ const styles = StyleSheet.create({
   dotCheckin: { backgroundColor: '#22c55e' },
   dotJournal: { backgroundColor: '#8b5cf6' },
   dotWorkout: { backgroundColor: Colors.pepTeal },
+  dotMeal: { backgroundColor: '#f59e0b' },
 
   // Legend
   legend: {

@@ -212,6 +212,14 @@ export interface ResearchArticle {
 
 export type ChatRole = 'user' | 'bot';
 
+/** Action button that Pepe can attach to responses for in-app navigation */
+export interface BotAction {
+  label: string;
+  route: string;
+  params?: Record<string, string>;
+  icon?: string; // Ionicon name
+}
+
 export interface ChatMessage {
   id: string;
   role: ChatRole;
@@ -219,6 +227,8 @@ export interface ChatMessage {
   timestamp: string;
   relatedPeptideIds?: string[];
   quickReplies?: string[];
+  /** Tappable action buttons for navigation from bot responses */
+  actions?: BotAction[];
   /** Auto-generated journal entry from conversational logging */
   journalEntry?: {
     category: JournalCategory;

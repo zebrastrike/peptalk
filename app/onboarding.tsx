@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
+  TextInput,
   StyleSheet,
   Alert,
 } from 'react-native';
@@ -15,12 +16,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { PepTalkCharacter } from '../src/components/PepTalkCharacter';
 import { GradientButton } from '../src/components/GradientButton';
 import { useOnboardingStore } from '../src/store/useOnboardingStore';
+import { useHealthProfileStore } from '../src/store/useHealthProfileStore';
 import { GlassCard } from '../src/components/GlassCard';
 import { OptionCard } from '../src/components/OptionCard';
 import { CATEGORIES } from '../src/constants/categories';
 import { GOAL_OPTIONS } from '../src/constants/goals';
 import { trackOnboardingComplete } from '../src/services/analyticsEvents';
-import { AgeRange, Ethnicity, Gender, MaritalStatus, ReferralSource } from '../src/types';
+import { AgeRange, Ethnicity, Gender, MaritalStatus, ReferralSource, ActivityLevel } from '../src/types';
 
 const GENDER_OPTIONS: Gender[] = ['Male', 'Female'];
 const AGE_OPTIONS: AgeRange[] = ['18-29', '30-44', '45-60', '60+'];
@@ -44,17 +46,43 @@ const REFERRAL_OPTIONS: ReferralSource[] = [
   'Other',
 ];
 
+const ACTIVITY_LEVELS: { value: ActivityLevel; label: string }[] = [
+  { value: 'sedentary', label: 'Sedentary' },
+  { value: 'light', label: 'Light' },
+  { value: 'moderate', label: 'Moderate' },
+  { value: 'active', label: 'Active' },
+  { value: 'very_active', label: 'Very Active' },
+];
+
+const HEALTH_CONDITIONS = [
+  'Diabetes',
+  'Hypertension',
+  'Thyroid',
+  'Heart Disease',
+  'Autoimmune',
+  'PCOS',
+  'None',
+];
+
 const STEP_TITLES = [
   'Welcome',
   'Your Goals',
   'About You',
   'Topics of Interest',
   'Your Data',
+  'Health Basics',
 ];
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const [step, setStep] = useState(0);
+
+  // Health basics state (Step 5)
+  const [weightLbs, setWeightLbs] = useState('');
+  const [heightFeet, setHeightFeet] = useState('');
+  const [heightInches, setHeightInches] = useState('');
+  const [activityLevel, setActivityLevel] = useState<ActivityLevel>('moderate');
+  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
 
   const {
     profile,
@@ -70,12 +98,50 @@ export default function OnboardingScreen() {
     completeOnboarding,
   } = useOnboardingStore();
 
+  const { setBodyMetrics, setLifestyle, addCondition, removeCondition } =
+    useHealthProfileStore();
+
   const canContinue = useMemo(() => {
     if (step === 0) return profile.acceptedSafety;
     if (step === 1) return profile.healthGoals.length > 0;
     if (step === 2) return Boolean(profile.gender && profile.ageRange);
     return true;
   }, [profile.acceptedSafety, profile.healthGoals.length, profile.ageRange, profile.gender, step]);
+
+  const saveHealthBasics = () => {
+    const weight = parseFloat(weightLbs);
+    const feet = parseInt(heightFeet, 10);
+    const inches = parseInt(heightInches, 10);
+
+    if (!isNaN(weight) && weight > 0) {
+      setBodyMetrics({ weightLbs: weight });
+    }
+    if (!isNaN(feet) && feet > 0) {
+      const totalInches = feet * 12 + (isNaN(inches) ? 0 : inches);
+      setBodyMetrics({ heightInches: totalInches });
+    }
+
+    setLifestyle({ activityLevel });
+
+    // Sync conditions: remove old, add new
+    const noneSelected = selectedConditions.includes('None');
+    if (!noneSelected) {
+      selectedConditions.forEach((c) => addCondition(c));
+    }
+  };
+
+  const toggleCondition = (condition: string) => {
+    setSelectedConditions((prev) => {
+      if (condition === 'None') {
+        return prev.includes('None') ? [] : ['None'];
+      }
+      const without = prev.filter((c) => c !== 'None');
+      if (without.includes(condition)) {
+        return without.filter((c) => c !== condition);
+      }
+      return [...without, condition];
+    });
+  };
 
   const handleNext = () => {
     if (!canContinue) {
@@ -89,6 +155,14 @@ export default function OnboardingScreen() {
       setStep((prev) => prev + 1);
       return;
     }
+    // Final step — save health basics data and finish
+    saveHealthBasics();
+    completeOnboarding();
+    trackOnboardingComplete(profile.interestCategories.length);
+    router.replace('/(tabs)');
+  };
+
+  const handleSkipHealthBasics = () => {
     completeOnboarding();
     trackOnboardingComplete(profile.interestCategories.length);
     router.replace('/(tabs)');
@@ -137,7 +211,7 @@ export default function OnboardingScreen() {
             <GlassCard variant="glow" style={styles.welcomeCard}>
               <Text style={styles.welcomeTitle}>Hey there!</Text>
               <Text style={styles.welcomeText}>
-                I'm PepTalk — your friendly health companion for peptide
+                I'm Pepe — your friendly health companion for peptide
                 education, tracking, and personalized insights. Let's get you
                 set up!
               </Text>
@@ -405,6 +479,115 @@ export default function OnboardingScreen() {
           </View>
         )}
 
+        {/* Step 5: Health Basics (optional) */}
+        {step === 5 && (
+          <View style={styles.section}>
+            <GlassCard variant="glow" style={styles.card}>
+              <Text style={styles.cardTitle}>Tell us more about you</Text>
+              <Text style={styles.cardText}>
+                This makes your dashboard feel personalized from day one. All
+                fields are optional.
+              </Text>
+
+              <Text style={styles.groupTitle}>Weight (lbs)</Text>
+              <TextInput
+                style={styles.healthInput}
+                value={weightLbs}
+                onChangeText={setWeightLbs}
+                placeholder="e.g. 175"
+                placeholderTextColor="#6b7280"
+                keyboardType="numeric"
+              />
+
+              <Text style={styles.groupTitle}>Height</Text>
+              <View style={styles.heightRow}>
+                <View style={styles.heightField}>
+                  <TextInput
+                    style={styles.healthInput}
+                    value={heightFeet}
+                    onChangeText={setHeightFeet}
+                    placeholder="Feet"
+                    placeholderTextColor="#6b7280"
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.heightField}>
+                  <TextInput
+                    style={styles.healthInput}
+                    value={heightInches}
+                    onChangeText={setHeightInches}
+                    placeholder="Inches"
+                    placeholderTextColor="#6b7280"
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+
+              <Text style={styles.groupTitle}>Activity Level</Text>
+              <View style={styles.optionStack}>
+                {ACTIVITY_LEVELS.map((level) => (
+                  <OptionCard
+                    key={level.value}
+                    label={level.label}
+                    selected={activityLevel === level.value}
+                    onPress={() => setActivityLevel(level.value)}
+                  />
+                ))}
+              </View>
+
+              <Text style={styles.groupTitle}>Health Conditions</Text>
+              <Text style={styles.groupSubtext}>
+                Select any that apply. This helps personalize safety insights.
+              </Text>
+              <View style={styles.goalGrid}>
+                {HEALTH_CONDITIONS.map((condition) => {
+                  const selected = selectedConditions.includes(condition);
+                  return (
+                    <TouchableOpacity
+                      key={condition}
+                      style={[
+                        styles.goalChip,
+                        selected && {
+                          backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                          borderColor: 'rgba(59, 130, 246, 0.5)',
+                        },
+                      ]}
+                      onPress={() => toggleCondition(condition)}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={
+                          condition === 'None'
+                            ? 'checkmark-circle-outline'
+                            : 'medkit-outline'
+                        }
+                        size={18}
+                        color={selected ? '#3B82F6' : '#9ca3af'}
+                      />
+                      <Text
+                        style={[
+                          styles.goalChipText,
+                          selected && { color: '#3B82F6' },
+                        ]}
+                      >
+                        {condition}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </GlassCard>
+
+            <TouchableOpacity
+              onPress={handleSkipHealthBasics}
+              style={styles.skipButton}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.skipText}>Skip for now</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <View style={styles.navRow}>
           <TouchableOpacity
             style={[styles.navButton, styles.backButton]}
@@ -628,5 +811,33 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#9ca3af',
+  },
+  healthInput: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+    color: '#f7f2ec',
+    fontSize: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  heightRow: {
+    flexDirection: 'row' as const,
+    gap: 10,
+  },
+  heightField: {
+    flex: 1,
+  },
+  skipButton: {
+    alignItems: 'center' as const,
+    paddingVertical: 14,
+    marginTop: 4,
+  },
+  skipText: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: '#6b7280',
+    textDecorationLine: 'underline' as const,
   },
 });

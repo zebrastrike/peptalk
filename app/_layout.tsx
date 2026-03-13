@@ -245,6 +245,13 @@ export default function RootLayout() {
               animation: 'slide_from_right',
             }}
           />
+          <Stack.Screen
+            name="nutrition/grocery-list"
+            options={{
+              headerShown: false,
+              animation: 'slide_from_right',
+            }}
+          />
           {/* Subscription */}
           <Stack.Screen
             name="subscription"

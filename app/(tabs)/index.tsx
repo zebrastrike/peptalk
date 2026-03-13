@@ -40,6 +40,7 @@ import { useAchievementStore } from '../../src/store/useAchievementStore';
 import { useWorkoutStore } from '../../src/store/useWorkoutStore';
 import { useMealStore } from '../../src/store/useMealStore';
 import { useStackStore } from '../../src/store/useStackStore';
+import { usePlanStore } from '../../src/store/usePlanStore';
 import { getSegmentByProfile } from '../../src/constants/segments';
 import { getEthnicityProfile } from '../../src/constants/ethnicityProfiles';
 import { PEPTIDES } from '../../src/data/peptides';
@@ -67,7 +68,7 @@ const QUICK_ACTIONS = [
   { id: 'dose', icon: 'flask-outline' as const, label: 'Log Dose', route: '/(tabs)/calendar', colors: ['#14b8a6', '#0d9488'] as [string, string] },
   { id: 'workout', icon: 'barbell-outline' as const, label: 'Workout', route: '/workouts', colors: ['#3b82f6', '#2563eb'] as [string, string] },
   { id: 'nutrition', icon: 'nutrition-outline' as const, label: 'Nutrition', route: '/nutrition', colors: ['#f59e0b', '#d97706'] as [string, string] },
-  { id: 'peptalk', icon: 'chatbubble-outline' as const, label: 'Ask PepTalk', route: '/(tabs)/peptalk', colors: ['#8b5cf6', '#7c3aed'] as [string, string] },
+  { id: 'peptalk', icon: 'chatbubble-outline' as const, label: 'Ask Pepe', route: '/(tabs)/peptalk', colors: ['#8b5cf6', '#7c3aed'] as [string, string] },
   { id: 'journal', icon: 'book-outline' as const, label: 'Journal', route: '/journal', colors: ['#06b6d4', '#0891b2'] as [string, string] },
 ];
 
@@ -174,6 +175,11 @@ export default function DashboardScreen() {
   const getWater = useMealStore((s) => s.getWater);
   const mealTargets = useMealStore((s) => s.targets);
   const stacks = useStackStore((s) => s.savedStacks);
+  const activePlan = usePlanStore((s) => s.activePlan);
+  const getTodayItems = usePlanStore((s) => s.getTodayItems);
+  const getWeeklyProgress = usePlanStore((s) => s.getWeeklyProgress);
+  const completeItem = usePlanStore((s) => s.completeItem);
+  const uncompleteItem = usePlanStore((s) => s.uncompleteItem);
 
   // ── Derived ───────────────────────────────────────────────────────────────
 
@@ -362,6 +368,51 @@ export default function DashboardScreen() {
 
     return events.sort((a, b) => (a.sortKey < b.sortKey ? -1 : 1));
   }, [doses, todayCheckin, workoutLogs, meals]);
+
+  // ── Pepe Says (contextual suggestion) ─────────────────────────────────────
+
+  const pepeSuggestion = useMemo(() => {
+    const today = todayKey();
+    const hasCheckin = entries.some((e) => e.date === today);
+    const hasWorkout = workoutLogs.some((w) => w.date === today);
+    const hasMeal = meals.some((m) => m.date === today);
+
+    if (!hasCheckin) {
+      return {
+        message: 'Hey! Start your day with a quick check-in',
+        route: '/(tabs)/check-in' as const,
+        actionLabel: 'Check In',
+        icon: 'heart-outline' as const,
+      };
+    }
+    if (!hasWorkout) {
+      return {
+        message: "Ready to move? Let's get a workout in",
+        route: '/workouts' as const,
+        actionLabel: 'Workout',
+        icon: 'barbell-outline' as const,
+      };
+    }
+    if (!hasMeal) {
+      return {
+        message: "Don't forget to track your meals",
+        route: '/nutrition' as const,
+        actionLabel: 'Log Meal',
+        icon: 'nutrition-outline' as const,
+      };
+    }
+    return {
+      message: 'Amazing day! You are crushing it',
+      route: '/(tabs)/peptalk' as const,
+      actionLabel: 'Ask Pepe',
+      icon: 'chatbubble-outline' as const,
+    };
+  }, [entries, workoutLogs, meals]);
+
+  // ── Today's Plan ────────────────────────────────────────────────────────
+
+  const todayPlanItems = useMemo(() => getTodayItems(), [activePlan]);
+  const weeklyProgress = useMemo(() => getWeeklyProgress(), [activePlan]);
 
   // ── Health Metrics ────────────────────────────────────────────────────────
 
@@ -589,6 +640,175 @@ export default function DashboardScreen() {
             </View>
           </LinearGradient>
         </RNAnimated.View>
+
+        {/* ══════════════════════════════════════════════════════════════════
+            1.5. PEPE SAYS - Contextual suggestion card
+        ══════════════════════════════════════════════════════════════════ */}
+        <Animated.View
+          entering={FadeInDown.delay(80).duration(500)}
+          style={styles.section}
+        >
+          <AnimatedPress
+            onPress={() => router.push(pepeSuggestion.route as any)}
+            scaleTo={0.97}
+          >
+            <GlassCard
+              variant="glow"
+              glowColor={accentColor}
+              style={styles.pepeSaysCard}
+            >
+              <View style={styles.pepeSaysRow}>
+                <View style={styles.pepeSaysCharacter}>
+                  <PepTalkCharacter size={40} animated />
+                </View>
+                <View style={styles.pepeSaysContent}>
+                  <Text style={styles.pepeSaysMessage}>
+                    {pepeSuggestion.message}
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    styles.pepeSaysAction,
+                    { backgroundColor: accentColor + '25' },
+                  ]}
+                >
+                  <Ionicons
+                    name={pepeSuggestion.icon}
+                    size={16}
+                    color={accentColor}
+                  />
+                  <Text
+                    style={[styles.pepeSaysActionText, { color: accentColor }]}
+                  >
+                    {pepeSuggestion.actionLabel}
+                  </Text>
+                </View>
+              </View>
+            </GlassCard>
+          </AnimatedPress>
+        </Animated.View>
+
+        {/* ══════════════════════════════════════════════════════════════════
+            1.6. TODAY'S PLAN - Scheduled items from active health plan
+        ══════════════════════════════════════════════════════════════════ */}
+        {activePlan && todayPlanItems.length > 0 && (
+          <Animated.View
+            entering={FadeInDown.delay(90).duration(500)}
+            style={styles.section}
+          >
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Today's Plan</Text>
+              <Text style={styles.sectionBadge}>
+                {weeklyProgress}% this week
+              </Text>
+            </View>
+
+            <GlassCard>
+              {todayPlanItems.map((item) => {
+                const typeRoute: Record<string, string> = {
+                  workout: '/workouts',
+                  meal: '/nutrition',
+                  checkin: '/(tabs)/check-in',
+                  protocol: '/(tabs)/calendar',
+                  custom: '/(tabs)/peptalk',
+                };
+                const typeIcon: Record<
+                  string,
+                  keyof typeof Ionicons.glyphMap
+                > = {
+                  workout: 'barbell-outline',
+                  meal: 'nutrition-outline',
+                  checkin: 'heart-outline',
+                  protocol: 'flask-outline',
+                  custom: 'star-outline',
+                };
+                const typeColor: Record<string, string> = {
+                  workout: '#3b82f6',
+                  meal: '#f59e0b',
+                  checkin: '#e3a7a1',
+                  protocol: '#14b8a6',
+                  custom: '#8b5cf6',
+                };
+
+                return (
+                  <View key={item.id} style={styles.planItemRow}>
+                    <TouchableOpacity
+                      style={styles.planCheckbox}
+                      onPress={() =>
+                        item.completed
+                          ? uncompleteItem(item.id)
+                          : completeItem(item.id)
+                      }
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={
+                          item.completed
+                            ? 'checkmark-circle'
+                            : 'ellipse-outline'
+                        }
+                        size={22}
+                        color={
+                          item.completed
+                            ? Colors.success
+                            : Colors.darkTextSecondary
+                        }
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.planItemContent}
+                      onPress={() =>
+                        router.push(
+                          (typeRoute[item.type] ?? '/(tabs)/peptalk') as any,
+                        )
+                      }
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={typeIcon[item.type] ?? 'star-outline'}
+                        size={16}
+                        color={typeColor[item.type] ?? '#8b5cf6'}
+                      />
+                      <View style={styles.planItemText}>
+                        <Text
+                          style={[
+                            styles.planItemTitle,
+                            item.completed && styles.planItemTitleDone,
+                          ]}
+                        >
+                          {item.title}
+                        </Text>
+                        <Text style={styles.planItemTime}>{item.time}</Text>
+                      </View>
+                      <Ionicons
+                        name="chevron-forward"
+                        size={14}
+                        color={Colors.darkTextSecondary}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+
+              {/* Weekly progress bar */}
+              <View style={styles.planProgressWrap}>
+                <View style={styles.planProgressTrack}>
+                  <LinearGradient
+                    colors={[accentColor, segment.palette.accent]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={[
+                      styles.planProgressFill,
+                      {
+                        width: `${Math.min(weeklyProgress, 100)}%` as any,
+                      },
+                    ]}
+                  />
+                </View>
+              </View>
+            </GlassCard>
+          </Animated.View>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════
             2. QUICK STATS ROW - 4 key metrics at a glance
@@ -1097,7 +1317,7 @@ export default function DashboardScreen() {
           entering={FadeInDown.delay(400).duration(500)}
           style={styles.section}
         >
-          <Text style={styles.sectionTitle}>Ask PepTalk</Text>
+          <Text style={styles.sectionTitle}>Ask Pepe</Text>
 
           {/* Prompt chips */}
           <ScrollView
@@ -2007,5 +2227,95 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingTop: 8,
+  },
+
+  // ── Pepe Says Card ───────────────────────────────────────────────────────
+  pepeSaysCard: {
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+  },
+  pepeSaysRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  pepeSaysCharacter: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  pepeSaysContent: {
+    flex: 1,
+  },
+  pepeSaysMessage: {
+    fontSize: FontSizes.sm,
+    fontWeight: '600',
+    color: Colors.darkText,
+    lineHeight: 20,
+  },
+  pepeSaysAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: BorderRadius.sm,
+  },
+  pepeSaysActionText: {
+    fontSize: FontSizes.xs,
+    fontWeight: '700',
+  },
+
+  // ── Today's Plan ─────────────────────────────────────────────────────────
+  planItemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.06)',
+  },
+  planCheckbox: {
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  planItemContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingLeft: 4,
+  },
+  planItemText: {
+    flex: 1,
+  },
+  planItemTitle: {
+    fontSize: FontSizes.sm,
+    fontWeight: '600',
+    color: Colors.darkText,
+  },
+  planItemTitleDone: {
+    textDecorationLine: 'line-through',
+    color: Colors.darkTextSecondary,
+  },
+  planItemTime: {
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    marginTop: 1,
+  },
+  planProgressWrap: {
+    marginTop: 12,
+    paddingTop: 8,
+  },
+  planProgressTrack: {
+    height: 4,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  planProgressFill: {
+    height: '100%',
+    borderRadius: 2,
   },
 });
