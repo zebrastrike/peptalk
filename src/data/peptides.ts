@@ -19,6 +19,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 31,
     halfLife: '~7 days',
     storageTemp: '2-8°C',
+    uses: {
+      primaryUses: ['Weight loss', 'Appetite suppression', 'Blood sugar management', 'Type 2 diabetes support'],
+      commonGoals: ['Fat loss', 'Metabolic health', 'Cardiovascular risk reduction', 'Portion control'],
+      whatPeopleReport: 'Users commonly report significant appetite reduction within the first few weeks, often describing a feeling of fullness after small meals. Many report steady, sustained weight loss of 1-2 lbs per week. Improved blood sugar control and reduced cravings for sugary or high-calorie foods are frequently mentioned. Some users note improved energy levels as weight decreases. Nausea during the initial titration period is a commonly reported side effect that typically diminishes over time.',
+      popularWith: ['Weight management', 'Metabolic health', 'Type 2 diabetes community', 'Body recomposition'],
+      pairsWith: ['bpc-157', 'aod-9604', 'mots-c', 'nad-plus'],
+    },
   },
   {
     id: 'tirzepatide',
@@ -37,6 +44,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 39,
     halfLife: '~5 days',
     storageTemp: '2-8°C',
+    uses: {
+      primaryUses: ['Weight loss', 'Dual-action appetite control', 'Blood sugar regulation', 'Body composition improvement'],
+      commonGoals: ['Aggressive fat loss', 'Metabolic health', 'Insulin sensitivity', 'Cardiovascular improvement'],
+      whatPeopleReport: 'Users often report more pronounced weight loss compared to single-action GLP-1 agonists, with many describing a dual effect on both appetite and metabolic rate. Reduced food noise and diminished cravings are commonly mentioned. Some users report improvements in energy and mood as metabolic markers improve. The dual GIP/GLP-1 action is frequently cited as providing a more comprehensive approach to weight management. GI side effects during dose escalation are commonly reported but typically manageable.',
+      popularWith: ['Weight management', 'Metabolic syndrome', 'Body recomposition', 'Athletes cutting weight'],
+      pairsWith: ['bpc-157', 'aod-9604', 'mots-c', 'nad-plus'],
+    },
   },
   {
     id: 'retatrutide',
@@ -126,6 +140,13 @@ export const PEPTIDES: Peptide[] = [
       'https://pubmed.ncbi.nlm.nih.gov/11146367/',
       'https://pubmed.ncbi.nlm.nih.gov/11713213/',
     ],
+    uses: {
+      primaryUses: ['Targeted fat loss', 'Lipolysis enhancement', 'Body composition', 'Cartilage support'],
+      commonGoals: ['Stubborn fat reduction', 'Body recomposition', 'Joint health', 'Lean physique'],
+      whatPeopleReport: 'Users commonly report targeted fat reduction, particularly in stubborn areas like the abdomen and love handles, when administered fasted in the morning. Many appreciate that it does not affect appetite, blood sugar, or IGF-1 levels the way full growth hormone does. Users frequently pair it with GLP-1 agonists for complementary fat loss mechanisms. Some report improved joint comfort, referencing its Australian TGA approval for knee osteoarthritis. Results are often described as gradual but consistent over 8-12 week cycles.',
+      popularWith: ['Body recomposition', 'Athletes', 'Anti-aging enthusiasts', 'Joint health'],
+      pairsWith: ['semaglutide', 'tirzepatide', 'cjc-1295', 'ipamorelin', 'bpc-157'],
+    },
   },
   {
     id: '5-amino-1mq',
@@ -187,6 +208,13 @@ export const PEPTIDES: Peptide[] = [
       'https://pubmed.ncbi.nlm.nih.gov/40756949/',
       'https://pubmed.ncbi.nlm.nih.gov/40005999/',
     ],
+    uses: {
+      primaryUses: ['Injury recovery', 'Gut healing', 'Tendon and ligament repair', 'Inflammation reduction'],
+      commonGoals: ['Faster recovery', 'Gut health', 'Joint repair', 'Tissue healing', 'Post-surgical recovery'],
+      whatPeopleReport: 'Users commonly report accelerated healing of muscle tears, tendon injuries, and ligament sprains, often noticing improvement within days to weeks. Gut health improvements are frequently cited, including reduced symptoms of leaky gut, IBS, and gastric discomfort. Many users describe it as a foundational recovery peptide they include in almost every stack. Athletes report faster return-to-training timelines after injuries. Some users report improvements in mood and cognitive clarity, which researchers attribute to its effects on dopaminergic and serotonergic systems. Often called the "Wolverine peptide" when stacked with TB-500.',
+      popularWith: ['Athletes', 'Injury recovery', 'Gut health', 'Anti-aging enthusiasts', 'Post-surgical healing'],
+      pairsWith: ['tb-500', 'ghk-cu', 'kpv', 'ipamorelin', 'cjc-1295'],
+    },
   },
   {
     id: 'tb-500',
@@ -205,6 +233,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 43,
     halfLife: '~2-3 hours',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Tissue repair', 'Flexibility improvement', 'Wound healing', 'Cardiac protection'],
+      commonGoals: ['Recovery from injury', 'Reduced scarring', 'Improved mobility', 'Hair regrowth', 'Systemic healing'],
+      whatPeopleReport: 'Users frequently report improved flexibility and range of motion, especially in chronically tight or injured areas. Many describe systemic healing effects that seem to work throughout the body rather than just at the injection site. Reduced scar tissue formation is commonly mentioned by those recovering from surgeries. Some users report noticeable hair regrowth or thickening. The "Wolverine Stack" combination with BPC-157 is one of the most popular peptide pairings in the community, with users reporting synergistic recovery benefits across multiple tissue types including muscle, tendon, ligament, and even nerve tissue.',
+      popularWith: ['Athletes', 'Injury recovery', 'Anti-aging enthusiasts', 'Hair restoration', 'Flexibility seekers'],
+      pairsWith: ['bpc-157', 'ghk-cu', 'cjc-1295', 'ipamorelin', 'kpv'],
+    },
   },
 
   // ─── GROWTH HORMONE ───────────────────────────────────────────────────────────
@@ -225,6 +260,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 30,
     halfLife: '~6-8 days (with DAC)',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Growth hormone optimization', 'Body composition improvement', 'Sleep enhancement', 'Anti-aging'],
+      commonGoals: ['Lean muscle gain', 'Fat loss', 'Deeper sleep', 'Recovery', 'Skin quality improvement'],
+      whatPeopleReport: 'Users commonly report noticeably deeper and more restorative sleep within the first week, often describing vivid dreams. Improvements in body composition are frequently cited, with gradual fat loss and lean muscle preservation over 3-6 month cycles. Many users describe improved skin quality, including better elasticity and reduced wrinkles. Recovery from workouts is often reported as faster and more complete. The CJC-1295/Ipamorelin combination is one of the most widely used GH peptide stacks, with users reporting synergistic benefits that mimic a more natural GH pulsatile release pattern.',
+      popularWith: ['Anti-aging enthusiasts', 'Athletes', 'Body recomposition', 'Sleep optimization', 'Longevity seekers'],
+      pairsWith: ['ipamorelin', 'bpc-157', 'tb-500', 'sermorelin', 'tesamorelin'],
+    },
   },
   {
     id: 'ipamorelin',
@@ -242,6 +284,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 5,
     halfLife: '~2 hours',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Growth hormone release', 'Anti-aging', 'Recovery enhancement', 'Sleep improvement'],
+      commonGoals: ['Lean muscle gain', 'Fat loss', 'Better sleep', 'Injury recovery', 'Youthful vitality'],
+      whatPeopleReport: 'Users frequently report Ipamorelin as one of the gentlest and most well-tolerated GH secretagogues, with minimal hunger stimulation compared to GHRP-6 or GHRP-2. Improved sleep quality is one of the earliest reported benefits, often within the first few days. Gradual improvements in body composition are commonly described over 8-12 week protocols. Many users appreciate that it does not significantly elevate cortisol or prolactin, reducing unwanted hormonal side effects. Often described as an ideal starting point for those new to GH peptides.',
+      popularWith: ['Anti-aging enthusiasts', 'GH peptide beginners', 'Athletes', 'Sleep optimization', 'Recovery focused'],
+      pairsWith: ['cjc-1295', 'sermorelin', 'bpc-157', 'tb-500', 'tesamorelin'],
+    },
   },
   {
     id: 'tesamorelin',
@@ -259,6 +308,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 44,
     halfLife: '~26-38 minutes',
     storageTemp: '2-8°C',
+    uses: {
+      primaryUses: ['Visceral fat reduction', 'Body fat redistribution', 'Lipodystrophy management', 'Cognitive support'],
+      commonGoals: ['Belly fat reduction', 'Body composition', 'Metabolic health', 'Neuroprotection'],
+      whatPeopleReport: 'Users commonly report targeted reduction of visceral (belly) fat, often describing noticeable changes in waist measurement within 8-12 weeks. It is frequently chosen by those who want GH benefits with a focus specifically on reducing abdominal adiposity. Some users report improvements in cognitive function and mental clarity, which researchers are actively investigating. Studies suggest it may have neuroprotective properties beyond its metabolic effects. Users appreciate that it is one of the few peptides with FDA approval (for HIV-associated lipodystrophy), lending confidence in its safety profile.',
+      popularWith: ['Visceral fat reduction', 'Anti-aging enthusiasts', 'Metabolic health', 'HIV community'],
+      pairsWith: ['cjc-1295', 'ipamorelin', 'aod-9604', 'sermorelin', 'mots-c'],
+    },
   },
   {
     id: 'sermorelin',
@@ -276,6 +332,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 29,
     halfLife: '~10-20 minutes',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Growth hormone stimulation', 'Anti-aging', 'Sleep improvement', 'Body composition'],
+      commonGoals: ['Age-related GH decline', 'Better sleep quality', 'Lean muscle maintenance', 'Skin rejuvenation', 'Overall vitality'],
+      whatPeopleReport: 'Users commonly report improved sleep architecture as one of the first noticeable benefits, often describing feeling more rested upon waking. Many describe gradual improvements in skin elasticity and hair quality over several months. Sermorelin is often considered a more natural approach to GH optimization because it works through the body\'s own GHRH receptor, preserving normal feedback mechanisms. Users appreciate its long history of clinical use and established safety profile. Some report improved workout recovery and body composition changes over 3-6 month protocols.',
+      popularWith: ['Anti-aging enthusiasts', 'GH optimization', 'Sleep improvement', 'Longevity seekers', 'Wellness clinics'],
+      pairsWith: ['ipamorelin', 'cjc-1295', 'bpc-157', 'epithalon', 'ghk-cu'],
+    },
   },
   {
     id: 'ghrp-2',
@@ -384,6 +447,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 7,
     halfLife: '~2-3 minutes (plasma); prolonged CNS activity',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Cognitive enhancement', 'Neuroprotection', 'Focus and mental clarity', 'Stroke recovery support'],
+      commonGoals: ['Sharper focus', 'Memory improvement', 'Brain health', 'ADHD support', 'Post-TBI recovery'],
+      whatPeopleReport: 'Users commonly report noticeably improved focus and mental clarity within minutes of nasal administration. Enhanced ability to concentrate for extended periods and improved working memory are frequently described. Some users report a subtle mood lift and increased motivation, attributed to its dopaminergic and serotonergic modulation. The N-Acetyl Semax variant is popular for its reported 2-3x greater potency and longer duration. Many users in the nootropic community consider it one of the most effective and well-tolerated cognitive enhancers available. Studies suggest neuroprotective benefits including increased BDNF in the hippocampus and prefrontal cortex.',
+      popularWith: ['Nootropic enthusiasts', 'Students and professionals', 'ADHD community', 'Stroke recovery', 'Cognitive optimization'],
+      pairsWith: ['selank', 'noopept', 'nad-plus', 'dihexa', 'cerebrolysin'],
+    },
   },
   {
     id: 'selank',
@@ -401,6 +471,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 7,
     halfLife: '~several minutes (plasma); prolonged CNS effects',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Anxiety reduction', 'Cognitive enhancement', 'Immune modulation', 'Stress resilience'],
+      commonGoals: ['Anxiety relief without sedation', 'Mental clarity', 'Immune support', 'Mood stabilization', 'Benzodiazepine alternative'],
+      whatPeopleReport: 'Users commonly report a calm, focused state without the sedation or cognitive impairment associated with benzodiazepines. Many describe it as providing anxiolysis while maintaining or even enhancing mental sharpness. The absence of tolerance, dependence, or withdrawal is frequently cited as a major advantage over conventional anxiolytics. Some users report improvements in immune function, particularly during periods of high stress or illness. The N-Acetyl Selank variant is popular for reportedly enhanced potency. Users in the nootropic community often stack it with Semax for a combined anxiolytic-cognitive enhancement protocol.',
+      popularWith: ['Anxiety management', 'Nootropic enthusiasts', 'Stress management', 'Immune support', 'Benzodiazepine tapering'],
+      pairsWith: ['semax', 'dsip', 'noopept', 'thymosin-alpha-1', 'kpv'],
+    },
   },
   {
     id: 'dihexa',
@@ -417,6 +494,13 @@ export const PEPTIDES: Peptide[] = [
     molecularWeight: '507.66 Da',
     halfLife: 'Under investigation; extended compared to angiotensin IV',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Cognitive enhancement', 'Memory consolidation', 'Synaptogenesis', 'Neuroprotection'],
+      commonGoals: ['Memory improvement', 'Cognitive decline support', 'Brain repair', 'Learning enhancement'],
+      whatPeopleReport: 'Users exploring this research compound report improvements in memory recall and learning capacity. It is commonly researched for its extraordinary potency in promoting synaptogenesis, reported to be 10 million times more potent than BDNF in certain assays. The nootropic community considers it among the most powerful cognitive-enhancing compounds studied, though human clinical data remain limited. Users generally approach it with caution due to its potent HGF pathway activation, which carries theoretical oncogenic concerns. It is typically reserved for significant cognitive impairment situations rather than casual nootropic use.',
+      popularWith: ['Cognitive decline support', 'Neuroscience research', 'Advanced nootropic users', 'TBI recovery'],
+      pairsWith: ['semax', 'cerebrolysin', 'noopept', 'nad-plus', 'humanin'],
+    },
   },
   {
     id: 'pinealon',
@@ -493,6 +577,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 2,
     halfLife: '~minutes',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Immune reconstitution', 'Thymic function restoration', 'Longevity support', 'Age-related immune decline'],
+      commonGoals: ['Immune system rejuvenation', 'Longevity', 'T-cell function', 'Reduced illness frequency'],
+      whatPeopleReport: 'Users in the longevity community commonly report improved immune resilience, including fewer and shorter illness episodes. It is a cornerstone of the classic Russian longevity protocol, typically administered biannually alongside Epithalon. Users describe it as supporting the immune system at a fundamental level by addressing age-related thymic involution. Long-term observational studies spanning 30+ years in elderly populations have investigated correlations with improved immune biomarkers. The peptide bioregulation community considers it essential for maintaining immune competence in aging.',
+      popularWith: ['Longevity enthusiasts', 'Aging population', 'Immune optimization', 'Russian peptide bioregulation'],
+      pairsWith: ['epithalon', 'thymosin-alpha-1', 'll-37', 'nad-plus', 'humanin'],
+    },
   },
   {
     id: 'll-37',
@@ -511,6 +602,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 37,
     halfLife: '~minutes to hours (tissue-dependent)',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Antimicrobial defense', 'Immune modulation', 'Wound healing', 'Biofilm disruption'],
+      commonGoals: ['Infection resistance', 'Immune support', 'Chronic infection management', 'Wound healing', 'Lyme disease support'],
+      whatPeopleReport: 'Users commonly report improved resilience against chronic and recurrent infections. The Lyme disease and chronic infection communities frequently discuss LL-37 for its broad-spectrum antimicrobial activity against bacteria, fungi, and enveloped viruses. Many users describe it as a natural antimicrobial peptide that supports the body\'s innate immune defense without the resistance concerns of traditional antibiotics. Wound healing acceleration is also frequently reported. Some users incorporate it into protocols for biofilm-associated infections where conventional antimicrobials have limited penetration.',
+      popularWith: ['Immune support', 'Chronic infection management', 'Lyme disease community', 'Wound healing', 'Antimicrobial research'],
+      pairsWith: ['thymosin-alpha-1', 'kpv', 'bpc-157', 'thymalin', 'nad-plus'],
+    },
   },
 
   // ─── ANTI-INFLAMMATORY ────────────────────────────────────────────────────────
@@ -531,6 +629,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 3,
     halfLife: '~minutes',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Gut inflammation reduction', 'Skin inflammation', 'Intestinal barrier support', 'Systemic anti-inflammatory'],
+      commonGoals: ['Gut healing', 'IBD/IBS support', 'Skin conditions', 'Reduced systemic inflammation', 'Mucosal healing'],
+      whatPeopleReport: 'Users commonly report significant improvements in gut-related symptoms including bloating, discomfort, and irregular digestion. The IBD and IBS communities frequently discuss KPV for its targeted anti-inflammatory effects on intestinal mucosa. Many users describe it as working synergistically with BPC-157 for comprehensive gut healing. Improvements in inflammatory skin conditions are also frequently reported when used topically or systemically. Users appreciate its mechanism of directly inhibiting NF-kB, the master inflammatory switch, without the immunosuppressive effects of conventional anti-inflammatory drugs.',
+      popularWith: ['Gut health', 'IBD/IBS community', 'Skin health', 'Anti-inflammatory protocols', 'Autoimmune support'],
+      pairsWith: ['bpc-157', 'll-37', 'thymosin-alpha-1', 'ghk-cu', 'glutathione'],
+    },
   },
 
   // ─── MITOCHONDRIAL ────────────────────────────────────────────────────────────
@@ -551,6 +656,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 16,
     halfLife: '~4-12 hours (estimated)',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Exercise mimetic', 'Metabolic optimization', 'Insulin sensitivity', 'Mitochondrial function'],
+      commonGoals: ['Enhanced exercise performance', 'Fat metabolism', 'Blood sugar regulation', 'Cellular energy', 'Muscle fiber optimization'],
+      whatPeopleReport: 'Users commonly report improved exercise tolerance and endurance, often describing it as providing a noticeable boost to workout performance. Enhanced fat metabolism and improved body composition are frequently cited over 8-12 week protocols. Many users in the metabolic health community value its direct AMPK activation, which mimics many of the cellular benefits of exercise. Some users report improved insulin sensitivity and blood sugar regulation. The longevity community considers MOTS-c a key mitochondrial-derived peptide for maintaining metabolic health during aging, as natural MOTS-c levels decline with age.',
+      popularWith: ['Athletes', 'Metabolic health', 'Exercise optimization', 'Longevity seekers', 'Weight management'],
+      pairsWith: ['ss-31', 'nad-plus', 'aod-9604', 'semaglutide', 'aicar'],
+    },
   },
   {
     id: 'ss-31',
@@ -569,6 +681,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 4,
     halfLife: '~4 hours',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Mitochondrial function optimization', 'Cellular energy production', 'Oxidative stress reduction', 'Organ protection'],
+      commonGoals: ['Mitochondrial health', 'Energy improvement', 'Anti-aging at the cellular level', 'Cardiac protection', 'Kidney support'],
+      whatPeopleReport: 'Users commonly report improved energy levels and reduced fatigue, often describing a sense of cellular vitality rather than stimulant-like energy. The longevity community values SS-31 for its unique mechanism of stabilizing cardiolipin in the inner mitochondrial membrane, which optimizes electron transport chain function at its source. Some users report improvements in exercise recovery and cardiovascular endurance. Research in cardiac, renal, and neurological mitochondrial dysfunction models has generated significant interest. Users appreciate that it reduces ROS generation at the source rather than simply scavenging free radicals after they form.',
+      popularWith: ['Longevity seekers', 'Mitochondrial health', 'Cardiac support', 'Energy optimization', 'Anti-aging research'],
+      pairsWith: ['mots-c', 'nad-plus', 'humanin', 'epithalon', 'glutathione'],
+    },
   },
   {
     id: 'nad-plus',
@@ -586,6 +705,13 @@ export const PEPTIDES: Peptide[] = [
     molecularWeight: '663.43 Da',
     halfLife: '~1-2 hours (plasma)',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Cellular energy restoration', 'DNA repair', 'Longevity support', 'Metabolic function'],
+      commonGoals: ['Energy and vitality', 'Anti-aging', 'Cognitive clarity', 'Addiction recovery support', 'Cellular repair'],
+      whatPeopleReport: 'Users commonly report a significant boost in energy and mental clarity, particularly with IV administration. Many describe feeling revitalized and cognitively sharper, often within hours of an IV infusion. The longevity community considers NAD+ repletion foundational to any anti-aging protocol, as NAD+ levels naturally decline 50% or more by middle age. Some users report improved mood and reduced brain fog. The addiction recovery community has explored NAD+ IV therapy as an adjunct for withdrawal support. Users frequently combine direct NAD+ repletion with precursor strategies (NMN, NR) for sustained benefits between infusions.',
+      popularWith: ['Longevity enthusiasts', 'Anti-aging', 'Cognitive optimization', 'Addiction recovery', 'High performers'],
+      pairsWith: ['epithalon', 'ss-31', 'mots-c', 'humanin', 'glutathione'],
+    },
   },
   {
     id: 'slu-pp-332',
@@ -622,6 +748,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 4,
     halfLife: '~minutes',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Telomere elongation', 'Longevity support', 'Melatonin regulation', 'Circadian rhythm optimization'],
+      commonGoals: ['Longevity', 'Cellular aging reversal', 'Better sleep patterns', 'Oxidative stress reduction', 'Geroprotection'],
+      whatPeopleReport: 'Users in the longevity community commonly report improved sleep quality and more regular circadian rhythms, often attributed to restored melatonin synthesis capacity. Many describe a general sense of vitality and well-being during and after 10-20 day treatment cycles. The telomerase activation mechanism generates significant interest among longevity enthusiasts, as telomere shortening is a hallmark of cellular aging. The classic Russian longevity protocol combines Epithalon with Thymalin biannually and is one of the most discussed longevity peptide regimens. Some users report improvements in skin quality and reduced oxidative stress markers. Long-term observational studies by Professor Khavinson spanning decades provide the foundational research for this peptide.',
+      popularWith: ['Longevity seekers', 'Anti-aging enthusiasts', 'Sleep optimization', 'Russian peptide bioregulation', 'Geroprotection'],
+      pairsWith: ['thymalin', 'nad-plus', 'ss-31', 'humanin', 'ghk-cu'],
+    },
   },
 
   // ─── SLEEP ────────────────────────────────────────────────────────────────────
@@ -642,6 +775,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 9,
     halfLife: '~7-8 minutes',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Deep sleep promotion', 'Stress modulation', 'Pain management', 'Recovery enhancement'],
+      commonGoals: ['Better sleep quality', 'Delta wave sleep', 'Stress resilience', 'Chronic pain support', 'Jet lag management'],
+      whatPeopleReport: 'Users commonly report deeper, more restorative sleep with increased time in delta wave (slow-wave) sleep phases. Many describe waking feeling more refreshed without the grogginess associated with pharmaceutical sleep aids. The absence of tolerance or dependence development is frequently cited as a major advantage. Some users report improved stress resilience and pain management as secondary benefits. The peptide is popular among shift workers and frequent travelers for circadian rhythm normalization and jet lag management. Users appreciate that it promotes natural sleep architecture rather than inducing sedation.',
+      popularWith: ['Sleep optimization', 'Shift workers', 'Frequent travelers', 'Pain management', 'Stress management'],
+      pairsWith: ['selank', 'epithalon', 'cjc-1295', 'ipamorelin', 'sermorelin'],
+    },
   },
 
   // ─── REPRODUCTIVE ─────────────────────────────────────────────────────────────
@@ -715,6 +855,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 7,
     halfLife: '~2-4 hours',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Sexual function enhancement', 'Libido improvement', 'Central arousal activation', 'Desire enhancement'],
+      commonGoals: ['Improved libido', 'Sexual wellness', 'Desire restoration', 'Intimacy enhancement'],
+      whatPeopleReport: 'Users commonly report enhanced sexual desire and arousal, often describing the effect as distinctly different from PDE5 inhibitors because it works on the brain rather than blood flow. Both men and women report improvements, with many women noting it addresses low desire specifically. Effects typically begin 30-60 minutes after administration. Some users report mild nausea or flushing as temporary side effects that diminish with subsequent use. Many users describe it as uniquely effective for addressing desire-related concerns that other approaches have not resolved. FDA-approved as Vyleesi for hypoactive sexual desire disorder (HSDD) in premenopausal women.',
+      popularWith: ['Sexual wellness', 'Women with HSDD', 'Couples', 'Anti-aging enthusiasts'],
+      pairsWith: ['melanotan-2', 'oxytocin', 'kisspeptin-10'],
+    },
   },
 
   // ─── COSMETIC ─────────────────────────────────────────────────────────────────
@@ -735,6 +882,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 3,
     halfLife: '~hours (tissue-dependent)',
     storageTemp: '2-8°C',
+    uses: {
+      primaryUses: ['Skin rejuvenation', 'Hair regrowth', 'Wound healing', 'Anti-aging', 'Collagen stimulation'],
+      commonGoals: ['Youthful skin', 'Hair restoration', 'Scar reduction', 'Post-procedure recovery', 'Neuroprotection'],
+      whatPeopleReport: 'Users frequently report visible improvements in skin texture, firmness, and fine lines within 4-8 weeks of topical or injectable use. Hair regrowth and thickening is one of the most commonly cited benefits, with many users incorporating it into scalp mesotherapy protocols. Post-procedure recovery (after microneedling, laser treatments, or surgery) is commonly reported as faster with less scarring. The copper peptide complex is appreciated for its multi-pathway approach, modulating over 4,000 genes related to tissue remodeling. Some users in the longevity community also value its neuroprotective and anti-inflammatory properties for brain health support.',
+      popularWith: ['Skincare enthusiasts', 'Hair restoration', 'Post-procedure recovery', 'Anti-aging', 'Longevity seekers'],
+      pairsWith: ['bpc-157', 'tb-500', 'epithalon', 'ghk-cu', 'nad-plus'],
+    },
   },
   {
     id: 'snap-8',
@@ -791,6 +945,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 7,
     halfLife: '~1-2 hours',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Tanning and melanogenesis', 'Sexual function', 'Appetite modulation', 'UV protection'],
+      commonGoals: ['Darker skin tone', 'UV protection enhancement', 'Libido improvement', 'Cosmetic tanning'],
+      whatPeopleReport: 'Users commonly report significant darkening of skin tone within 1-2 weeks of starting a loading phase, even with minimal sun exposure. Many users describe a more even, natural-looking tan compared to UV-only tanning. Sexual function enhancement is frequently reported as a secondary benefit due to MC4R activation. Some users report temporary nausea and facial flushing after injection, particularly during early dosing. Appetite suppression is sometimes noted. Users generally describe a maintenance protocol of less frequent dosing once desired pigmentation is achieved. It is important to note that this peptide is non-selective across melanocortin receptors, which accounts for its broad range of effects.',
+      popularWith: ['Tanning enthusiasts', 'Fair-skinned individuals', 'Cosmetic enhancement', 'Sexual wellness'],
+      pairsWith: ['pt-141', 'ghk-cu', 'melanotan-1'],
+    },
   },
 
   // ─── NEUROPEPTIDE ─────────────────────────────────────────────────────────────
@@ -920,6 +1081,13 @@ export const PEPTIDES: Peptide[] = [
     sequenceLength: 24,
     halfLife: '~hours (under investigation)',
     storageTemp: '-20°C',
+    uses: {
+      primaryUses: ['Neuroprotection', 'Cellular survival', 'Longevity support', 'Metabolic regulation'],
+      commonGoals: ['Brain health', 'Anti-aging', 'Mitochondrial protection', 'Insulin sensitivity', 'Cardiovascular support'],
+      whatPeopleReport: 'Users in the longevity and neuroprotection communities report interest in Humanin for its unique origin as a mitochondrial-derived peptide discovered in surviving neurons of Alzheimer\'s disease brains. Studies suggest potent cytoprotective and anti-apoptotic properties across multiple tissue types. The peptide is commonly discussed for its multi-system protective effects spanning brain, heart, and metabolic health. Users value its insulin-sensitizing properties and its role in supporting mitochondrial respiratory chain efficiency. The S14G analog (Humanin G or HNG) is frequently referenced for its enhanced potency. It is considered a key component of comprehensive longevity and neuroprotective peptide protocols.',
+      popularWith: ['Longevity seekers', 'Neuroprotection', 'Mitochondrial health', 'Anti-aging research', 'Cognitive decline prevention'],
+      pairsWith: ['ss-31', 'mots-c', 'nad-plus', 'epithalon', 'dihexa'],
+    },
   },
 
   // ─── SENOLYTIC ────────────────────────────────────────────────────────────────

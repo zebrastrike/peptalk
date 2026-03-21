@@ -8,8 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,6 +38,7 @@ import { canSendToCloud } from '../../src/services/privacyGuard';
 import { useJournalStore } from '../../src/store/useJournalStore';
 import { ChatMessage, EnhancedBotContext, GoalType } from '../../src/types';
 import { getGoalLabel } from '../../src/constants/goals';
+import { PaywallGate } from '../../src/hooks/useFeatureGate';
 import {
   Colors,
   Fonts,
@@ -364,6 +365,7 @@ export default function PepTalkScreen() {
   );
 
   return (
+    <PaywallGate feature="pepe_ai_unlimited">
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         style={styles.container}
@@ -540,6 +542,7 @@ export default function PepTalkScreen() {
         </Text>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </PaywallGate>
   );
 }
 

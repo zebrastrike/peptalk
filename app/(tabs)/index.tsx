@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Animated as RNAnimated,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -71,6 +72,24 @@ const QUICK_ACTIONS = [
   { id: 'peptalk', icon: 'chatbubble-outline' as const, label: 'Ask Pepe', route: '/(tabs)/peptalk', colors: ['#8b5cf6', '#7c3aed'] as [string, string] },
   { id: 'journal', icon: 'book-outline' as const, label: 'Journal', route: '/journal', colors: ['#06b6d4', '#0891b2'] as [string, string] },
 ];
+
+const HERO_BACKGROUND_IMAGES: Record<string, string> = {
+  default: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80',
+  fitness: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80',
+  science: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80',
+};
+
+function getHeroBackgroundUri(segmentLabel?: string): string {
+  if (!segmentLabel) return HERO_BACKGROUND_IMAGES.default;
+  const lower = segmentLabel.toLowerCase();
+  if (lower.includes('send') || lower.includes('beast') || lower.includes('shred')) {
+    return HERO_BACKGROUND_IMAGES.fitness;
+  }
+  if (lower.includes('biohack') || lower.includes('science') || lower.includes('research')) {
+    return HERO_BACKGROUND_IMAGES.science;
+  }
+  return HERO_BACKGROUND_IMAGES.default;
+}
 
 // ─── Greeting Logic ─────────────────────────────────────────────────────────
 
@@ -573,6 +592,12 @@ export default function DashboardScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.heroGradient}
           >
+            {/* Hero background image overlay */}
+            <Image
+              source={{ uri: getHeroBackgroundUri(segment.label) }}
+              style={styles.heroBgImage}
+              resizeMode="cover"
+            />
             {/* Top row: greeting + character */}
             <View style={styles.heroTopRow}>
               <View style={styles.heroTextBlock}>
@@ -913,6 +938,63 @@ export default function DashboardScreen() {
               </Animated.View>
             ))}
           </ScrollView>
+        </Animated.View>
+
+        {/* ══════════════════════════════════════════════════════════════════
+            3.5. DOSING CALCULATORS - Prominent shortcut card
+        ══════════════════════════════════════════════════════════════════ */}
+        <Animated.View
+          entering={FadeInDown.delay(175).duration(500)}
+          style={styles.section}
+        >
+          <Text style={styles.sectionTitle}>Dosing Calculators</Text>
+          <View style={styles.calcRow}>
+            <AnimatedPress
+              style={styles.calcCard}
+              onPress={() => router.push('/calculators/dosing' as any)}
+            >
+              <LinearGradient
+                colors={['#14b8a6', '#0891b2']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.calcCardGrad}
+              >
+                <Ionicons name="flask" size={28} color="#fff" />
+                <Text style={styles.calcCardTitle}>Dosing</Text>
+                <Text style={styles.calcCardSub}>mcg · mg · IU</Text>
+              </LinearGradient>
+            </AnimatedPress>
+            <AnimatedPress
+              style={styles.calcCard}
+              onPress={() => router.push('/calculators/reconstitution' as any)}
+            >
+              <LinearGradient
+                colors={['#3b82f6', '#6366f1']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.calcCardGrad}
+              >
+                <Ionicons name="beaker-outline" size={28} color="#fff" />
+                <Text style={styles.calcCardTitle}>Reconstitution</Text>
+                <Text style={styles.calcCardSub}>Bac water · vials</Text>
+              </LinearGradient>
+            </AnimatedPress>
+            <AnimatedPress
+              style={styles.calcCard}
+              onPress={() => router.push('/calculators' as any)}
+            >
+              <LinearGradient
+                colors={['#8b5cf6', '#a855f7']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.calcCardGrad}
+              >
+                <Ionicons name="calculator-outline" size={28} color="#fff" />
+                <Text style={styles.calcCardTitle}>All Tools</Text>
+                <Text style={styles.calcCardSub}>BMI · TDEE · more</Text>
+              </LinearGradient>
+            </AnimatedPress>
+          </View>
         </Animated.View>
 
         {/* ══════════════════════════════════════════════════════════════════
@@ -1610,6 +1692,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 20,
     elevation: 12,
+    overflow: 'hidden',
+  },
+  heroBgImage: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.15,
+    borderRadius: BorderRadius.xl,
   },
   heroTopRow: {
     flexDirection: 'row',
@@ -2317,5 +2405,35 @@ const styles = StyleSheet.create({
   planProgressFill: {
     height: '100%',
     borderRadius: 2,
+  },
+
+  // Dosing Calculators
+  calcRow: {
+    flexDirection: 'row',
+    gap: 10,
+    paddingHorizontal: Spacing.lg,
+  },
+  calcCard: {
+    flex: 1,
+    borderRadius: BorderRadius.md,
+    overflow: 'hidden',
+  },
+  calcCardGrad: {
+    paddingVertical: 18,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    gap: 6,
+    borderRadius: BorderRadius.md,
+  },
+  calcCardTitle: {
+    fontSize: FontSizes.sm,
+    fontWeight: '700',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  calcCardSub: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.7)',
+    textAlign: 'center',
   },
 });

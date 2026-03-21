@@ -5,7 +5,7 @@ import { secureStorage } from '../services/secureStorage';
 import { useSubscriptionStore } from './useSubscriptionStore';
 
 const MAX_HISTORY = 200; // keep last 200 messages
-const FREE_DAILY_MESSAGE_LIMIT = 5;
+const FREE_DAILY_MESSAGE_LIMIT = 0;
 
 const todayKey = (): string => {
   const d = new Date();
@@ -58,7 +58,7 @@ export const useChatStore = create<ChatStore>()(
 
       canSendMessage: () => {
         const tier = useSubscriptionStore.getState().tier;
-        if (tier === 'plus' || tier === 'pro') return true;
+        if (tier === 'pepe' || tier === 'pepe_plus' || tier === 'pepe_pro') return true;
 
         const today = todayKey();
         const { lastMessageDate, dailyMessageCount } = get();

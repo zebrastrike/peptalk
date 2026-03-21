@@ -13,6 +13,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -24,6 +25,7 @@ import { Colors, Spacing, FontSizes, BorderRadius } from '../../src/constants/th
 import { useMealStore } from '../../src/store/useMealStore';
 import { useSubscriptionStore } from '../../src/store/useSubscriptionStore';
 import { generateRecipe, isAIAvailable } from '../../src/services/llmService';
+import { PaywallGate } from '../../src/hooks/useFeatureGate';
 
 // ---------------------------------------------------------------------------
 // Diet type options
@@ -276,12 +278,13 @@ export default function RecipeGeneratorScreen() {
   };
 
   return (
+    <PaywallGate feature="recipe_generator">
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>AI Recipes</Text>
+        <Text style={styles.headerTitle}>Meals by Pepe</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -289,6 +292,15 @@ export default function RecipeGeneratorScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
       >
+        {/* Hero Image */}
+        <View style={styles.section}>
+          <Image
+            source={{ uri: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80' }}
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+        </View>
+
         {/* Intro */}
         <View style={styles.intro}>
           <LinearGradient
@@ -297,10 +309,10 @@ export default function RecipeGeneratorScreen() {
           >
             <Ionicons name="sparkles" size={28} color="#fff" />
           </LinearGradient>
-          <Text style={styles.introTitle}>AI Recipe Generator</Text>
+          <Text style={styles.introTitle}>Meals by Pepe</Text>
           <Text style={styles.introDesc}>
-            Get personalized recipes based on your macro targets, dietary
-            preferences, and available ingredients.
+            Get personalized meal ideas from Pepe based on your macro targets,
+            dietary preferences, and available ingredients.
           </Text>
         </View>
 
@@ -428,6 +440,7 @@ export default function RecipeGeneratorScreen() {
         )}
       </ScrollView>
     </SafeAreaView>
+    </PaywallGate>
   );
 }
 
@@ -456,6 +469,15 @@ const styles = StyleSheet.create({
     color: Colors.darkText,
   },
   scroll: { paddingBottom: 40 },
+
+  // Hero image
+  heroImage: {
+    width: '100%',
+    height: 160,
+    borderRadius: 16,
+    marginBottom: 16,
+    opacity: 0.8,
+  },
 
   // Intro
   intro: {

@@ -10,6 +10,7 @@ import {
   Switch,
   StyleSheet,
   Animated,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -259,11 +260,11 @@ function UserProfile() {
             end={{ x: 1, y: 1 }}
             style={styles.avatarGradientRing}
           >
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>
-                {(user.name ?? user.email)[0].toUpperCase()}
-              </Text>
-            </View>
+            <Image
+              source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&q=80' }}
+              style={styles.avatar}
+              defaultSource={undefined}
+            />
           </LinearGradient>
           {user.isPro && (
             <View style={styles.proBadgeWrap}>
@@ -1432,8 +1433,8 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     backgroundColor: Colors.darkBg,
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: Colors.pepTeal,
   },
   avatarText: {
     fontSize: 30,

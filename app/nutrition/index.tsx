@@ -1,8 +1,9 @@
 /**
  * Nutrition Dashboard — macro tracking, meal log, water intake.
+ * Supports quick-log, food-search logging, and inline meal editing.
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,6 +13,9 @@ import {
   TextInput,
   Modal,
   Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -21,7 +25,7 @@ import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
 import { Colors, Gradients, Spacing, FontSizes, BorderRadius } from '../../src/constants/theme';
 import { useMealStore } from '../../src/store/useMealStore';
-import type { MealType } from '../../src/types/fitness';
+import type { MealEntry, MealType } from '../../src/types/fitness';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -30,25 +34,40 @@ import type { MealType } from '../../src/types/fitness';
 const today = () => new Date().toISOString().slice(0, 10);
 
 const MEAL_ICONS: Record<MealType, string> = {
-  breakfast: 'sunny-outline',
-  lunch: 'restaurant-outline',
-  dinner: 'moon-outline',
-  snack: 'cafe-outline',
-  pre_workout: 'flash-outline',
+  breakfast:    'sunny-outline',
+  lunch:        'restaurant-outline',
+  dinner:       'moon-outline',
+  snack:        'cafe-outline',
+  pre_workout:  'flash-outline',
   post_workout: 'fitness-outline',
 };
 
 const MEAL_LABELS: Record<MealType, string> = {
-  breakfast: 'Breakfast',
-  lunch: 'Lunch',
-  dinner: 'Dinner',
-  snack: 'Snack',
-  pre_workout: 'Pre-Workout',
+  breakfast:    'Breakfast',
+  lunch:        'Lunch',
+  dinner:       'Dinner',
+  snack:        'Snack',
+  pre_workout:  'Pre-Workout',
   post_workout: 'Post-Workout',
 };
 
+/** Derive a display calorie total from a meal entry (quickLog or itemized foods). */
+function mealCalories(meal: MealEntry): number {
+  if (meal.quickLog) return meal.quickLog.calories;
+  return meal.foods.reduce((sum, f) => sum + f.calories, 0);
+}
+
+/** Derive a display description from a meal entry. */
+function mealDescription(meal: MealEntry): string {
+  if (meal.quickLog?.description) return meal.quickLog.description;
+  if (meal.foods.length > 0) {
+    return meal.foods.map((f) => f.foodName).join(', ');
+  }
+  return 'Itemized meal';
+}
+
 // ---------------------------------------------------------------------------
-// Macro Ring (simple progress arc)
+// Macro Bar
 // ---------------------------------------------------------------------------
 
 function MacroBar({
@@ -122,10 +141,10 @@ function QuickLogModal({
     onSave({
       mealType,
       description: desc.trim(),
-      calories: parseInt(cal, 10) || 0,
-      protein: parseInt(protein, 10) || 0,
-      carbs: parseInt(carbs, 10) || 0,
-      fat: parseInt(fat, 10) || 0,
+      calories:    parseInt(cal,     10) || 0,
+      protein:     parseInt(protein, 10) || 0,
+      carbs:       parseInt(carbs,   10) || 0,
+      fat:         parseInt(fat,     10) || 0,
     });
     setDesc('');
     setCal('');
@@ -136,8 +155,11 @@ function QuickLogModal({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent>
-      <View style={styles.modalOverlay}>
+    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.modalOverlay}
+      >
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Quick Log Meal</Text>
@@ -147,18 +169,11 @@ function QuickLogModal({
           </View>
 
           {/* Meal type selector */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.mealTypeRow}
-          >
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.mealTypeRow}>
             {(Object.keys(MEAL_LABELS) as MealType[]).map((mt) => (
               <TouchableOpacity
                 key={mt}
-                style={[
-                  styles.mealTypeChip,
-                  mealType === mt && styles.mealTypeChipActive,
-                ]}
+                style={[styles.mealTypeChip, mealType === mt && styles.mealTypeChipActive]}
                 onPress={() => setMealType(mt)}
               >
                 <Ionicons
@@ -166,12 +181,7 @@ function QuickLogModal({
                   size={14}
                   color={mealType === mt ? '#fff' : Colors.darkTextSecondary}
                 />
-                <Text
-                  style={[
-                    styles.mealTypeText,
-                    mealType === mt && styles.mealTypeTextActive,
-                  ]}
-                >
+                <Text style={[styles.mealTypeText, mealType === mt && styles.mealTypeTextActive]}>
                   {MEAL_LABELS[mt]}
                 </Text>
               </TouchableOpacity>
@@ -239,7 +249,237 @@ function QuickLogModal({
 
           <GradientButton label="Log Meal" onPress={handleSave} />
         </View>
-      </View>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Edit Meal Modal
+// ---------------------------------------------------------------------------
+
+const PORTION_MULTIPLIERS: { label: string; value: number }[] = [
+  { label: '0.5x',  value: 0.5 },
+  { label: '0.75x', value: 0.75 },
+  { label: '1x',    value: 1 },
+  { label: '1.25x', value: 1.25 },
+  { label: '1.5x',  value: 1.5 },
+  { label: '2x',    value: 2 },
+];
+
+interface EditMealModalProps {
+  meal: MealEntry | null;
+  visible: boolean;
+  onClose: () => void;
+  onSave:   (mealId: string, updates: Partial<MealEntry>) => void;
+  onDelete: (mealId: string) => void;
+}
+
+function EditMealModal({ meal, visible, onClose, onSave, onDelete }: EditMealModalProps) {
+  const [desc,    setDesc]    = useState('');
+  const [cal,     setCal]     = useState('');
+  const [protein, setProtein] = useState('');
+  const [carbs,   setCarbs]   = useState('');
+  const [fat,     setFat]     = useState('');
+  const [notes,   setNotes]   = useState('');
+
+  // Seed form when meal changes
+  React.useEffect(() => {
+    if (!meal) return;
+    const baseCal     = meal.quickLog?.calories     ?? meal.foods.reduce((s, f) => s + f.calories, 0);
+    const baseProt    = meal.quickLog?.proteinGrams  ?? meal.foods.reduce((s, f) => s + f.proteinGrams, 0);
+    const baseCarbs   = meal.quickLog?.carbsGrams    ?? meal.foods.reduce((s, f) => s + f.carbsGrams, 0);
+    const baseFat     = meal.quickLog?.fatGrams      ?? meal.foods.reduce((s, f) => s + f.fatGrams, 0);
+    const baseDesc    = meal.quickLog?.description   ?? meal.foods.map((f) => f.foodName).join(', ') ?? '';
+    setDesc(baseDesc);
+    setCal(String(baseCal));
+    setProtein(String(baseProt));
+    setCarbs(String(baseCarbs));
+    setFat(String(baseFat));
+    setNotes(meal.notes ?? '');
+  }, [meal?.id]);
+
+  const applyMultiplier = (mult: number) => {
+    if (!meal) return;
+    const baseCal   = meal.quickLog?.calories     ?? meal.foods.reduce((s, f) => s + f.calories, 0);
+    const baseProt  = meal.quickLog?.proteinGrams  ?? meal.foods.reduce((s, f) => s + f.proteinGrams, 0);
+    const baseCarbs = meal.quickLog?.carbsGrams    ?? meal.foods.reduce((s, f) => s + f.carbsGrams, 0);
+    const baseFat   = meal.quickLog?.fatGrams      ?? meal.foods.reduce((s, f) => s + f.fatGrams, 0);
+    setCal(String(Math.round(baseCal * mult)));
+    setProtein(String(Math.round(baseProt * mult * 10) / 10));
+    setCarbs(String(Math.round(baseCarbs * mult * 10) / 10));
+    setFat(String(Math.round(baseFat * mult * 10) / 10));
+  };
+
+  const handleSave = () => {
+    if (!meal) return;
+    const calNum     = parseFloat(cal)     || 0;
+    const proteinNum = parseFloat(protein) || 0;
+    const carbsNum   = parseFloat(carbs)   || 0;
+    const fatNum     = parseFloat(fat)     || 0;
+
+    // Always persist as quickLog so the existing display logic works regardless of origin
+    const updates: Partial<MealEntry> = {
+      quickLog: {
+        description:  desc.trim() || mealDescription(meal),
+        calories:     calNum,
+        proteinGrams: proteinNum,
+        carbsGrams:   carbsNum,
+        fatGrams:     fatNum,
+      },
+      notes: notes.trim() || undefined,
+    };
+    onSave(meal.id, updates);
+    onClose();
+  };
+
+  const handleDelete = () => {
+    if (!meal) return;
+    Alert.alert(
+      'Delete Meal',
+      'Remove this entry permanently?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            onDelete(meal.id);
+            onClose();
+          },
+        },
+      ],
+    );
+  };
+
+  if (!meal) return null;
+
+  return (
+    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.modalOverlay}
+      >
+        <View style={styles.editModalContent}>
+          {/* Handle */}
+          <View style={styles.modalHandle} />
+
+          {/* Header */}
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Edit Meal</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+              <Ionicons name="close" size={22} color={Colors.darkText} />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+            {/* Meal type badge (read-only) */}
+            <View style={styles.editMealTypeBadge}>
+              <Ionicons name={MEAL_ICONS[meal.mealType] as any} size={16} color={Colors.pepTeal} />
+              <Text style={styles.editMealTypeLabel}>{MEAL_LABELS[meal.mealType]}</Text>
+            </View>
+
+            {/* Description */}
+            <Text style={styles.fieldLabel}>Description</Text>
+            <TextInput
+              style={[styles.input, { marginBottom: 12 }]}
+              value={desc}
+              onChangeText={setDesc}
+              placeholder="What did you eat?"
+              placeholderTextColor={Colors.darkTextSecondary}
+            />
+
+            {/* Macros */}
+            <Text style={styles.fieldLabel}>Macros</Text>
+            <View style={styles.macroInputRow}>
+              <View style={styles.macroInput}>
+                <Text style={styles.macroInputLabel}>Cal</Text>
+                <TextInput
+                  style={styles.macroInputField}
+                  value={cal}
+                  onChangeText={setCal}
+                  keyboardType="decimal-pad"
+                  placeholder="0"
+                  placeholderTextColor={Colors.darkTextSecondary}
+                />
+              </View>
+              <View style={styles.macroInput}>
+                <Text style={styles.macroInputLabel}>Pro (g)</Text>
+                <TextInput
+                  style={styles.macroInputField}
+                  value={protein}
+                  onChangeText={setProtein}
+                  keyboardType="decimal-pad"
+                  placeholder="0"
+                  placeholderTextColor={Colors.darkTextSecondary}
+                />
+              </View>
+              <View style={styles.macroInput}>
+                <Text style={styles.macroInputLabel}>Carb (g)</Text>
+                <TextInput
+                  style={styles.macroInputField}
+                  value={carbs}
+                  onChangeText={setCarbs}
+                  keyboardType="decimal-pad"
+                  placeholder="0"
+                  placeholderTextColor={Colors.darkTextSecondary}
+                />
+              </View>
+              <View style={styles.macroInput}>
+                <Text style={styles.macroInputLabel}>Fat (g)</Text>
+                <TextInput
+                  style={styles.macroInputField}
+                  value={fat}
+                  onChangeText={setFat}
+                  keyboardType="decimal-pad"
+                  placeholder="0"
+                  placeholderTextColor={Colors.darkTextSecondary}
+                />
+              </View>
+            </View>
+
+            {/* Portion multipliers */}
+            <Text style={[styles.fieldLabel, { marginTop: 4 }]}>Portion Multiplier</Text>
+            <Text style={styles.fieldHint}>Applies to all macros proportionally</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.multRow}
+            >
+              {PORTION_MULTIPLIERS.map((m) => (
+                <TouchableOpacity
+                  key={m.label}
+                  style={styles.multChip}
+                  onPress={() => applyMultiplier(m.value)}
+                >
+                  <Text style={styles.multChipText}>{m.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            {/* Notes */}
+            <Text style={[styles.fieldLabel, { marginTop: 8 }]}>Notes (optional)</Text>
+            <TextInput
+              style={[styles.input, styles.notesInput]}
+              value={notes}
+              onChangeText={setNotes}
+              placeholder="e.g. substituted Greek yogurt for sour cream"
+              placeholderTextColor={Colors.darkTextSecondary}
+              multiline
+              numberOfLines={2}
+            />
+
+            {/* Save */}
+            <GradientButton label="Save Changes" onPress={handleSave} style={{ marginTop: 12 }} />
+
+            {/* Delete */}
+            <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
+              <Ionicons name="trash-outline" size={16} color={Colors.error} />
+              <Text style={styles.deleteBtnText}>Delete Meal</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -250,9 +490,9 @@ function QuickLogModal({
 
 function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
   const clampedPct = Math.min(100, Math.max(0, pct));
-  const ringSize = size;
-  const thickness = 8;
-  const innerSize = ringSize - thickness * 2;
+  const ringSize   = size;
+  const thickness  = 8;
+  const innerSize  = ringSize - thickness * 2;
 
   return (
     <View
@@ -274,7 +514,7 @@ function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
           position: 'absolute',
         }}
       />
-      {/* Fill — we simulate a ring fill using a clipped approach */}
+      {/* Fill */}
       <View
         style={{
           width: ringSize,
@@ -283,14 +523,10 @@ function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
           borderWidth: thickness,
           borderColor: Colors.pepCyan,
           position: 'absolute',
-          borderTopColor:
-            clampedPct >= 25 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
-          borderRightColor:
-            clampedPct >= 50 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
-          borderBottomColor:
-            clampedPct >= 75 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
-          borderLeftColor:
-            clampedPct > 0 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          borderTopColor:    clampedPct >= 25 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          borderRightColor:  clampedPct >= 50 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          borderBottomColor: clampedPct >= 75 ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
+          borderLeftColor:   clampedPct >  0  ? Colors.pepCyan : 'rgba(6, 182, 212, 0.12)',
           transform: [{ rotate: '-90deg' }],
         }}
       />
@@ -306,14 +542,7 @@ function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
         }}
       >
         <Ionicons name="water" size={20} color={Colors.pepCyan} />
-        <Text
-          style={{
-            fontSize: FontSizes.lg,
-            fontWeight: '800',
-            color: Colors.darkText,
-            marginTop: 2,
-          }}
-        >
+        <Text style={{ fontSize: FontSizes.lg, fontWeight: '800', color: Colors.darkText, marginTop: 2 }}>
           {clampedPct}%
         </Text>
       </View>
@@ -322,27 +551,26 @@ function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
 }
 
 // ---------------------------------------------------------------------------
-// Water Tracker (enhanced)
+// Water Tracker
 // ---------------------------------------------------------------------------
 
 const WATER_QUICK_ADD: { oz: number; label: string; icon: string }[] = [
-  { oz: 4, label: '4 oz', icon: 'cafe-outline' },
-  { oz: 8, label: '8 oz', icon: 'water-outline' },
-  { oz: 12, label: '12 oz', icon: 'pint-outline' },
-  { oz: 16, label: '16 oz', icon: 'beer-outline' },
+  { oz: 4,  label: '4 oz',  icon: 'cafe-outline'  },
+  { oz: 8,  label: '8 oz',  icon: 'water-outline' },
+  { oz: 12, label: '12 oz', icon: 'pint-outline'  },
+  { oz: 16, label: '16 oz', icon: 'beer-outline'  },
 ];
 
 function WaterTracker() {
   const { logWater, getWater, targets } = useMealStore();
-  const dateKey = today();
-  const current = getWater(dateKey);
-  const target = targets.waterOz ?? 100;
-  const pct = Math.min(100, Math.round((current / target) * 100));
+  const dateKey   = today();
+  const current   = getWater(dateKey);
+  const target    = targets.waterOz ?? 100;
+  const pct       = Math.min(100, Math.round((current / target) * 100));
   const remaining = Math.max(0, target - current);
 
   return (
     <GlassCard>
-      {/* Top section: ring + stats */}
       <View style={styles.waterTop}>
         <WaterRing pct={pct} size={100} />
         <View style={styles.waterStats}>
@@ -352,22 +580,14 @@ function WaterTracker() {
             <Text style={styles.waterTarget}>/ {target} oz</Text>
           </Text>
           <View style={styles.macroBarTrack}>
-            <View
-              style={[
-                styles.macroBarFill,
-                { width: `${pct}%`, backgroundColor: Colors.pepCyan },
-              ]}
-            />
+            <View style={[styles.macroBarFill, { width: `${pct}%`, backgroundColor: Colors.pepCyan }]} />
           </View>
           <Text style={styles.waterRemaining}>
-            {remaining > 0
-              ? `${remaining} oz remaining`
-              : 'Daily target reached!'}
+            {remaining > 0 ? `${remaining} oz remaining` : 'Daily target reached!'}
           </Text>
         </View>
       </View>
 
-      {/* Quick-add buttons */}
       <View style={styles.waterQuickRow}>
         {WATER_QUICK_ADD.map((btn) => (
           <TouchableOpacity
@@ -382,13 +602,8 @@ function WaterTracker() {
         ))}
       </View>
 
-      {/* Today's target info */}
       <View style={styles.waterFooter}>
-        <Ionicons
-          name="flag-outline"
-          size={14}
-          color={Colors.darkTextSecondary}
-        />
+        <Ionicons name="flag-outline" size={14} color={Colors.darkTextSecondary} />
         <Text style={styles.waterFooterText}>
           Daily target: {target} oz ({Math.round(target / 8)} glasses)
         </Text>
@@ -403,37 +618,41 @@ function WaterTracker() {
 
 export default function NutritionScreen() {
   const router = useRouter();
-  const { meals, addMeal, removeMeal, getDailyProgress, targets } =
-    useMealStore();
-  const [showLog, setShowLog] = useState(false);
+  const { meals, addMeal, removeMeal, updateMeal, getDailyProgress, targets } = useMealStore();
 
-  const dateKey = today();
-  const progress = getDailyProgress(dateKey);
-  const todayMeals = meals.filter((m) => m.date === dateKey);
+  const [showLog,     setShowLog]     = useState(false);
+  const [editingMeal, setEditingMeal] = useState<MealEntry | null>(null);
 
-  const handleQuickLog = (data: {
-    mealType: MealType;
-    description: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-  }) => {
-    addMeal({
-      id: `meal-${Date.now()}`,
-      date: dateKey,
-      mealType: data.mealType,
-      foods: [],
-      quickLog: {
-        description: data.description,
-        calories: data.calories,
-        proteinGrams: data.protein,
-        carbsGrams: data.carbs,
-        fatGrams: data.fat,
-      },
-      timestamp: new Date().toISOString(),
-    });
-  };
+  const dateKey     = today();
+  const progress    = getDailyProgress(dateKey);
+  const todayMeals  = meals.filter((m) => m.date === dateKey);
+
+  const handleQuickLog = useCallback(
+    (data: {
+      mealType: MealType;
+      description: string;
+      calories: number;
+      protein: number;
+      carbs: number;
+      fat: number;
+    }) => {
+      addMeal({
+        id:       `meal-${Date.now()}`,
+        date:     dateKey,
+        mealType: data.mealType,
+        foods:    [],
+        quickLog: {
+          description:  data.description,
+          calories:     data.calories,
+          proteinGrams: data.protein,
+          carbsGrams:   data.carbs,
+          fatGrams:     data.fat,
+        },
+        timestamp: new Date().toISOString(),
+      });
+    },
+    [addMeal, dateKey],
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -444,17 +663,23 @@ export default function NutritionScreen() {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Nutrition</Text>
         <TouchableOpacity
-          onPress={() => router.push('/nutrition/targets')}
+          onPress={() => router.push('/nutrition/targets' as any)}
           style={styles.backBtn}
         >
           <Ionicons name="settings-outline" size={22} color={Colors.darkText} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scroll}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+        {/* Hero Image */}
+        <View style={styles.section}>
+          <Image
+            source={{ uri: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80' }}
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+        </View>
+
         {/* Calorie summary */}
         <View style={styles.section}>
           <GlassCard variant="gradient">
@@ -463,10 +688,7 @@ export default function NutritionScreen() {
                 <Text style={styles.calLabel}>Calories Today</Text>
                 <Text style={styles.calValue}>
                   {Math.round(progress.totals.calories)}
-                  <Text style={styles.calTarget}>
-                    {' '}
-                    / {targets.calories}
-                  </Text>
+                  <Text style={styles.calTarget}> / {targets.calories}</Text>
                 </Text>
               </View>
               <View style={styles.calCircle}>
@@ -480,27 +702,9 @@ export default function NutritionScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Macros</Text>
           <GlassCard>
-            <MacroBar
-              label="Protein"
-              current={progress.totals.proteinGrams}
-              target={targets.proteinGrams}
-              color={Colors.pepTeal}
-              unit="g"
-            />
-            <MacroBar
-              label="Carbs"
-              current={progress.totals.carbsGrams}
-              target={targets.carbsGrams}
-              color={Colors.pepBlue}
-              unit="g"
-            />
-            <MacroBar
-              label="Fat"
-              current={progress.totals.fatGrams}
-              target={targets.fatGrams}
-              color="#a855f7"
-              unit="g"
-            />
+            <MacroBar label="Protein" current={progress.totals.proteinGrams} target={targets.proteinGrams} color={Colors.pepTeal}  unit="g" />
+            <MacroBar label="Carbs"   current={progress.totals.carbsGrams}   target={targets.carbsGrams}   color={Colors.pepBlue}  unit="g" />
+            <MacroBar label="Fat"     current={progress.totals.fatGrams}     target={targets.fatGrams}     color="#a855f7"          unit="g" />
           </GlassCard>
         </View>
 
@@ -514,67 +718,74 @@ export default function NutritionScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Today's Meals</Text>
-            <TouchableOpacity onPress={() => setShowLog(true)}>
-              <Ionicons name="add-circle" size={24} color={Colors.pepTeal} />
-            </TouchableOpacity>
+            {/* Action buttons: food search + quick log */}
+            <View style={styles.mealHeaderActions}>
+              <TouchableOpacity
+                style={styles.addFoodBtn}
+                onPress={() => router.push('/nutrition/food-search' as any)}
+              >
+                <LinearGradient
+                  colors={[Colors.pepBlue, Colors.pepTeal]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.addFoodBtnGradient}
+                >
+                  <Ionicons name="search" size={14} color="#fff" />
+                  <Text style={styles.addFoodBtnText}>Food Search</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowLog(true)}>
+                <Ionicons name="add-circle" size={28} color={Colors.pepTeal} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {todayMeals.length === 0 ? (
             <GlassCard>
               <View style={styles.emptyMeals}>
-                <Ionicons
-                  name="restaurant-outline"
-                  size={32}
-                  color={Colors.darkTextSecondary}
-                />
+                <Ionicons name="restaurant-outline" size={32} color={Colors.darkTextSecondary} />
                 <Text style={styles.emptyTitle}>No meals logged</Text>
                 <Text style={styles.emptyDesc}>
-                  Tap + to quick-log what you eat
+                  Tap the search button or + to log what you eat
                 </Text>
               </View>
             </GlassCard>
           ) : (
             todayMeals.map((meal) => (
-              <TouchableOpacity
-                key={meal.id}
-                onLongPress={() =>
-                  Alert.alert('Delete Meal', 'Remove this entry?', [
-                    { text: 'Cancel', style: 'cancel' },
-                    {
-                      text: 'Delete',
-                      style: 'destructive',
-                      onPress: () => removeMeal(meal.id),
-                    },
-                  ])
-                }
-                activeOpacity={0.85}
-              >
-                <GlassCard>
-                  <View style={styles.mealRow}>
-                    <View style={styles.mealIcon}>
-                      <Ionicons
-                        name={MEAL_ICONS[meal.mealType] as any}
-                        size={18}
-                        color={Colors.pepTeal}
-                      />
-                    </View>
-                    <View style={styles.mealInfo}>
-                      <Text style={styles.mealType}>
-                        {MEAL_LABELS[meal.mealType]}
-                      </Text>
-                      <Text style={styles.mealDesc}>
-                        {meal.quickLog?.description ?? 'Itemized meal'}
-                      </Text>
-                    </View>
-                    <View style={styles.mealCal}>
-                      <Text style={styles.mealCalNum}>
-                        {meal.quickLog?.calories ?? 0}
-                      </Text>
-                      <Text style={styles.mealCalLabel}>cal</Text>
-                    </View>
+              <GlassCard key={meal.id} style={styles.mealCard}>
+                <View style={styles.mealRow}>
+                  <View style={styles.mealIcon}>
+                    <Ionicons
+                      name={MEAL_ICONS[meal.mealType] as any}
+                      size={18}
+                      color={Colors.pepTeal}
+                    />
                   </View>
-                </GlassCard>
-              </TouchableOpacity>
+                  <View style={styles.mealInfo}>
+                    <Text style={styles.mealTypeLabel}>{MEAL_LABELS[meal.mealType]}</Text>
+                    <Text style={styles.mealDesc} numberOfLines={1}>
+                      {mealDescription(meal)}
+                    </Text>
+                    {meal.notes ? (
+                      <Text style={styles.mealNotes} numberOfLines={1}>
+                        {meal.notes}
+                      </Text>
+                    ) : null}
+                  </View>
+                  <View style={styles.mealCal}>
+                    <Text style={styles.mealCalNum}>{mealCalories(meal)}</Text>
+                    <Text style={styles.mealCalLabel}>cal</Text>
+                  </View>
+                  {/* Edit button */}
+                  <TouchableOpacity
+                    style={styles.editBtn}
+                    onPress={() => setEditingMeal(meal)}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  >
+                    <Ionicons name="pencil" size={15} color={Colors.darkTextSecondary} />
+                  </TouchableOpacity>
+                </View>
+              </GlassCard>
             ))
           )}
         </View>
@@ -582,7 +793,7 @@ export default function NutritionScreen() {
         {/* AI Recipe CTA */}
         <View style={styles.section}>
           <TouchableOpacity
-            onPress={() => router.push('/nutrition/recipe-generator')}
+            onPress={() => router.push('/nutrition/recipe-generator' as any)}
             activeOpacity={0.85}
           >
             <GlassCard variant="glow" glowColor={Colors.pepBlue}>
@@ -596,25 +807,30 @@ export default function NutritionScreen() {
                 <View style={styles.aiInfo}>
                   <Text style={styles.aiTitle}>AI Recipe Generator</Text>
                   <Text style={styles.aiDesc}>
-                    Get personalized recipes based on your macros and
-                    preferences
+                    Get personalized recipes based on your macros and preferences
                   </Text>
                 </View>
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={Colors.darkTextSecondary}
-                />
+                <Ionicons name="chevron-forward" size={20} color={Colors.darkTextSecondary} />
               </View>
             </GlassCard>
           </TouchableOpacity>
         </View>
       </ScrollView>
 
+      {/* Quick Log Modal */}
       <QuickLogModal
         visible={showLog}
         onClose={() => setShowLog(false)}
         onSave={handleQuickLog}
+      />
+
+      {/* Edit Meal Modal */}
+      <EditMealModal
+        meal={editingMeal}
+        visible={editingMeal !== null}
+        onClose={() => setEditingMeal(null)}
+        onSave={(id, updates) => updateMeal(id, updates)}
+        onDelete={(id) => removeMeal(id)}
       />
     </SafeAreaView>
   );
@@ -626,6 +842,7 @@ export default function NutritionScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.darkBg },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -644,7 +861,9 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: Colors.darkText,
   },
+
   scroll: { paddingBottom: 40 },
+
   section: {
     paddingHorizontal: Spacing.lg,
     marginBottom: Spacing.md,
@@ -660,6 +879,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.darkText,
     marginBottom: 4,
+  },
+
+  // Hero image
+  heroImage: {
+    width: '100%',
+    height: 160,
+    borderRadius: 16,
+    marginBottom: 16,
+    opacity: 0.8,
   },
 
   // Calorie card
@@ -731,14 +959,14 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
 
-  // Water — enhanced
+  // Water
   waterTop: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
     marginBottom: 14,
   },
-  waterStats: { flex: 1 },
+  waterStats:      { flex: 1 },
   waterTitle: {
     fontSize: FontSizes.md,
     fontWeight: '700',
@@ -795,20 +1023,33 @@ const styles = StyleSheet.create({
     color: Colors.darkTextSecondary,
   },
 
-  // Meals
-  emptyMeals: {
+  // Meals section header actions
+  mealHeaderActions: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 20,
-    gap: 6,
+    gap: 10,
   },
-  emptyTitle: {
-    fontSize: FontSizes.md,
-    fontWeight: '600',
-    color: Colors.darkText,
+  addFoodBtn: {
+    borderRadius: BorderRadius.full,
+    overflow: 'hidden',
   },
-  emptyDesc: {
-    fontSize: FontSizes.sm,
-    color: Colors.darkTextSecondary,
+  addFoodBtnGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: BorderRadius.full,
+  },
+  addFoodBtnText: {
+    fontSize: FontSizes.xs,
+    fontWeight: '700',
+    color: '#fff',
+  },
+
+  // Meal card
+  mealCard: {
+    marginBottom: 0,
   },
   mealRow: {
     flexDirection: 'row',
@@ -824,7 +1065,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   mealInfo: { flex: 1 },
-  mealType: {
+  mealTypeLabel: {
     fontSize: FontSizes.sm,
     fontWeight: '600',
     color: Colors.darkText,
@@ -833,6 +1074,12 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.xs,
     color: Colors.darkTextSecondary,
     marginTop: 1,
+  },
+  mealNotes: {
+    fontSize: FontSizes.xs,
+    color: Colors.pepTeal,
+    marginTop: 2,
+    fontStyle: 'italic',
   },
   mealCal: { alignItems: 'center' },
   mealCalNum: {
@@ -843,6 +1090,32 @@ const styles = StyleSheet.create({
   mealCalLabel: {
     fontSize: FontSizes.xs,
     color: Colors.darkTextSecondary,
+  },
+  editBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: Colors.glassWhite,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 4,
+  },
+
+  // Empty meals
+  emptyMeals: {
+    alignItems: 'center',
+    paddingVertical: 20,
+    gap: 6,
+  },
+  emptyTitle: {
+    fontSize: FontSizes.md,
+    fontWeight: '600',
+    color: Colors.darkText,
+  },
+  emptyDesc: {
+    fontSize: FontSizes.sm,
+    color: Colors.darkTextSecondary,
+    textAlign: 'center',
   },
 
   // AI row
@@ -871,14 +1144,14 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 
-  // Modal
+  // Shared modal
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.7)',
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: Colors.darkBg,
+    backgroundColor: Colors.darkCard,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: Spacing.lg,
@@ -886,20 +1159,43 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     gap: 12,
   },
+  editModalContent: {
+    backgroundColor: Colors.darkCard,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: Spacing.lg,
+    paddingTop: 12,
+    paddingBottom: 40,
+    maxHeight: '88%',
+  },
+  modalHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
   modalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   modalTitle: {
     fontSize: FontSizes.xl,
     fontWeight: '800',
     color: Colors.darkText,
   },
-  mealTypeRow: {
-    marginBottom: 8,
+  closeBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.glassWhite,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  mealTypeRow: { marginBottom: 8 },
   mealTypeChip: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -929,6 +1225,13 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.sm,
     fontWeight: '600',
     color: Colors.darkText,
+    marginBottom: 6,
+  },
+  fieldHint: {
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    marginTop: -4,
+    marginBottom: 8,
   },
   input: {
     backgroundColor: Colors.glassBlue,
@@ -939,6 +1242,11 @@ const styles = StyleSheet.create({
     height: 44,
     fontSize: FontSizes.md,
     color: Colors.darkText,
+  },
+  notesInput: {
+    height: 72,
+    paddingTop: 12,
+    textAlignVertical: 'top',
   },
   macroInputRow: {
     flexDirection: 'row',
@@ -963,5 +1271,61 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.darkText,
     textAlign: 'center',
+  },
+
+  // Edit meal badge
+  editMealTypeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: Colors.glassBlue,
+    borderRadius: BorderRadius.full,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: Colors.glassBlueBorder,
+    marginBottom: 14,
+  },
+  editMealTypeLabel: {
+    fontSize: FontSizes.xs,
+    fontWeight: '700',
+    color: Colors.pepTeal,
+  },
+
+  // Portion multipliers
+  multRow: { marginBottom: 12 },
+  multChip: {
+    backgroundColor: Colors.glassWhite,
+    borderRadius: BorderRadius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: Colors.glassBorder,
+  },
+  multChipText: {
+    fontSize: FontSizes.sm,
+    fontWeight: '700',
+    color: Colors.darkText,
+  },
+
+  // Delete button
+  deleteBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 12,
+    paddingVertical: 12,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.error + '44',
+    backgroundColor: Colors.error + '11',
+  },
+  deleteBtnText: {
+    fontSize: FontSizes.md,
+    fontWeight: '700',
+    color: Colors.error,
   },
 });

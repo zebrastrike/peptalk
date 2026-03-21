@@ -30,24 +30,34 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true });
 
         try {
-          // Simulate network latency
           await new Promise((resolve) => setTimeout(resolve, 800));
+
+          // Test credentials — auto-set subscription tier
+          const TEST_ACCOUNTS: Record<string, { name: string; tier: 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro' }> = {
+            'free@test.com':      { name: 'Free Tester',     tier: 'free' },
+            'pepe@test.com':      { name: 'Pepe Tester',     tier: 'pepe' },
+            'plus@test.com':      { name: 'Plus Tester',     tier: 'pepe_plus' },
+            'pro@test.com':       { name: 'Pro Tester',      tier: 'pepe_pro' },
+            'jamie@test.com':     { name: 'Jamie',           tier: 'pepe_pro' },
+          };
+
+          const testMatch = TEST_ACCOUNTS[_email.toLowerCase()];
+          if (testMatch) {
+            const { useSubscriptionStore } = require('./useSubscriptionStore');
+            useSubscriptionStore.getState().setTier(testMatch.tier);
+          }
 
           const dummyUser: User = {
             id: `user-${Date.now()}`,
             email: _email,
-            name: _email.split('@')[0],
+            name: testMatch?.name ?? _email.split('@')[0],
             savedStacks: [],
             favoritePeptides: [],
             isPro: false,
             createdAt: new Date().toISOString(),
           };
 
-          set({
-            user: dummyUser,
-            isAuthenticated: true,
-            isLoading: false,
-          });
+          set({ user: dummyUser, isAuthenticated: true, isLoading: false });
         } catch (error) {
           console.error('[useAuthStore] Login failed:', error);
           set({ isLoading: false });

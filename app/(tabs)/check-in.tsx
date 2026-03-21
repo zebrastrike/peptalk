@@ -9,6 +9,7 @@ import {
   Alert,
   Platform,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -453,6 +454,12 @@ export default function CheckInScreen() {
           </Text>
         </View>
 
+        {/* ── Motivational header image ────────────────────────────────────── */}
+        <Image
+          source={{ uri: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80' }}
+          style={styles.headerBanner}
+        />
+
         {/* ── Summary ──────────────────────────────────────────────────────── */}
         <GlassCard style={styles.summaryCard}>
           <View style={styles.summaryRow}>
@@ -884,6 +891,15 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     marginTop: 6,
     lineHeight: 18,
+  },
+
+  // ── Header banner ──────────────────────────────────────────────────────
+  headerBanner: {
+    width: '100%',
+    height: 130,
+    borderRadius: 16,
+    marginBottom: 16,
+    opacity: 0.75,
   },
 
   // ── Summary Card ────────────────────────────────────────────────────────

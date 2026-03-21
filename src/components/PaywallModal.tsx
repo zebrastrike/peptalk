@@ -24,77 +24,128 @@ import type { SubscriptionTier } from '../types/fitness';
 // ---------------------------------------------------------------------------
 
 const FEATURE_META: Record<string, { name: string; description: string }> = {
-  full_exercise_library: {
-    name: 'Full Exercise Library',
-    description: 'Access 288+ exercises with video demos and coaching cues.',
+  // Free tier features
+  peptide_library: {
+    name: 'Peptide Library',
+    description: 'Browse our comprehensive library of 55+ peptides.',
   },
+  peptide_info: {
+    name: 'Peptide Information',
+    description: 'Detailed peptide profiles with dosing and research data.',
+  },
+  dosing_calculator: {
+    name: 'Dosing Calculator',
+    description: 'Calculate precise peptide dosing based on your needs.',
+  },
+  reconstitution_calculator: {
+    name: 'Reconstitution Calculator',
+    description: 'Calculate reconstitution volumes for peptide vials.',
+  },
+  calorie_counter: {
+    name: 'Calorie Counter',
+    description: 'Track your daily calorie intake with easy meal logging.',
+  },
+  health_checkins: {
+    name: 'Health Check-Ins',
+    description: 'Log daily wellness check-ins to track your progress.',
+  },
+  dose_logging: {
+    name: 'Dose Logging',
+    description: 'Track your peptide doses on a calendar.',
+  },
+  calendar: {
+    name: 'Calendar',
+    description: 'View your doses, check-ins, and events on a calendar.',
+  },
+  journal: {
+    name: 'Wellness Journal',
+    description: 'Write journal entries to track your wellness journey.',
+  },
+  learn_hub: {
+    name: 'Learn Hub',
+    description: 'Educational articles and videos on peptides and health.',
+  },
+  stack_builder: {
+    name: 'Stack Builder',
+    description: 'Build and manage your peptide stacks.',
+  },
+
+  // Pepe tier features
+  pepe_ai_unlimited: {
+    name: 'Unlimited Pepe AI',
+    description: 'Chat with Pepe AI without any message limits.',
+  },
+  pepe_dosing_qa: {
+    name: 'Pepe Dosing Q&A',
+    description: 'Ask Pepe AI detailed questions about peptide dosing.',
+  },
+  pepe_health_suggestions: {
+    name: 'Pepe Health Suggestions',
+    description: 'Get personalized health suggestions from Pepe AI.',
+  },
+
+  // Pepe Plus tier features
   workout_programs: {
     name: 'Workout Programs',
     description: 'Follow structured multi-week workout programs.',
   },
-  ai_recipe_generator: {
-    name: 'AI Recipe Generator',
-    description: 'Generate personalized recipes based on your macros and preferences.',
-  },
-  custom_meal_plans: {
-    name: 'Custom Meal Plans',
+  ai_meal_plans: {
+    name: 'AI Meal Plans',
     description: 'Get AI-generated weekly meal plans tailored to your goals.',
   },
-  grocery_list: {
-    name: 'Grocery List',
+  nutrition_planning: {
+    name: 'Nutrition Planning',
+    description: 'Advanced nutrition planning with macro optimization.',
+  },
+  pepe_weekly_programs: {
+    name: 'Pepe Weekly Programs',
+    description: 'AI-generated weekly workout and nutrition programs.',
+  },
+  pepe_full_tracking: {
+    name: 'Full Progress Tracking',
+    description: 'Comprehensive tracking of workouts, nutrition, and health.',
+  },
+  grocery_from_plans: {
+    name: 'Grocery Lists',
     description: 'Auto-generated shopping lists from your meal plans.',
   },
-  unlimited_ai_chat: {
-    name: 'Unlimited AI Chat',
-    description: 'Chat with PepTalk AI without daily message limits.',
+  recipe_generator: {
+    name: 'Meals by Pepe',
+    description: 'Get personalized meal ideas from Pepe based on your macros and preferences.',
   },
-  unlimited_journal: {
-    name: 'Unlimited Journal',
-    description: 'Write unlimited wellness journal entries.',
-  },
-  health_reports_basic: {
-    name: 'Health Reports',
-    description: 'Generate basic health trend reports from your data.',
-  },
+
+  // Pepe Pro tier features
   health_device_sync: {
     name: 'Health Device Sync',
     description: 'Sync data from Apple Watch, Fitbit, and Google Health.',
-  },
-  no_ads: {
-    name: 'Ad-Free Experience',
-    description: 'Remove all banner ads from the app.',
-  },
-  progress_photos: {
-    name: 'Progress Photos',
-    description: 'Track your transformation with progress photo comparisons.',
-  },
-  advanced_analytics: {
-    name: 'Advanced Analytics',
-    description: 'Deep insights into your trends and performance metrics.',
   },
   ai_health_planner: {
     name: 'AI Health Planner',
     description: 'AI-powered comprehensive health optimization plans.',
   },
+  health_reports: {
+    name: 'Health Reports',
+    description: 'Comprehensive health reports with actionable recommendations.',
+  },
+  pdf_export: {
+    name: 'PDF Export',
+    description: 'Export health reports and data as professional PDFs.',
+  },
   nutritionist_consult: {
     name: 'Nutritionist Consult',
     description: 'Schedule a consultation with a certified nutritionist.',
   },
-  health_reports_full: {
-    name: 'Full Health Reports',
-    description: 'Comprehensive health reports with actionable recommendations.',
-  },
-  export_data: {
+  data_export: {
     name: 'Data Export',
     description: 'Export all your data in JSON format for your records.',
-  },
-  ai_workout_builder: {
-    name: 'AI Workout Builder',
-    description: 'Build custom workouts with AI-powered exercise selection.',
   },
   priority_support: {
     name: 'Priority Support',
     description: 'Get faster responses from our support team.',
+  },
+  ad_free: {
+    name: 'Ad-Free Experience',
+    description: 'Remove all banner ads from the app.',
   },
 };
 
@@ -104,27 +155,26 @@ const FEATURE_META: Record<string, { name: string; description: string }> = {
 
 /** Determine the minimum tier that unlocks a feature. */
 function getRequiredTier(feature: string): SubscriptionTier {
-  // Check if pro-level (directly listed in pro, excluding inheritance keys)
-  const proFeatures = TIER_FEATURES.pro.filter((f) => !f.startsWith('all_'));
-  if (proFeatures.includes(feature)) return 'pro';
-
-  // Check if plus-level
-  const plusFeatures = TIER_FEATURES.plus.filter((f) => !f.startsWith('all_'));
-  if (plusFeatures.includes(feature)) return 'plus';
-
+  const tiers: SubscriptionTier[] = ['pepe_pro', 'pepe_plus', 'pepe', 'free'];
+  for (const tier of tiers) {
+    const directFeatures = TIER_FEATURES[tier].filter((f) => !f.startsWith('all_'));
+    if (directFeatures.includes(feature)) return tier;
+  }
   return 'free';
 }
 
 const TIER_LABELS: Record<SubscriptionTier, string> = {
   free: 'Free',
-  plus: 'Plus',
-  pro: 'Pro',
+  pepe: 'Pepe',
+  pepe_plus: 'Pepe Plus',
+  pepe_pro: 'Pepe Pro',
 };
 
 const TIER_PRICES: Record<SubscriptionTier, string> = {
   free: '$0',
-  plus: '$9.99/mo',
-  pro: '$24.99/mo',
+  pepe: '$9.99/mo',
+  pepe_plus: '$49.99/mo',
+  pepe_pro: '$99.99/mo',
 };
 
 // ---------------------------------------------------------------------------

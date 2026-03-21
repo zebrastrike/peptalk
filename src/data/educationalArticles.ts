@@ -10,6 +10,7 @@ export const EDUCATIONAL_ARTICLES: EducationalArticle[] = [
     title: 'What Is a Peptide?',
     slug: 'what-is-a-peptide',
     category: 'fundamentals',
+    imageUrl: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80',
     summary: 'Everything you need to know about peptides — what they are, how they work, and why they matter for health research.',
     sections: [
       {
@@ -51,6 +52,7 @@ export const EDUCATIONAL_ARTICLES: EducationalArticle[] = [
     title: 'Why Independent Lab Testing Matters',
     slug: 'why-lab-testing-matters',
     category: 'testing',
+    imageUrl: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80',
     summary: 'Understanding how HPLC, mass spectrometry, and endotoxin testing protect you — and what to look for in a Certificate of Analysis.',
     sections: [
       {
@@ -88,6 +90,7 @@ export const EDUCATIONAL_ARTICLES: EducationalArticle[] = [
     title: 'Safe Injection Practices for Peptides',
     slug: 'safe-injection-practices',
     category: 'safety',
+    imageUrl: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&q=80',
     summary: 'A comprehensive guide to subcutaneous injection technique, injection site rotation, and hygiene best practices for peptide administration.',
     sections: [
       {
@@ -124,6 +127,7 @@ export const EDUCATIONAL_ARTICLES: EducationalArticle[] = [
     title: 'Understanding GLP-1 Receptor Agonists',
     slug: 'understanding-glp1-receptor-agonists',
     category: 'fundamentals',
+    imageUrl: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&q=80',
     summary: 'How semaglutide, tirzepatide, and other GLP-1 receptor agonists work — their mechanism of action, metabolic effects, and what the clinical evidence shows.',
     sections: [
       {
@@ -160,6 +164,7 @@ export const EDUCATIONAL_ARTICLES: EducationalArticle[] = [
     title: 'Peptide Storage and Reconstitution Guide',
     slug: 'peptide-storage-and-reconstitution',
     category: 'delivery',
+    imageUrl: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&q=80',
     summary: 'Everything you need to know about storing lyophilized peptides, reconstituting with bacteriostatic water, calculating doses, and maximizing shelf life.',
     sections: [
       {
@@ -196,6 +201,7 @@ export const EDUCATIONAL_ARTICLES: EducationalArticle[] = [
     title: 'Growth Hormone Peptides Explained',
     slug: 'growth-hormone-peptides-explained',
     category: 'fundamentals',
+    imageUrl: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80',
     summary: 'A comprehensive guide to growth hormone secretagogues and releasing peptides — CJC-1295, Ipamorelin, Sermorelin, and GHRP-6, including how they work and how they differ.',
     sections: [
       {
@@ -232,6 +238,7 @@ export const EDUCATIONAL_ARTICLES: EducationalArticle[] = [
     title: 'Peptide Regulation: What You Need to Know',
     slug: 'peptide-regulation-what-you-need-to-know',
     category: 'regulation',
+    imageUrl: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80',
     summary: 'An overview of the regulatory landscape for peptides in the United States — FDA approval status, compounding pharmacy rules, the research chemical market, and recent regulatory changes.',
     sections: [
       {

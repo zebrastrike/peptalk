@@ -357,6 +357,7 @@ export const CORE_CHALLENGE: WorkoutProgram = {
   weeks: [week1, week2, week3, week4, week5, week6, week7, week8],
   durationWeeks: 8,
   isPremium: false, // Flagship free program
+  imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80',
   tags: [
     'core',
     'pelvic floor',
@@ -477,6 +478,7 @@ export const BOOTY_CHALLENGE: WorkoutProgram = {
   weeks: [booty_w1, booty_w2, booty_w3, booty_w4],
   durationWeeks: 12,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80',
   tags: ['glutes', 'booty', 'hip thrust', 'activation', 'HIIT', '90 day challenge', 'gym', 'home'],
 };
 
@@ -617,6 +619,7 @@ export const LEAN_AND_MEAN: WorkoutProgram = {
   weeks: [lm_w1, lm_w2, lm_w3, lm_w4],
   durationWeeks: 8,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80',
   tags: ['lean', 'muscle building', 'push pull', 'strength', '8 week', 'gym'],
 };
 
@@ -722,6 +725,7 @@ export const POSTURE_CORE_RESTORE: WorkoutProgram = {
   weeks: [pcr_w1, pcr_w2, pcr_w3, pcr_w4],
   durationWeeks: 6,
   isPremium: false,
+  imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80',
   tags: ['posture', 'core', 'pelvic floor', 'postpartum', 'beginner', 'corrective', 'rehab'],
 };
 
@@ -788,6 +792,7 @@ export const TRIAL_PROGRAM: WorkoutProgram = {
   weeks: [trial_w1, trial_w2],
   durationWeeks: 2,
   isPremium: false,
+  imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80',
   tags: ['trial', 'beginner', 'starter', 'full body', 'assessment', '2 week'],
 };
 
@@ -928,6 +933,7 @@ export const TRX_PROGRAM: WorkoutProgram = {
   weeks: [trx_w1, trx_w2, trx_w3, trx_w4],
   durationWeeks: 4,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=600&q=80',
   tags: ['TRX', 'suspension', 'functional', 'core', 'HIIT', 'home', '4 week'],
 };
 
@@ -1092,6 +1098,7 @@ export const LL_HIIT: WorkoutProgram = {
   weeks: [hiit_w1, hiit_w2, hiit_w3, hiit_w4],
   durationWeeks: 4,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=600&q=80',
   tags: ['HIIT', 'AMRAP', 'home', 'cardio', 'conditioning', 'fat loss', '30 min', '4 week'],
 };
 
@@ -1208,6 +1215,7 @@ export const COMPOUND_FUNCTIONAL: WorkoutProgram = {
   weeks: [cfm_w1, cfm_w2, cfm_w3, cfm_w4],
   durationWeeks: 16,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=600&q=80',
   tags: ['compound', 'functional', 'strength', 'barbell', 'progressive', '16 week', 'gym'],
 };
 
@@ -1295,6 +1303,7 @@ export const NUTRITION_BOOTCAMP: WorkoutProgram = {
   weeks: [nb_w1, nb_w2, nb_w3, nb_w4],
   durationWeeks: 12,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80',
   tags: ['nutrition', 'education', 'gut health', 'wellness', 'beginner', '12 week'],
 };
 
@@ -1464,6 +1473,7 @@ export const BODY_RECOMP: WorkoutProgram = {
   weeks: [br_w1, br_w2, br_w3, br_w4],
   durationWeeks: 8,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80',
   tags: ['body recomp', 'lean', 'nutrition', 'macros', 'gym', 'home', '8 week', 'fat loss'],
 };
 
@@ -1601,6 +1611,7 @@ export const SSD_2: WorkoutProgram = {
   weeks: [ssd_w1, ssd_w2, ssd_w3, ssd_w4],
   durationWeeks: 8,
   isPremium: true,
+  imageUrl: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80',
   tags: ['summer', 'slim down', 'HIIT', 'pelvic floor', 'nutrition', '8 week', 'fat loss'],
 };
 

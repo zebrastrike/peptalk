@@ -148,7 +148,7 @@ export const useJournalStore = create<JournalStore>()(
 
       canCreateEntry: () => {
         const tier = useSubscriptionStore.getState().tier;
-        if (tier === 'plus' || tier === 'pro') return true;
+        if (tier !== 'free') return true;
 
         const currentWeekStart = getWeekStart();
         const { weekStartDate, weeklyEntryCount } = get();

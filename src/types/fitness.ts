@@ -179,6 +179,10 @@ export interface WorkoutLog {
   /** User rating 1-5 */
   rating?: 1 | 2 | 3 | 4 | 5;
   notes?: string;
+  /** Optional workout name (used for free-form logs) */
+  workoutName?: string;
+  /** YouTube video URL attached by the user */
+  youtubeUrl?: string;
   startedAt: string; // ISO
   completedAt?: string; // ISO
 }
@@ -310,7 +314,7 @@ export interface BodyMeasurement {
 // Subscription / Paywall
 // ---------------------------------------------------------------------------
 
-export type SubscriptionTier = 'free' | 'plus' | 'pro';
+export type SubscriptionTier = 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro';
 
 export interface SubscriptionState {
   tier: SubscriptionTier;
@@ -323,40 +327,44 @@ export interface SubscriptionState {
 /** What each tier can access */
 export const TIER_FEATURES: Record<SubscriptionTier, string[]> = {
   free: [
-    'public_workouts',
-    'basic_exercise_library',
-    'manual_meal_log',
-    'basic_macro_targets',
-    'peptide_education',
-    'wellness_journal',
-    'check_ins',
+    'peptide_library',
+    'peptide_info',
+    'dosing_calculator',
+    'reconstitution_calculator',
+    'calorie_counter',
+    'health_checkins',
     'dose_logging',
+    'calendar',
+    'journal',
     'learn_hub',
-    'basic_ai_chat',
+    'stack_builder',
   ],
-  plus: [
+  pepe: [
     'all_free_features',
-    'full_exercise_library',
-    'workout_programs',
-    'ai_recipe_generator',
-    'custom_meal_plans',
-    'grocery_list',
-    'unlimited_ai_chat',
-    'unlimited_journal',
-    'health_reports_basic',
-    'health_device_sync',
-    'no_ads',
-    'progress_photos',
-    'advanced_analytics',
+    'pepe_ai_unlimited',
+    'pepe_dosing_qa',
+    'pepe_health_suggestions',
   ],
-  pro: [
-    'all_plus_features',
+  pepe_plus: [
+    'all_pepe_features',
+    'workout_programs',
+    'ai_meal_plans',
+    'nutrition_planning',
+    'pepe_weekly_programs',
+    'pepe_full_tracking',
+    'grocery_from_plans',
+    'recipe_generator',
+  ],
+  pepe_pro: [
+    'all_pepe_plus_features',
+    'health_device_sync',
     'ai_health_planner',
+    'health_reports',
+    'pdf_export',
     'nutritionist_consult',
-    'health_reports_full',
-    'export_data',
-    'ai_workout_builder',
+    'data_export',
     'priority_support',
+    'ad_free',
   ],
 };
 

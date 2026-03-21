@@ -83,13 +83,13 @@ export const CategoryColors: Record<string, string> = {
 };
 
 export const Fonts = {
-  heading: 'BodoniModa',
-  headingBold: 'BodoniModa-Bold',
-  headingItalic: 'BodoniModa-Italic',
-  body: 'Sora',
-  bodyMedium: 'Sora-Medium',
-  bodySemiBold: 'Sora-SemiBold',
-  bodyBold: 'Sora-Bold',
+  heading: 'System',
+  headingBold: 'System',
+  headingItalic: 'System',
+  body: 'System',
+  bodyMedium: 'System',
+  bodySemiBold: 'System',
+  bodyBold: 'System',
 } as const;
 
 export const Spacing = {

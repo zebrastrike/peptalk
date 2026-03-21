@@ -1,5 +1,5 @@
 /**
- * Subscription / Paywall screen — 3-tier plan comparison with upgrade CTAs.
+ * Subscription / Paywall screen — 4-tier plan comparison with upgrade CTAs.
  */
 
 import React from 'react';
@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -43,62 +44,78 @@ const TIERS: TierInfo[] = [
     name: 'Free',
     price: '$0',
     period: '',
-    description: 'Get started with core peptide tools',
+    description: 'Core peptide tools to get started',
     features: [
-      'Public workout programs',
-      'Basic exercise library (50 exercises)',
-      'Manual meal logging',
-      'Basic macro targets',
-      'Peptide education hub',
-      'Wellness journal (3/week)',
-      'Daily check-ins & dose logging',
-      'AI chat (5 messages/day)',
+      'Peptide library (55+ peptides)',
+      'Peptide info & profiles',
+      'Dosing calculator',
+      'Reconstitution calculator',
+      'Calorie counter',
+      'Health check-ins',
+      'Dose logging & calendar',
+      'Wellness journal',
+      'Learn hub (articles & videos)',
+      'Stack builder',
     ],
     colors: ['#6b7280', '#9ca3af'],
     icon: 'person-outline',
   },
   {
-    tier: 'plus',
-    name: 'Plus',
+    tier: 'pepe',
+    name: 'Pepe',
     price: '$9.99',
     period: '/mo',
-    description: 'Full library, AI tools, and no ads',
+    description: 'Unlock unlimited Pepe AI assistant',
     features: [
       'Everything in Free',
-      'Full 288+ exercise library',
-      'All workout programs',
-      'AI Recipe Generator',
-      'Custom meal plans & grocery list',
-      'Unlimited AI chat',
-      'Unlimited journal entries',
-      'Basic health reports',
-      'Health device sync',
-      'No ads',
-      'Progress photos',
-      'Advanced analytics',
+      'Unlimited Pepe AI chat',
+      'Pepe dosing Q&A',
+      'Pepe health suggestions',
     ],
     colors: [Colors.pepBlue, Colors.pepCyan],
-    icon: 'flash-outline',
+    icon: 'chatbubble-ellipses-outline',
     badge: 'Most Popular',
   },
   {
-    tier: 'pro',
-    name: 'Pro',
-    price: '$24.99',
+    tier: 'pepe_plus',
+    name: 'Pepe Plus',
+    price: '$49.99',
     period: '/mo',
-    description: 'AI health planner, nutritionist access, full reports',
+    description: 'Workouts, nutrition, and full tracking',
     features: [
-      'Everything in Plus',
-      'AI Health Planner',
+      'Everything in Pepe',
+      'Structured workout programs',
+      'AI meal plans',
+      'Nutrition planning',
+      'Pepe weekly programs',
+      'Full progress tracking',
+      'Grocery lists from plans',
+      'AI recipe generator',
+    ],
+    colors: ['#8b5cf6', '#06b6d4'],
+    icon: 'flash-outline',
+    badge: 'Best Value',
+  },
+  {
+    tier: 'pepe_pro',
+    name: 'Pepe Pro',
+    price: '$99.99',
+    period: '/mo',
+    description: 'Professional health tools and priority access',
+    features: [
+      'Everything in Pepe Plus',
+      'Health device sync',
+      'AI health planner',
+      'Health reports',
+      'PDF export',
       'Nutritionist consultation',
-      'Full health reports',
-      'AI Workout Builder',
-      'Export all your data',
+      'Full data export',
       'Priority support',
+      'Ad-free experience',
     ],
     colors: ['#f59e0b', '#ef4444'],
     icon: 'star-outline',
-    badge: 'Best Value',
+    badge: 'Ultimate',
   },
 ];
 
@@ -209,6 +226,12 @@ export default function SubscriptionScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
       >
+        {/* Hero banner image */}
+        <Image
+          source={{ uri: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80' }}
+          style={styles.heroBanner}
+        />
+
         {/* Hero */}
         <View style={styles.hero}>
           <Text style={styles.heroTitle}>Choose Your Plan</Text>
@@ -261,6 +284,16 @@ const styles = StyleSheet.create({
     color: Colors.darkText,
   },
   scroll: { paddingBottom: 40 },
+
+  // Hero banner
+  heroBanner: {
+    width: '100%',
+    height: 160,
+    borderRadius: 16,
+    opacity: 0.8,
+    marginHorizontal: Spacing.lg,
+    alignSelf: 'center',
+  },
 
   // Hero
   hero: {

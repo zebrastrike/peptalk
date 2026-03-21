@@ -7,6 +7,7 @@ import {
   StyleSheet,
   FlatList,
   TextInput,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -464,38 +465,47 @@ export default function LearnHubScreen() {
                   }
                 >
                   <GlassCard style={styles.articleCard}>
-                    <View
-                      style={[
-                        styles.categoryBadge,
-                        {
-                          backgroundColor: `${getArticleCategoryColor(item.category)}20`,
-                        },
-                      ]}
-                    >
-                      <Text
+                    {item.imageUrl && (
+                      <Image
+                        source={{ uri: item.imageUrl }}
+                        style={styles.articleCardImage}
+                        resizeMode="cover"
+                      />
+                    )}
+                    <View style={styles.articleCardContent}>
+                      <View
                         style={[
-                          styles.categoryBadgeText,
+                          styles.categoryBadge,
                           {
-                            color: getArticleCategoryColor(item.category),
+                            backgroundColor: `${getArticleCategoryColor(item.category)}20`,
                           },
                         ]}
                       >
-                        {item.category}
+                        <Text
+                          style={[
+                            styles.categoryBadgeText,
+                            {
+                              color: getArticleCategoryColor(item.category),
+                            },
+                          ]}
+                        >
+                          {item.category}
+                        </Text>
+                      </View>
+                      <Text style={styles.cardTitle} numberOfLines={2}>
+                        {item.title}
                       </Text>
-                    </View>
-                    <Text style={styles.cardTitle} numberOfLines={2}>
-                      {item.title}
-                    </Text>
-                    <Text style={styles.cardSummary} numberOfLines={3}>
-                      {item.summary}
-                    </Text>
-                    <View style={styles.cardFooter}>
-                      <Ionicons
-                        name="arrow-forward"
-                        size={14}
-                        color={Colors.rose}
-                      />
-                      <Text style={styles.readMore}>Read article</Text>
+                      <Text style={styles.cardSummary} numberOfLines={3}>
+                        {item.summary}
+                      </Text>
+                      <View style={styles.cardFooter}>
+                        <Ionicons
+                          name="arrow-forward"
+                          size={14}
+                          color={Colors.rose}
+                        />
+                        <Text style={styles.readMore}>Read article</Text>
+                      </View>
                     </View>
                   </GlassCard>
                 </TouchableOpacity>
@@ -615,6 +625,13 @@ export default function LearnHubScreen() {
                 >
                   <GlassCard style={styles.videoCard}>
                     <View style={styles.videoThumbnail}>
+                      {item.thumbnailUrl && (
+                        <Image
+                          source={{ uri: item.thumbnailUrl }}
+                          style={styles.videoThumbnailImage}
+                          resizeMode="cover"
+                        />
+                      )}
                       <Ionicons
                         name="play-circle"
                         size={40}
@@ -961,6 +978,17 @@ const styles = StyleSheet.create({
   articleCard: {
     width: 260,
     minHeight: 150,
+    padding: 0,
+    overflow: 'hidden' as const,
+  },
+  articleCardImage: {
+    width: '100%' as const,
+    height: 120,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  articleCardContent: {
+    padding: 16,
   },
   guideCard: {
     width: 260,
@@ -1015,6 +1043,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
+    overflow: 'hidden' as const,
+  },
+  videoThumbnailImage: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%' as const,
+    height: '100%' as const,
+    opacity: 0.6,
   },
   durationBadge: {
     position: 'absolute',

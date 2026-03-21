@@ -19,18 +19,20 @@
 // Dynamic module loading — safe for Expo Go
 // ---------------------------------------------------------------------------
 
-let mobileAdsModule: any = null;
-let TestIdsRef: any = {};
-let MaxAdContentRatingRef: any = {};
+const mobileAdsModule: any = null;
+const TestIdsRef: any = {};
+const MaxAdContentRatingRef: any = {};
 
-try {
-  const mod = require('react-native-google-mobile-ads');
-  mobileAdsModule = mod.default ?? mod;
-  TestIdsRef = mod.TestIds ?? {};
-  MaxAdContentRatingRef = mod.MaxAdContentRating ?? {};
-} catch {
-  // Native module not available (Expo Go / web). All functions below no-op.
-}
+// NOTE: react-native-google-mobile-ads is NOT installed yet.
+// Metro resolves require() at bundle time even inside try/catch.
+// Install the package and uncomment below when ready for ads.
+//
+// try {
+//   const mod = require('react-native-google-mobile-ads');
+//   mobileAdsModule = mod.default ?? mod;
+//   TestIdsRef = mod.TestIds ?? {};
+//   MaxAdContentRatingRef = mod.MaxAdContentRating ?? {};
+// } catch {}
 
 // ---------------------------------------------------------------------------
 // Ad Unit IDs

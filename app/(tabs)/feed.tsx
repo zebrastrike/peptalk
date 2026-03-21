@@ -3,6 +3,7 @@ import {
   View,
   Text,
   FlatList,
+  Image,
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
@@ -62,6 +63,21 @@ function getCategoryColor(category: FeedCategory): string {
   }
 }
 
+// ─── Category image mapping ──────────────────────────────────────────────────
+
+function getCategoryImage(category: FeedCategory): string {
+  switch (category) {
+    case 'medical':
+      return 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=400&q=80';
+    case 'regulatory':
+      return 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&q=80';
+    case 'research':
+      return 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80';
+    default:
+      return 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&q=80';
+  }
+}
+
 // ─── Feed Item Card ──────────────────────────────────────────────────────────
 
 function FeedItemCard({ item }: { item: FeedItem }) {
@@ -81,6 +97,13 @@ function FeedItemCard({ item }: { item: FeedItem }) {
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
       <GlassCard style={styles.feedCard}>
+        {/* Category image + content row */}
+        <View style={styles.feedCardRow}>
+          <Image
+            source={{ uri: getCategoryImage(item.category) }}
+            style={styles.feedCardImage}
+          />
+          <View style={styles.feedCardContent}>
         {/* Category + Date row */}
         <View style={styles.feedCardMeta}>
           <View style={[styles.categoryPill, { backgroundColor: `${catColor}18` }]}>
@@ -134,6 +157,8 @@ function FeedItemCard({ item }: { item: FeedItem }) {
         <View style={styles.sourceRow}>
           <Text style={styles.sourceText}>{item.source}</Text>
           <Ionicons name="open-outline" size={12} color="#6b7280" />
+        </View>
+          </View>
         </View>
       </GlassCard>
     </TouchableOpacity>
@@ -410,6 +435,18 @@ const styles = StyleSheet.create({
   feedCard: {
     marginTop: 12,
     padding: 16,
+  },
+  feedCardRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  feedCardImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+  },
+  feedCardContent: {
+    flex: 1,
   },
   feedCardMeta: {
     flexDirection: 'row',

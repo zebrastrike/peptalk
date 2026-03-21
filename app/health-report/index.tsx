@@ -19,6 +19,7 @@ import { useJournalStore } from '../../src/store/useJournalStore';
 import { getGoalLabel } from '../../src/constants/goals';
 import { GoalType } from '../../src/types';
 import { getPeptideById } from '../../src/data/peptides';
+import { PaywallGate } from '../../src/hooks/useFeatureGate';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -271,6 +272,7 @@ export default function HealthReportScreen() {
   );
 
   return (
+    <PaywallGate feature="health_reports">
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       {/* Header */}
       <View style={styles.header}>
@@ -497,6 +499,7 @@ export default function HealthReportScreen() {
         <View style={{ height: 48 }} />
       </ScrollView>
     </SafeAreaView>
+    </PaywallGate>
   );
 }
 

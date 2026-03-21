@@ -16,16 +16,18 @@ import { useSubscriptionStore } from '../store/useSubscriptionStore';
 // Dynamic module loading — safe for Expo Go
 // ---------------------------------------------------------------------------
 
-let BannerAd: any = null;
-let BannerAdSize: any = {};
+const BannerAd: any = null;
+const BannerAdSize: any = {};
 
-try {
-  const mod = require('react-native-google-mobile-ads');
-  BannerAd = mod.BannerAd;
-  BannerAdSize = mod.BannerAdSize ?? {};
-} catch {
-  // Native module not available — component renders null below.
-}
+// NOTE: react-native-google-mobile-ads is NOT installed yet.
+// Metro resolves require() at bundle time even inside try/catch.
+// Install the package and uncomment below when ready for ads.
+//
+// try {
+//   const mod = require('react-native-google-mobile-ads');
+//   BannerAd = mod.BannerAd;
+//   BannerAdSize = mod.BannerAdSize ?? {};
+// } catch {}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -46,7 +48,7 @@ export default function AdBanner({ style }: AdBannerProps) {
   const [adFailed, setAdFailed] = useState(false);
 
   // No ads for paid users
-  if (tier === 'plus' || tier === 'pro') {
+  if (tier !== 'free') {
     return null;
   }
 

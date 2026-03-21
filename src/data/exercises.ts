@@ -101,16 +101,38 @@ function indexToExercise(entry: ExerciseIndexEntry): Exercise {
 // Exported Exercise Library (backward-compatible API)
 // ---------------------------------------------------------------------------
 
-export const EXERCISES: Exercise[] = EXERCISE_INDEX.map(indexToExercise);
+// Lazy-initialized — only built when first accessed, not at app startup
+let _exercises: Exercise[] | null = null;
+let _exerciseMap: Map<string, Exercise> | null = null;
 
-/** Quick lookup by ID */
-export const EXERCISE_MAP = new Map<string, Exercise>(
-  EXERCISES.map((e) => [e.id, e]),
-);
+function getExerciseList(): Exercise[] {
+  if (!_exercises) _exercises = EXERCISE_INDEX.map(indexToExercise);
+  return _exercises;
+}
+
+function getExerciseMap(): Map<string, Exercise> {
+  if (!_exerciseMap) _exerciseMap = new Map(getExerciseList().map((e) => [e.id, e]));
+  return _exerciseMap;
+}
+
+export const EXERCISES: Exercise[] = new Proxy([] as Exercise[], {
+  get(_, prop) {
+    const list = getExerciseList();
+    if (prop === 'length') return list.length;
+    if (prop === 'map') return list.map.bind(list);
+    if (prop === 'filter') return list.filter.bind(list);
+    if (prop === 'forEach') return list.forEach.bind(list);
+    if (prop === 'find') return list.find.bind(list);
+    if (prop === 'slice') return list.slice.bind(list);
+    if (prop === Symbol.iterator) return list[Symbol.iterator].bind(list);
+    if (typeof prop === 'string' && !isNaN(Number(prop))) return list[Number(prop)];
+    return (list as any)[prop];
+  },
+});
 
 /** Get exercise by ID */
 export function getExerciseById(exerciseId: string): Exercise | undefined {
-  return EXERCISE_MAP.get(exerciseId);
+  return getExerciseMap().get(exerciseId);
 }
 
 /** Search exercises by name fragment */

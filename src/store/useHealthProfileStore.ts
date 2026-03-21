@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { useDoseLogStore } from './useDoseLogStore';
+import { useChatStore } from './useChatStore';
+import { useCheckinStore } from './useCheckinStore';
 import {
   HealthProfile,
   BodyMetrics,
@@ -375,9 +378,6 @@ export const useHealthProfileStore = create<HealthProfileStore>()(
         set({ profile: { ...emptyProfile }, currentStep: 0 });
         // Also clear other stores that hold PHI
         try {
-          const { useDoseLogStore } = require('./useDoseLogStore');
-          const { useChatStore } = require('./useChatStore');
-          const { useCheckinStore } = require('./useCheckinStore');
           const doseStore = useDoseLogStore.getState();
           const chatStore = useChatStore.getState();
           const checkinStore = useCheckinStore.getState();

@@ -23,17 +23,20 @@ import { Platform } from 'react-native';
 // We use a dynamic require wrapped in try/catch so the app doesn't crash
 // when the native module isn't available (Expo Go, Android, web).
 
-let HKModule: any = null;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const HKModule: any = null;
 
-try {
-  if (Platform.OS === 'ios') {
-    HKModule = require('@kingstinct/react-native-healthkit');
-  }
-} catch {
-  // Module not available — running in Expo Go, on Android, or the native
-  // module hasn't been linked. All public functions below will return
-  // null / false gracefully.
-}
+// NOTE: @kingstinct/react-native-healthkit is NOT installed yet.
+// When ready, install the package and uncomment the dynamic require below.
+// Metro resolves require() at bundle time even inside try/catch,
+// so we must leave it commented out until the package is installed.
+//
+// try {
+//   if (Platform.OS === 'ios') {
+//     HKModule = require('@kingstinct/react-native-healthkit');
+//   }
+// } catch {}
+
 
 // ---------------------------------------------------------------------------
 // Availability check

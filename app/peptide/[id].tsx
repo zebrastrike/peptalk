@@ -214,6 +214,88 @@ export default function PeptideDetailScreen() {
           </View>
         )}
 
+        {/* What People Use This For */}
+        {peptide.uses && (
+          <View style={styles.usesSection}>
+            <View style={styles.usesSectionHeader}>
+              <Ionicons name="people-outline" size={20} color="#e3a7a1" />
+              <Text style={styles.usesSectionTitle}>What People Use This For</Text>
+            </View>
+
+            {/* Primary Uses - colored pill badges */}
+            <View style={styles.usesPillsRow}>
+              {peptide.uses.primaryUses.map((use, i) => (
+                <View key={i} style={styles.usesPrimaryPill}>
+                  <Text style={styles.usesPrimaryPillText}>{use}</Text>
+                </View>
+              ))}
+            </View>
+
+            {/* Common Goals */}
+            {peptide.uses.commonGoals.length > 0 && (
+              <View style={styles.usesGoalsSection}>
+                <Text style={styles.usesSubtitle}>Common Goals</Text>
+                <View style={styles.usesGoalsRow}>
+                  {peptide.uses.commonGoals.map((goal, i) => (
+                    <View key={i} style={styles.usesGoalTag}>
+                      <Text style={styles.usesGoalTagText}>{goal}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* What People Report */}
+            <GlassCard style={styles.usesReportCard}>
+              <View style={styles.usesReportHeader}>
+                <Ionicons name="chatbubbles-outline" size={16} color="#b9cbb6" />
+                <Text style={styles.usesReportTitle}>What People Report</Text>
+              </View>
+              <Text style={styles.usesReportText}>{peptide.uses.whatPeopleReport}</Text>
+            </GlassCard>
+
+            {/* Popular With */}
+            {peptide.uses.popularWith.length > 0 && (
+              <View style={styles.usesPopularSection}>
+                <Text style={styles.usesSubtitle}>Popular With</Text>
+                <View style={styles.usesPopularRow}>
+                  {peptide.uses.popularWith.map((group, i) => (
+                    <View key={i} style={styles.usesPopularBadge}>
+                      <Ionicons name="person-outline" size={12} color="#c7d7e6" />
+                      <Text style={styles.usesPopularBadgeText}>{group}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* Pairs Well With */}
+            {peptide.uses.pairsWith.length > 0 && (
+              <View style={styles.usesPairsSection}>
+                <Text style={styles.usesSubtitle}>Pairs Well With</Text>
+                <View style={styles.usesPairsRow}>
+                  {peptide.uses.pairsWith.map((pairId) => {
+                    const pairPeptide = getPeptideById(pairId);
+                    if (!pairPeptide) return null;
+                    return (
+                      <TouchableOpacity
+                        key={pairId}
+                        style={styles.usesPairChip}
+                        onPress={() => router.push(`/peptide/${pairId}` as any)}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name="link-outline" size={14} color="#e3a7a1" />
+                        <Text style={styles.usesPairChipText}>{pairPeptide.name}</Text>
+                        <Ionicons name="chevron-forward" size={12} color="#9ca3af" />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+
         {/* Research Summary */}
         <GlassCard style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -1222,5 +1304,141 @@ const styles = StyleSheet.create({
     color: '#c7d7e6',
     flex: 1,
     textDecorationLine: 'underline',
+  },
+
+  // ── What People Use This For ──────────────────────────────────
+  usesSection: {
+    marginBottom: 14,
+    padding: 16,
+    backgroundColor: 'rgba(227, 167, 161, 0.06)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(227, 167, 161, 0.12)',
+  },
+  usesSectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 14,
+  },
+  usesSectionTitle: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#f7f2ec',
+    letterSpacing: -0.3,
+  },
+  usesPillsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+  usesPrimaryPill: {
+    backgroundColor: 'rgba(227, 167, 161, 0.18)',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderWidth: 1,
+    borderColor: 'rgba(227, 167, 161, 0.25)',
+  },
+  usesPrimaryPillText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#e3a7a1',
+  },
+  usesSubtitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#c7d7e6',
+    marginBottom: 8,
+  },
+  usesGoalsSection: {
+    marginBottom: 14,
+  },
+  usesGoalsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  usesGoalTag: {
+    backgroundColor: 'rgba(185, 203, 182, 0.12)',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(185, 203, 182, 0.18)',
+  },
+  usesGoalTagText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#b9cbb6',
+  },
+  usesReportCard: {
+    marginBottom: 14,
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+  },
+  usesReportHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  usesReportTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#b9cbb6',
+  },
+  usesReportText: {
+    fontSize: 13,
+    color: '#d1cdc7',
+    lineHeight: 21,
+  },
+  usesPopularSection: {
+    marginBottom: 14,
+  },
+  usesPopularRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  usesPopularBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: 'rgba(199, 215, 230, 0.1)',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(199, 215, 230, 0.15)',
+  },
+  usesPopularBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#c7d7e6',
+  },
+  usesPairsSection: {
+    marginBottom: 0,
+  },
+  usesPairsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  usesPairChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(227, 167, 161, 0.1)',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(227, 167, 161, 0.18)',
+  },
+  usesPairChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#e3a7a1',
   },
 });

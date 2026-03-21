@@ -1,0 +1,171 @@
+/**
+ * Calculators Hub — links to Dosing and Reconstitution calculators.
+ */
+
+import React from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors, Spacing, FontSizes, BorderRadius, Gradients } from '../../src/constants/theme';
+
+export default function CalculatorsHubScreen() {
+  const router = useRouter();
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Calculators</Text>
+        <View style={{ width: 40 }} />
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+      >
+        <Text style={styles.subtitle}>
+          Tools to help you calculate dosing and reconstitution for your peptide protocols.
+        </Text>
+
+        {/* Dosing Calculator Card */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => router.push('/calculators/dosing')}
+        >
+          <LinearGradient
+            colors={[Gradients.card[0], Gradients.card[1]]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.card}
+          >
+            <View style={styles.cardIcon}>
+              <Ionicons name="calculator-outline" size={32} color={Colors.pepBlue} />
+            </View>
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>Dosing Calculator</Text>
+              <Text style={styles.cardDesc}>
+                Calculate your dose per injection, weekly totals, and monthly vial supply based on
+                peptide, body weight, target dose, and frequency.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={Colors.darkTextSecondary} />
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Reconstitution Calculator Card */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => router.push('/calculators/reconstitution')}
+        >
+          <LinearGradient
+            colors={[Gradients.card[0], Gradients.card[1]]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.card}
+          >
+            <View style={styles.cardIcon}>
+              <Ionicons name="flask-outline" size={32} color={Colors.pepTeal} />
+            </View>
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>Reconstitution Calculator</Text>
+              <Text style={styles.cardDesc}>
+                Determine concentration, injection volume, and doses per vial when mixing
+                lyophilized peptides with bacteriostatic water.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={Colors.darkTextSecondary} />
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Disclaimer */}
+        <View style={styles.disclaimerBox}>
+          <Ionicons name="information-circle-outline" size={18} color={Colors.darkTextSecondary} />
+          <Text style={styles.disclaimerText}>
+            These calculators are informational tools only. Always consult a qualified healthcare
+            provider before starting any peptide protocol.
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: Colors.darkBg },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: FontSizes.xl,
+    fontWeight: '800',
+    color: Colors.darkText,
+  },
+  scroll: { paddingHorizontal: Spacing.lg, paddingBottom: 40 },
+  subtitle: {
+    fontSize: FontSizes.md,
+    color: Colors.darkTextSecondary,
+    marginBottom: Spacing.lg,
+    lineHeight: 22,
+  },
+
+  // Cards
+  card: {
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    borderColor: Colors.glassBlueBorder,
+    padding: Spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  cardIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: BorderRadius.md,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: Spacing.md,
+  },
+  cardContent: { flex: 1, marginRight: Spacing.sm },
+  cardTitle: {
+    fontSize: FontSizes.lg,
+    fontWeight: '700',
+    color: Colors.darkText,
+    marginBottom: 4,
+  },
+  cardDesc: {
+    fontSize: FontSizes.sm,
+    color: Colors.darkTextSecondary,
+    lineHeight: 18,
+  },
+
+  // Disclaimer
+  disclaimerBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginTop: Spacing.lg,
+    paddingHorizontal: Spacing.sm,
+  },
+  disclaimerText: {
+    flex: 1,
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    lineHeight: 16,
+  },
+});

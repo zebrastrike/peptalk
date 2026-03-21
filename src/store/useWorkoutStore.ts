@@ -53,7 +53,7 @@ interface WorkoutActions {
   // Live workout
   beginWorkout: (programId?: string, weekNum?: number, dayId?: string) => void;
   logSet: (set: WorkoutLogSet) => void;
-  finishWorkout: (rating?: 1 | 2 | 3 | 4 | 5, notes?: string) => void;
+  finishWorkout: (rating?: 1 | 2 | 3 | 4 | 5, notes?: string, youtubeUrl?: string, workoutName?: string) => void;
   cancelWorkout: () => void;
 
   // History & analytics
@@ -140,7 +140,7 @@ export const useWorkoutStore = create<WorkoutState & WorkoutActions>()(
         set({ inProgress: { ...wp, sets: [...wp.sets, logSet] } });
       },
 
-      finishWorkout: (rating, notes) => {
+      finishWorkout: (rating, notes, youtubeUrl, workoutName) => {
         const wp = get().inProgress;
         if (!wp) return;
         const now = new Date();
@@ -153,6 +153,8 @@ export const useWorkoutStore = create<WorkoutState & WorkoutActions>()(
           durationMinutes,
           rating,
           notes,
+          ...(youtubeUrl ? { youtubeUrl } : {}),
+          ...(workoutName ? { workoutName } : {}),
           completedAt: now.toISOString(),
         };
 

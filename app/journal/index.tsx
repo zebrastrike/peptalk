@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import {
   FlatList,
+  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -380,6 +381,12 @@ export default function JournalFeedScreen() {
         </Pressable>
       </View>
 
+      {/* Header banner image */}
+      <Image
+        source={{ uri: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&q=80' }}
+        style={styles.headerBanner}
+      />
+
       {/* Entry list */}
       <FlatList
         data={filtered}
@@ -436,6 +443,13 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerBanner: {
+    width: '100%',
+    height: 120,
+    borderRadius: 16,
+    marginBottom: 16,
+    opacity: 0.7,
   },
 
   // Search

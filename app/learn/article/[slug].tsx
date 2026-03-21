@@ -7,6 +7,7 @@ import {
   Linking,
   Alert,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -100,6 +101,15 @@ export default function ArticleDetailScreen() {
           <Ionicons name="arrow-back" size={20} color="#e8e6e3" />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
+
+        {/* Hero Image */}
+        {article.imageUrl && (
+          <Image
+            source={{ uri: article.imageUrl }}
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+        )}
 
         {/* Category Badge */}
         <View
@@ -216,6 +226,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: '#e8e6e3',
+  },
+
+  // ── Hero Image ───────────────────────────────────────────────
+  heroImage: {
+    width: '100%' as const,
+    height: 200,
+    borderRadius: 16,
+    marginBottom: 16,
   },
 
   // ── Category Badge ─────────────────────────────────────────

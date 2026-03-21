@@ -33,11 +33,24 @@ interface SubscriptionActions {
   isExpired: () => boolean;
   /** Get all features for current tier */
   getFeatures: () => string[];
+  /** Directly set tier (for dev/testing) */
+  setTier: (tier: SubscriptionTier) => void;
 }
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Map inheritance keys to their parent tier.
+ * e.g. 'all_free_features' -> 'free', 'all_pepe_features' -> 'pepe', etc.
+ */
+const INHERITANCE_MAP: Record<string, SubscriptionTier> = {
+  all_free_features: 'free',
+  all_pepe_features: 'pepe',
+  all_pepe_plus_features: 'pepe_plus',
+  all_pepe_pro_features: 'pepe_pro',
+};
 
 /** Recursively collect all features for a tier, resolving inheritance. */
 function collectFeatures(tier: SubscriptionTier, visited = new Set<string>()): Set<string> {
@@ -46,12 +59,10 @@ function collectFeatures(tier: SubscriptionTier, visited = new Set<string>()): S
   visited.add(tier);
 
   for (const f of TIER_FEATURES[tier] ?? []) {
-    if (f.startsWith('all_') && f.endsWith('_features')) {
-      const parentTier = f.replace('all_', '').replace('_features', '') as SubscriptionTier;
-      if (TIER_FEATURES[parentTier]) {
-        for (const pf of collectFeatures(parentTier, visited)) {
-          features.add(pf);
-        }
+    if (f in INHERITANCE_MAP) {
+      const parentTier = INHERITANCE_MAP[f];
+      for (const pf of collectFeatures(parentTier, visited)) {
+        features.add(pf);
       }
     } else {
       features.add(f);
@@ -94,6 +105,8 @@ export const useSubscriptionStore = create<SubscriptionState & SubscriptionActio
         if (!expiresAt) return true;
         return new Date(expiresAt) < new Date();
       },
+
+      setTier: (tier) => set({ tier, isActive: true }),
 
       getFeatures: () => {
         const { tier } = get();

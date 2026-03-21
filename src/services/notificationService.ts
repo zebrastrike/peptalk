@@ -17,17 +17,17 @@ import { Platform } from 'react-native';
 let Notifications: any = null;
 let Device: any = null;
 
-try {
-  Notifications = require('expo-notifications');
-} catch {
-  // Not installed or not available in Expo Go
-}
-
-try {
-  Device = require('expo-device');
-} catch {
-  // Not installed
-}
+// NOTE: expo-notifications and expo-device are NOT installed yet.
+// Metro resolves require() at bundle time even inside try/catch.
+// Install both packages and uncomment below for push notifications.
+//
+// try {
+//   Notifications = require('expo-notifications');
+// } catch {}
+//
+// try {
+//   Device = require('expo-device');
+// } catch {}
 
 // ---------------------------------------------------------------------------
 // Availability check

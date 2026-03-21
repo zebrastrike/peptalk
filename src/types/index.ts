@@ -85,6 +85,13 @@ export interface Peptide {
   doiLinks?: string[];
   evidenceGrade?: 'established' | 'moderate' | 'preliminary';
   structureImageUrl?: string;
+  uses?: {
+    primaryUses: string[];
+    commonGoals: string[];
+    whatPeopleReport: string;
+    popularWith: string[];
+    pairsWith: string[];
+  };
 }
 
 export type InteractionType =
@@ -566,6 +573,7 @@ export interface EducationalArticle {
   slug: string;
   category: ArticleCategory;
   summary: string;
+  imageUrl?: string;
   sections: { heading: string; content: string }[];
   citations: { text: string; url?: string }[];
   relatedPeptideIds?: string[];

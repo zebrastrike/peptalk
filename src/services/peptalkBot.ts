@@ -1535,7 +1535,7 @@ function respondMealSuggest(message: string, context: BotContext): string {
   const isMacro = /\b(macro|calorie|protein|carb|fat|track|count)\b/i.test(lower);
 
   if (isRecipe) {
-    parts.push(`Head to the **Nutrition → Recipe Generator** to get AI-powered recipes tailored to your macro targets and dietary preferences.`);
+    parts.push(`Head to **Nutrition → Meals by Pepe** to get personalized meal ideas tailored to your macro targets and dietary preferences.`);
     parts.push('');
     parts.push(`The generator creates recipes optimized for your daily targets and can filter by diet type.`);
   } else if (isMacro) {
@@ -1567,7 +1567,7 @@ function respondMealSuggest(message: string, context: BotContext): string {
     parts.push(`I can help with nutrition planning! Check out these features:`);
     parts.push('');
     parts.push(`• **Nutrition Tab** — Track meals, macros, and water intake`);
-    parts.push(`• **Recipe Generator** — AI-powered recipes matching your targets`);
+    parts.push(`• **Meals by Pepe** — Personalized meal ideas matching your targets`);
     parts.push(`• **Meal Planning** — Plan meals ahead and build grocery lists`);
     parts.push(`• **Macro Targets** — Set calories, protein, carbs, fat, and fiber goals`);
     parts.push('');
@@ -1941,7 +1941,7 @@ function getActions(intent: BotIntent, peptides: Peptide[], context: BotContext)
       ];
     case 'meal_suggest':
       return [
-        { label: 'Recipe Generator', route: '/nutrition/recipe-generator', icon: 'restaurant-outline' },
+        { label: 'Meals by Pepe', route: '/nutrition/recipe-generator', icon: 'restaurant-outline' },
         { label: 'Log Meal', route: '/nutrition', icon: 'nutrition-outline' },
       ];
     case 'create_plan':

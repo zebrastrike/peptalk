@@ -11,6 +11,8 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  Image,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -24,6 +26,115 @@ import { getProgramById } from '../../src/data/workoutPrograms';
 import { getExerciseById } from '../../src/data/exercises';
 import { useWorkoutStore } from '../../src/store/useWorkoutStore';
 import type { ExerciseSet } from '../../src/types/fitness';
+import { PaywallGate } from '../../src/hooks/useFeatureGate';
+
+// ---------------------------------------------------------------------------
+// YouTube helpers
+// ---------------------------------------------------------------------------
+
+function extractYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function YouTubeCard({ url, onRemove }: { url: string; onRemove?: () => void }) {
+  const videoId = extractYouTubeId(url);
+  const thumbUri = videoId
+    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+    : null;
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={() => Linking.openURL(url).catch(() => {})}
+      style={styles.ytCard}
+    >
+      {thumbUri ? (
+        <Image source={{ uri: thumbUri }} style={styles.ytThumb} resizeMode="cover" />
+      ) : (
+        <View style={[styles.ytThumb, styles.ytThumbPlaceholder]}>
+          <Ionicons name="logo-youtube" size={32} color="#ef4444" />
+        </View>
+      )}
+      <LinearGradient
+        colors={['transparent', 'rgba(0,0,0,0.75)']}
+        style={styles.ytOverlay}
+      />
+      <View style={styles.ytPlayBadge}>
+        <Ionicons name="logo-youtube" size={18} color="#ef4444" />
+        <Text style={styles.ytPlayText}>Tap to watch</Text>
+      </View>
+      {onRemove && (
+        <TouchableOpacity style={styles.ytRemove} onPress={onRemove} hitSlop={10}>
+          <Ionicons name="close-circle" size={22} color="#fff" />
+        </TouchableOpacity>
+      )}
+    </TouchableOpacity>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// YouTube URL Input Card
+// ---------------------------------------------------------------------------
+
+function YouTubeInputCard({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const videoId = extractYouTubeId(value);
+
+  return (
+    <View style={styles.ytInputSection}>
+      {!expanded && !videoId ? (
+        <TouchableOpacity
+          style={styles.ytAttachBtn}
+          onPress={() => setExpanded(true)}
+          activeOpacity={0.75}
+        >
+          <Ionicons name="logo-youtube" size={20} color="#ef4444" />
+          <Text style={styles.ytAttachText}>Attach YouTube Video</Text>
+          <Ionicons name="chevron-down" size={16} color={Colors.darkTextSecondary} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.ytInputWrap}>
+          <Ionicons name="logo-youtube" size={20} color="#ef4444" style={{ marginTop: 14 }} />
+          <TextInput
+            style={styles.ytInput}
+            placeholder="Paste YouTube URL..."
+            placeholderTextColor="#6b7280"
+            value={value}
+            onChangeText={onChange}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="url"
+          />
+          {value.length > 0 && (
+            <TouchableOpacity onPress={() => { onChange(''); setExpanded(false); }} style={{ marginTop: 12 }}>
+              <Ionicons name="close-circle" size={20} color={Colors.darkTextSecondary} />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+      {videoId && value.length > 0 && (
+        <YouTubeCard url={value} onRemove={() => { onChange(''); setExpanded(false); }} />
+      )}
+      {value.length > 0 && !videoId && (
+        <Text style={styles.ytError}>Couldn't detect a YouTube video ID — check the URL</Text>
+      )}
+    </View>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Timer Hook
@@ -260,6 +371,222 @@ function ExerciseRow({
 // Main Screen
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Free Workout Logger (no program) — lets user log own exercises + YouTube
+// ---------------------------------------------------------------------------
+
+interface FreeExerciseEntry {
+  id: string;
+  name: string;
+  sets: string;
+  reps: string;
+  weight: string;
+}
+
+function FreeWorkoutScreen() {
+  const router = useRouter();
+  const { beginWorkout, finishWorkout, cancelWorkout, inProgress } = useWorkoutStore();
+  const timer = useTimer();
+
+  const [workoutName, setWorkoutName] = useState('');
+  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [notes, setNotes] = useState('');
+  const [exercises, setExercises] = useState<FreeExerciseEntry[]>([
+    { id: '1', name: '', sets: '3', reps: '10', weight: '' },
+  ]);
+
+  useEffect(() => {
+    if (!inProgress) beginWorkout(undefined, undefined, undefined);
+    timer.start();
+    return () => timer.pause();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const addExercise = () => {
+    setExercises((prev) => [
+      ...prev,
+      { id: String(Date.now()), name: '', sets: '3', reps: '10', weight: '' },
+    ]);
+  };
+
+  const removeExercise = (id: string) => {
+    setExercises((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const updateExercise = (id: string, field: keyof FreeExerciseEntry, val: string) => {
+    setExercises((prev) => prev.map((e) => e.id === id ? { ...e, [field]: val } : e));
+  };
+
+  const handleFinish = () => {
+    const ytId = extractYouTubeId(youtubeUrl);
+    Alert.alert(
+      'Workout Complete!',
+      `${Math.floor(timer.seconds / 60)} min logged. What's next?`,
+      [
+        {
+          text: 'Log Meal',
+          onPress: () => {
+            timer.pause();
+            finishWorkout(undefined, notes || undefined, ytId ? youtubeUrl : undefined, workoutName || undefined);
+            router.replace('/nutrition');
+          },
+        },
+        {
+          text: 'Check In',
+          onPress: () => {
+            timer.pause();
+            finishWorkout(undefined, notes || undefined, ytId ? youtubeUrl : undefined, workoutName || undefined);
+            router.replace('/(tabs)/check-in');
+          },
+        },
+        {
+          text: 'Save & Exit',
+          onPress: () => {
+            timer.pause();
+            finishWorkout(undefined, notes || undefined, ytId ? youtubeUrl : undefined, workoutName || undefined);
+            router.back();
+          },
+        },
+      ],
+    );
+  };
+
+  const handleQuit = () => {
+    Alert.alert('Discard Workout?', 'Nothing will be saved.', [
+      { text: 'Keep Going', style: 'cancel' },
+      { text: 'Discard', style: 'destructive', onPress: () => { timer.pause(); cancelWorkout(); router.back(); } },
+    ]);
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleQuit} style={styles.backBtn}>
+          <Ionicons name="close" size={24} color={Colors.darkText} />
+        </TouchableOpacity>
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerTitle}>Log Workout</Text>
+          <Text style={styles.headerTimer}>{timer.formatted}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => (timer.running ? timer.pause() : timer.start())}
+          style={styles.backBtn}
+        >
+          <Ionicons name={timer.running ? 'pause' : 'play'} size={22} color={Colors.pepTeal} />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        {/* Workout name */}
+        <View style={styles.freeSection}>
+          <TextInput
+            style={styles.freeNameInput}
+            placeholder="Workout name (optional)"
+            placeholderTextColor="#6b7280"
+            value={workoutName}
+            onChangeText={setWorkoutName}
+          />
+        </View>
+
+        {/* YouTube video link */}
+        <View style={styles.freeSection}>
+          <Text style={styles.freeSectionLabel}>Reference Video</Text>
+          <YouTubeInputCard value={youtubeUrl} onChange={setYoutubeUrl} />
+        </View>
+
+        {/* Exercises */}
+        <View style={styles.freeSection}>
+          <View style={styles.freeSectionRow}>
+            <Text style={styles.freeSectionLabel}>Exercises</Text>
+            <TouchableOpacity onPress={addExercise} style={styles.addExBtn}>
+              <Ionicons name="add" size={18} color={Colors.pepTeal} />
+              <Text style={styles.addExText}>Add</Text>
+            </TouchableOpacity>
+          </View>
+
+          {exercises.map((ex, i) => (
+            <GlassCard key={ex.id} style={{ marginBottom: 10 }}>
+              <View style={styles.freeExHeader}>
+                <Text style={styles.freeExNum}>{i + 1}</Text>
+                <TextInput
+                  style={styles.freeExNameInput}
+                  placeholder="Exercise name"
+                  placeholderTextColor="#6b7280"
+                  value={ex.name}
+                  onChangeText={(v) => updateExercise(ex.id, 'name', v)}
+                />
+                {exercises.length > 1 && (
+                  <TouchableOpacity onPress={() => removeExercise(ex.id)} hitSlop={8}>
+                    <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                  </TouchableOpacity>
+                )}
+              </View>
+              <View style={styles.freeExFields}>
+                <View style={styles.freeExField}>
+                  <Text style={styles.freeExFieldLabel}>Sets</Text>
+                  <TextInput
+                    style={styles.freeExInput}
+                    value={ex.sets}
+                    onChangeText={(v) => updateExercise(ex.id, 'sets', v.replace(/[^0-9]/g, ''))}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.freeExField}>
+                  <Text style={styles.freeExFieldLabel}>Reps</Text>
+                  <TextInput
+                    style={styles.freeExInput}
+                    value={ex.reps}
+                    onChangeText={(v) => updateExercise(ex.id, 'reps', v.replace(/[^0-9]/g, ''))}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.freeExField}>
+                  <Text style={styles.freeExFieldLabel}>Weight</Text>
+                  <TextInput
+                    style={styles.freeExInput}
+                    placeholder="lbs"
+                    placeholderTextColor="#6b7280"
+                    value={ex.weight}
+                    onChangeText={(v) => updateExercise(ex.id, 'weight', v.replace(/[^0-9.]/g, ''))}
+                    keyboardType="decimal-pad"
+                  />
+                </View>
+              </View>
+            </GlassCard>
+          ))}
+        </View>
+
+        {/* Notes */}
+        <View style={styles.freeSection}>
+          <Text style={styles.freeSectionLabel}>Notes</Text>
+          <TextInput
+            style={styles.freeNotesInput}
+            placeholder="How did it feel? Any PRs?"
+            placeholderTextColor="#6b7280"
+            value={notes}
+            onChangeText={setNotes}
+            multiline
+            numberOfLines={3}
+          />
+        </View>
+
+        <View style={styles.finishSection}>
+          <GradientButton
+            label="Finish Workout"
+            onPress={handleFinish}
+            colors={[Colors.pepTeal, Colors.pepBlue]}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main Screen — routes to FreeWorkoutScreen or program player
+// ---------------------------------------------------------------------------
+
 export default function WorkoutPlayerScreen() {
   const router = useRouter();
   const { programId } = useLocalSearchParams<{ programId: string }>();
@@ -267,7 +594,6 @@ export default function WorkoutPlayerScreen() {
   const {
     activeProgram,
     beginWorkout,
-    logSet,
     finishWorkout,
     cancelWorkout,
     advanceDay,
@@ -278,6 +604,7 @@ export default function WorkoutPlayerScreen() {
   const restTimer = useRestTimer();
   const [completedSets, setCompletedSets] = useState<Set<string>>(new Set());
   const [setInputs, setSetInputs] = useState<SetInputData>({});
+  const [youtubeUrl, setYoutubeUrl] = useState('');
 
   // Determine current day
   const currentWeek = activeProgram?.currentWeek ?? 1;
@@ -285,7 +612,26 @@ export default function WorkoutPlayerScreen() {
   const week = program?.weeks[(currentWeek - 1)] ?? null;
   const day = week?.days[currentDayIdx] ?? null;
 
-  // Start the workout timer on mount
+  // Free workout mode (no programId)
+  if (!programId) {
+    return <FreeWorkoutScreen />;
+  }
+
+  // Program complete
+  if (!program || !day) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.center}>
+          <Ionicons name="checkmark-circle" size={48} color={Colors.success} />
+          <Text style={styles.doneTitle}>Program Complete!</Text>
+          <Text style={styles.doneDesc}>You've finished all available workouts.</Text>
+          <GradientButton label="Back to Workouts" onPress={() => router.back()} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (day && !inProgress) {
       beginWorkout(programId, currentWeek, day.id);
@@ -295,74 +641,47 @@ export default function WorkoutPlayerScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const totalSets = useMemo(
-    () => day?.exercises.reduce((sum, e) => sum + e.reps.length, 0) ?? 0,
-    [day],
-  );
+  const totalSets = day?.exercises.reduce((sum, e) => sum + e.reps.length, 0) ?? 0;
 
   const handleToggleSet = (key: string, restSeconds?: number) => {
     setCompletedSets((prev) => {
       const next = new Set(prev);
-      const wasCompleted = next.has(key);
-      if (wasCompleted) {
+      if (next.has(key)) {
         next.delete(key);
         restTimer.cancel();
       } else {
         next.add(key);
-        // Start rest timer when completing a set
-        if (restSeconds && restSeconds > 0) {
-          restTimer.startCountdown(restSeconds);
-        }
+        if (restSeconds && restSeconds > 0) restTimer.startCountdown(restSeconds);
       }
       return next;
     });
   };
 
   const handleSetInput = (key: string, field: 'weight' | 'reps', value: string) => {
-    // Only allow numeric input
     const cleaned = value.replace(/[^0-9.]/g, '');
     setSetInputs((prev) => ({
       ...prev,
-      [key]: {
-        ...prev[key],
-        weight: prev[key]?.weight ?? '',
-        reps: prev[key]?.reps ?? '',
-        [field]: cleaned,
-      },
+      [key]: { weight: prev[key]?.weight ?? '', reps: prev[key]?.reps ?? '', [field]: cleaned },
     }));
   };
 
   const handleFinish = () => {
+    const ytId = extractYouTubeId(youtubeUrl);
     Alert.alert(
       'Workout Complete!',
       `Great session! ${Math.floor(timer.seconds / 60)} minutes of effort logged.\n\nWhat's next?`,
       [
         {
           text: 'Log Meal',
-          onPress: () => {
-            timer.pause();
-            finishWorkout(undefined, undefined);
-            advanceDay();
-            router.replace('/nutrition');
-          },
+          onPress: () => { timer.pause(); finishWorkout(undefined, undefined, ytId ? youtubeUrl : undefined); advanceDay(); router.replace('/nutrition'); },
         },
         {
           text: 'Check In',
-          onPress: () => {
-            timer.pause();
-            finishWorkout(undefined, undefined);
-            advanceDay();
-            router.replace('/(tabs)/check-in');
-          },
+          onPress: () => { timer.pause(); finishWorkout(undefined, undefined, ytId ? youtubeUrl : undefined); advanceDay(); router.replace('/(tabs)/check-in'); },
         },
         {
           text: 'Ask Pepe',
-          onPress: () => {
-            timer.pause();
-            finishWorkout(undefined, undefined);
-            advanceDay();
-            router.replace('/(tabs)/peptalk');
-          },
+          onPress: () => { timer.pause(); finishWorkout(undefined, undefined, ytId ? youtubeUrl : undefined); advanceDay(); router.replace('/(tabs)/peptalk'); },
         },
       ],
     );
@@ -371,34 +690,12 @@ export default function WorkoutPlayerScreen() {
   const handleQuit = () => {
     Alert.alert('Quit Workout', 'Your progress for this session will be lost.', [
       { text: 'Keep Going', style: 'cancel' },
-      {
-        text: 'Quit',
-        style: 'destructive',
-        onPress: () => {
-          timer.pause();
-          cancelWorkout();
-          router.back();
-        },
-      },
+      { text: 'Quit', style: 'destructive', onPress: () => { timer.pause(); cancelWorkout(); router.back(); } },
     ]);
   };
 
-  if (!program || !day) {
-    return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.center}>
-          <Ionicons name="checkmark-circle" size={48} color={Colors.success} />
-          <Text style={styles.doneTitle}>Program Complete!</Text>
-          <Text style={styles.doneDesc}>
-            You've finished all available workouts.
-          </Text>
-          <GradientButton label="Back to Workouts" onPress={() => router.back()} />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   return (
+    <PaywallGate feature="workout_programs">
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
@@ -428,13 +725,7 @@ export default function WorkoutPlayerScreen() {
         <View
           style={[
             styles.progressFill,
-            {
-              width: `${
-                totalSets > 0
-                  ? Math.round((completedSets.size / totalSets) * 100)
-                  : 0
-              }%`,
-            },
+            { width: `${totalSets > 0 ? Math.round((completedSets.size / totalSets) * 100) : 0}%` },
           ]}
         />
       </View>
@@ -445,6 +736,7 @@ export default function WorkoutPlayerScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
       >
         {day.exercises.map((exerciseSet, i) => (
           <View key={`${exerciseSet.exerciseId}-${i}`} style={styles.exWrap}>
@@ -460,6 +752,12 @@ export default function WorkoutPlayerScreen() {
           </View>
         ))}
 
+        {/* Reference video for program workouts */}
+        <View style={[styles.exWrap, { marginTop: 4 }]}>
+          <Text style={styles.freeSectionLabel}>Reference Video</Text>
+          <YouTubeInputCard value={youtubeUrl} onChange={setYoutubeUrl} />
+        </View>
+
         {/* Finish */}
         <View style={styles.finishSection}>
           <GradientButton
@@ -470,6 +768,7 @@ export default function WorkoutPlayerScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </PaywallGate>
   );
 }
 
@@ -714,5 +1013,195 @@ const styles = StyleSheet.create({
   finishSection: {
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.lg,
+  },
+
+  // YouTube card
+  ytCard: {
+    borderRadius: BorderRadius.md,
+    overflow: 'hidden',
+    height: 180,
+    backgroundColor: '#000',
+    marginTop: 10,
+  },
+  ytThumb: {
+    width: '100%',
+    height: '100%',
+  },
+  ytThumbPlaceholder: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#111',
+  },
+  ytOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  ytPlayBadge: {
+    position: 'absolute',
+    bottom: 10,
+    left: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  ytPlayText: {
+    color: '#fff',
+    fontSize: FontSizes.xs,
+    fontWeight: '600',
+  },
+  ytRemove: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
+  ytInputSection: {
+    marginTop: 6,
+  },
+  ytAttachBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: Colors.glassBlue,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.glassBlueBorder,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  ytAttachText: {
+    flex: 1,
+    fontSize: FontSizes.sm,
+    color: Colors.darkText,
+    fontWeight: '600',
+  },
+  ytInputWrap: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    backgroundColor: Colors.glassBlue,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.glassBlueBorder,
+    paddingHorizontal: 12,
+  },
+  ytInput: {
+    flex: 1,
+    color: Colors.darkText,
+    fontSize: FontSizes.sm,
+    paddingVertical: 12,
+  },
+  ytError: {
+    fontSize: FontSizes.xs,
+    color: '#f87171',
+    marginTop: 6,
+  },
+
+  // Free workout
+  freeSection: {
+    paddingHorizontal: Spacing.lg,
+    marginBottom: Spacing.md,
+  },
+  freeSectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  freeSectionLabel: {
+    fontSize: FontSizes.sm,
+    fontWeight: '700',
+    color: Colors.darkText,
+    marginBottom: 8,
+  },
+  freeNameInput: {
+    backgroundColor: Colors.glassBlue,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.glassBlueBorder,
+    paddingHorizontal: 14,
+    height: 48,
+    fontSize: FontSizes.md,
+    fontWeight: '700',
+    color: Colors.darkText,
+  },
+  addExBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(20,184,166,0.12)',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  addExText: {
+    fontSize: FontSizes.sm,
+    color: Colors.pepTeal,
+    fontWeight: '600',
+  },
+  freeExHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 10,
+  },
+  freeExNum: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: Colors.pepTeal,
+    textAlign: 'center',
+    lineHeight: 24,
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#fff',
+  },
+  freeExNameInput: {
+    flex: 1,
+    color: Colors.darkText,
+    fontSize: FontSizes.md,
+    fontWeight: '600',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.glassBlueBorder,
+    paddingBottom: 4,
+  },
+  freeExFields: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  freeExField: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  freeExFieldLabel: {
+    fontSize: FontSizes.xs,
+    color: Colors.darkTextSecondary,
+    marginBottom: 4,
+  },
+  freeExInput: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.glassBlueBorder,
+    width: '100%',
+    textAlign: 'center',
+    height: 38,
+    fontSize: FontSizes.sm,
+    color: Colors.darkText,
+    fontWeight: '600',
+  },
+  freeNotesInput: {
+    backgroundColor: Colors.glassBlue,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.glassBlueBorder,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: FontSizes.sm,
+    color: Colors.darkText,
+    minHeight: 80,
+    textAlignVertical: 'top',
   },
 });

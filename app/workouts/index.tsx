@@ -17,10 +17,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
-import { Colors, Gradients, Spacing, FontSizes, BorderRadius } from '../../src/constants/theme';
+import { Colors, Fonts, Gradients, Spacing, FontSizes, BorderRadius } from '../../src/constants/theme';
 import { WORKOUT_PROGRAMS } from '../../src/data/workoutPrograms';
 import { useWorkoutStore } from '../../src/store/useWorkoutStore';
 import type { WorkoutProgram } from '../../src/types/fitness';
+import { PaywallGate } from '../../src/hooks/useFeatureGate';
 
 // ---------------------------------------------------------------------------
 // Program Card
@@ -42,6 +43,21 @@ function ProgramCard({ program }: { program: WorkoutProgram }) {
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={handlePress}>
       <GlassCard variant={isActive ? 'glow' : 'default'} glowColor={Colors.pepTeal}>
+        {/* Cover Image */}
+        {program.imageUrl && (
+          <View style={styles.cardImageWrap}>
+            <Image
+              source={{ uri: program.imageUrl }}
+              style={styles.cardImage}
+              resizeMode="cover"
+            />
+            <LinearGradient
+              colors={['transparent', 'rgba(0,0,0,0.7)']}
+              style={styles.cardImageOverlay}
+            />
+          </View>
+        )}
+
         {/* Header */}
         <View style={styles.cardHeader}>
           <LinearGradient
@@ -201,31 +217,40 @@ export default function WorkoutsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Programs */}
-        <Text style={styles.sectionTitle}>Programs</Text>
-        {WORKOUT_PROGRAMS.map((program) => (
-          <View key={program.id} style={styles.cardWrap}>
-            <ProgramCard program={program} />
-          </View>
-        ))}
+        {/* Log Your Own Workout — free for everyone */}
+        <TouchableOpacity
+          style={styles.logOwnBtn}
+          onPress={() => router.push('/workouts/player')}
+          activeOpacity={0.8}
+        >
+          <LinearGradient colors={[Colors.pepTeal, Colors.pepBlue]} style={styles.logOwnGrad}>
+            <Ionicons name="add-circle-outline" size={22} color="#fff" />
+            <Text style={styles.logOwnText}>Log Your Own Workout</Text>
+          </LinearGradient>
+        </TouchableOpacity>
 
-        {/* Coming Soon */}
-        <View style={styles.cardWrap}>
-          <GlassCard>
-            <View style={styles.comingSoon}>
-              <Ionicons
-                name="add-circle-outline"
-                size={32}
-                color={Colors.darkTextSecondary}
-              />
-              <Text style={styles.comingSoonTitle}>More Programs Coming</Text>
-              <Text style={styles.comingSoonDesc}>
-                Jamie is building strength, HIIT, and postpartum recovery
-                programs. Stay tuned!
-              </Text>
+        {/* Jamie's Programs — Pepe Plus required */}
+        <Text style={styles.sectionTitle}>Programs by Jamie</Text>
+        <PaywallGate feature="workout_programs">
+          <>
+            {WORKOUT_PROGRAMS.map((program) => (
+              <View key={program.id} style={styles.cardWrap}>
+                <ProgramCard program={program} />
+              </View>
+            ))}
+            <View style={styles.cardWrap}>
+              <GlassCard>
+                <View style={styles.comingSoon}>
+                  <Ionicons name="add-circle-outline" size={32} color={Colors.darkTextSecondary} />
+                  <Text style={styles.comingSoonTitle}>More Programs Coming</Text>
+                  <Text style={styles.comingSoonDesc}>
+                    Jamie is building strength, HIIT, and postpartum recovery programs. Stay tuned!
+                  </Text>
+                </View>
+              </GlassCard>
             </View>
-          </GlassCard>
-        </View>
+          </>
+        </PaywallGate>
       </ScrollView>
     </SafeAreaView>
   );
@@ -328,6 +353,29 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
 
+  // Program card image
+  cardImageWrap: {
+    height: 140,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    overflow: 'hidden' as const,
+    marginTop: -16,
+    marginLeft: -16,
+    marginRight: -16,
+    marginBottom: 12,
+  },
+  cardImage: {
+    width: '100%',
+    height: 140,
+  },
+  cardImageOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 60,
+  },
+
   // Program card
   cardHeader: {
     flexDirection: 'row',
@@ -417,6 +465,26 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.sm,
     color: Colors.pepTeal,
     fontWeight: '600',
+  },
+
+  logOwnBtn: {
+    marginHorizontal: Spacing.lg,
+    marginBottom: Spacing.md,
+    borderRadius: BorderRadius.md,
+    overflow: 'hidden',
+  },
+  logOwnGrad: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 14,
+    paddingHorizontal: Spacing.lg,
+  },
+  logOwnText: {
+    color: '#fff',
+    fontFamily: Fonts.bodyBold,
+    fontSize: FontSizes.md,
   },
 
   // Coming soon
