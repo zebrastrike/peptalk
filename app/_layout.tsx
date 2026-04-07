@@ -13,6 +13,7 @@ import { ErrorBoundary } from '../src/components/ErrorBoundary';
 import { CelebrationModal } from '../src/components/CelebrationModal';
 import { PepTalkCharacter } from '../src/components/PepTalkCharacter';
 import { useOnboardingStore } from '../src/store/useOnboardingStore';
+import { useAuthStore } from '../src/store/useAuthStore';
 import { configureNotificationHandler } from '../src/services/notificationService';
 
 export default function RootLayout() {
@@ -21,6 +22,8 @@ export default function RootLayout() {
   const { edit } = useGlobalSearchParams<{ edit?: string }>();
   const isComplete = useOnboardingStore((state) => state.isComplete);
   const hasHydrated = useOnboardingStore((state) => state.hasHydrated);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const authHydrated = useAuthStore((state) => state.hasHydrated);
 
   // Wait for the navigator (<Stack>) to mount before attempting navigation
   const [navReady, setNavReady] = useState(false);
@@ -56,16 +59,27 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (!navReady || !hasHydrated) return;
+    if (!navReady || !hasHydrated || !authHydrated) return;
+    const inAuth = segments[0] === 'auth';
     const inOnboarding = segments[0] === 'onboarding';
-    if (!isComplete && !inOnboarding) {
+
+    // 1. Not logged in → auth screen
+    if (!isAuthenticated && !inAuth) {
+      router.replace('/auth');
+      return;
+    }
+
+    // 2. Logged in but onboarding not done → onboarding
+    if (isAuthenticated && !isComplete && !inOnboarding) {
       router.replace('/onboarding');
       return;
     }
-    if (isComplete && inOnboarding && edit !== 'true') {
+
+    // 3. Logged in + onboarded → dashboard
+    if (isAuthenticated && isComplete && (inAuth || (inOnboarding && edit !== 'true'))) {
       router.replace('/(tabs)');
     }
-  }, [edit, hasHydrated, isComplete, navReady, router, segments]);
+  }, [edit, hasHydrated, authHydrated, isAuthenticated, isComplete, navReady, router, segments]);
 
   return (
     <ErrorBoundary>
@@ -103,6 +117,7 @@ export default function RootLayout() {
             animation: 'slide_from_right',
           }}
         >
+          <Stack.Screen name="auth" options={{ headerShown: false, animation: 'fade' }} />
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen

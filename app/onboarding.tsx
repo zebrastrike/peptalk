@@ -18,8 +18,7 @@ import { PepTalkCharacter } from '../src/components/PepTalkCharacter';
 import { GradientButton } from '../src/components/GradientButton';
 import { useOnboardingStore } from '../src/store/useOnboardingStore';
 import { useHealthProfileStore } from '../src/store/useHealthProfileStore';
-import { useAuthStore } from '../src/store/useAuthStore';
-import { useSubscriptionStore } from '../src/store/useSubscriptionStore';
+// Auth and subscription are handled on the /auth screen
 import { GlassCard } from '../src/components/GlassCard';
 import { OptionCard } from '../src/components/OptionCard';
 import { CATEGORIES } from '../src/constants/categories';
@@ -74,8 +73,6 @@ const STEP_TITLES = [
   'Topics of Interest',
   'Your Data',
   'Health Basics',
-  'Create Account',
-  'Choose Your Plan',
 ];
 
 const STEP_HERO_IMAGES: Record<number, string> = {
@@ -97,18 +94,7 @@ export default function OnboardingScreen() {
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>('moderate');
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
 
-  // Account creation state (Step 6)
-  const [accountEmail, setAccountEmail] = useState('');
-  const [accountPassword, setAccountPassword] = useState('');
-  const [accountName, setAccountName] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [accountError, setAccountError] = useState('');
-
-  // Plan selection state (Step 7)
-  const [selectedPlan, setSelectedPlan] = useState<'free' | 'pepe' | 'pepe_plus' | 'pepe_pro'>('free');
-
-  const login = useAuthStore((s) => s.login);
-  const setTier = useSubscriptionStore((s) => s.setTier);
+  // Auth and subscription are now handled on the /auth screen before onboarding
 
   const {
     profile,
@@ -131,9 +117,8 @@ export default function OnboardingScreen() {
     if (step === 0) return profile.acceptedSafety;
     if (step === 1) return profile.healthGoals.length > 0;
     if (step === 2) return Boolean(profile.gender && profile.ageRange);
-    if (step === 6) return accountEmail.includes('@') && accountPassword.length >= 6 && accountName.length > 0;
     return true;
-  }, [profile.acceptedSafety, profile.healthGoals.length, profile.ageRange, profile.gender, step, accountEmail, accountPassword, accountName]);
+  }, [profile.acceptedSafety, profile.healthGoals.length, profile.ageRange, profile.gender, step]);
 
   const saveHealthBasics = () => {
     const weight = parseFloat(weightLbs);
@@ -176,24 +161,9 @@ export default function OnboardingScreen() {
       return;
     }
 
-    // Step 5 → 6: save health basics before moving to account creation
+    // Step 5 (Health Basics) — final step: save and complete
     if (step === 5) {
       saveHealthBasics();
-      setStep(6);
-      return;
-    }
-
-    // Step 6: create account
-    if (step === 6) {
-      setAccountError('');
-      await login(accountEmail, 'password123'); // stub login with email
-      setStep(7);
-      return;
-    }
-
-    // Step 7: final — apply plan and go to dashboard
-    if (step === 7) {
-      setTier(selectedPlan);
       completeOnboarding();
       trackOnboardingComplete(profile.interestCategories.length);
       router.replace('/(tabs)');
@@ -206,7 +176,9 @@ export default function OnboardingScreen() {
   };
 
   const handleSkipHealthBasics = () => {
-    setStep(6); // Skip health basics → go to account creation
+    completeOnboarding();
+    trackOnboardingComplete(profile.interestCategories.length);
+    router.replace('/(tabs)');
   };
 
   const handleBack = () => {
@@ -654,107 +626,6 @@ export default function OnboardingScreen() {
           </View>
         )}
 
-        {/* Step 6: Create Account */}
-        {step === 6 && (
-          <View style={styles.section}>
-            <GlassCard variant="glow" style={styles.card}>
-              <Text style={styles.cardTitle}>Create Your Account</Text>
-              <Text style={styles.cardSubtitle}>Your data stays private and encrypted on your device.</Text>
-
-              <TextInput
-                style={styles.accountInput}
-                placeholder="Full name"
-                placeholderTextColor="#6b7280"
-                value={accountName}
-                onChangeText={setAccountName}
-                autoCapitalize="words"
-              />
-              <TextInput
-                style={styles.accountInput}
-                placeholder="Email address"
-                placeholderTextColor="#6b7280"
-                value={accountEmail}
-                onChangeText={(t) => { setAccountEmail(t); setAccountError(''); }}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              <View style={styles.passwordRow}>
-                <TextInput
-                  style={[styles.accountInput, { flex: 1, marginBottom: 0 }]}
-                  placeholder="Password (min 6 characters)"
-                  placeholderTextColor="#6b7280"
-                  value={accountPassword}
-                  onChangeText={setAccountPassword}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                />
-                <TouchableOpacity onPress={() => setShowPassword((v) => !v)} style={styles.eyeBtn}>
-                  <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#9ca3af" />
-                </TouchableOpacity>
-              </View>
-              {accountError ? <Text style={styles.errorText}>{accountError}</Text> : null}
-            </GlassCard>
-
-            <GlassCard style={{ marginTop: 12 }}>
-              <View style={styles.privacyRow}>
-                <Ionicons name="lock-closed" size={16} color="#3B82F6" />
-                <Text style={styles.privacyText}>End-to-end encrypted · Never sold · Delete anytime</Text>
-              </View>
-            </GlassCard>
-          </View>
-        )}
-
-        {/* Step 7: Choose Your Plan */}
-        {step === 7 && (
-          <View style={styles.section}>
-            <Text style={styles.planIntro}>Start free and upgrade anytime.</Text>
-
-            {([
-              { tier: 'free' as const, name: 'Free', price: '$0', color: '#6b7280', badge: '', features: ['Peptide library (55+ peptides)', 'Dosing & reconstitution calculators', 'Calorie & macro tracking', 'Dose logging & calendar', 'Journal & check-ins', 'Learn hub'] },
-              { tier: 'pepe' as const, name: 'Pepe', price: '$9.99/mo', color: '#3B82F6', badge: 'Most Popular', features: ['Everything in Free', 'Unlimited Pepe AI chat', 'Pepe dosing Q&A', 'Pepe health suggestions', 'No ads'] },
-              { tier: 'pepe_plus' as const, name: 'Pepe Plus', price: '$49.99/mo', color: '#8B5CF6', badge: 'Best Value', features: ["Everything in Pepe", "Jamie's workout programs", 'Meals by Pepe', 'Nutrition coaching', 'Pepe builds your weekly plan', 'Grocery lists from meal plans'] },
-              { tier: 'pepe_pro' as const, name: 'Pepe Pro', price: '$99.99/mo', color: '#F59E0B', badge: 'Ultimate', features: ['Everything in Pepe Plus', 'Health device sync (Apple Watch, etc.)', 'AI health planner', 'PDF health reports', 'Priority support'] },
-            ]).map((plan) => (
-              <TouchableOpacity
-                key={plan.tier}
-                onPress={() => setSelectedPlan(plan.tier)}
-                activeOpacity={0.8}
-                style={[styles.planCard, selectedPlan === plan.tier && { borderColor: plan.color, borderWidth: 2 }]}
-              >
-                <LinearGradient
-                  colors={selectedPlan === plan.tier ? [`${plan.color}22`, 'transparent'] : ['transparent', 'transparent']}
-                  style={styles.planCardInner}
-                >
-                  <View style={styles.planHeader}>
-                    <View>
-                      <Text style={[styles.planName, { color: plan.color }]}>{plan.name}</Text>
-                      <Text style={styles.planPrice}>{plan.price}</Text>
-                    </View>
-                    <View style={styles.planRight}>
-                      {plan.badge && (
-                        <View style={[styles.planBadge, { backgroundColor: plan.color }]}>
-                          <Text style={styles.planBadgeText}>{plan.badge}</Text>
-                        </View>
-                      )}
-                      <View style={[styles.planRadio, selectedPlan === plan.tier && { borderColor: plan.color, backgroundColor: plan.color }]}>
-                        {selectedPlan === plan.tier && <Ionicons name="checkmark" size={14} color="#fff" />}
-                      </View>
-                    </View>
-                  </View>
-                  {plan.features.map((f) => (
-                    <View key={f} style={styles.planFeatureRow}>
-                      <Ionicons name="checkmark-circle" size={14} color={plan.color} />
-                      <Text style={styles.planFeatureText}>{f}</Text>
-                    </View>
-                  ))}
-                </LinearGradient>
-              </TouchableOpacity>
-            ))}
-
-            <Text style={styles.planFooter}>Cancel anytime. No commitment required.</Text>
-          </View>
-        )}
-
         <View style={styles.navRow}>
           <TouchableOpacity
             style={[styles.navButton, styles.backButton]}
@@ -764,7 +635,7 @@ export default function OnboardingScreen() {
             <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
           <GradientButton
-            label={step === 6 ? 'Create Account' : step === 7 ? "Let's Go!" : 'Next'}
+            label={step === 5 ? "Let's Go!" : 'Next'}
             onPress={handleNext}
             disabled={!canContinue}
             style={styles.navButton}
@@ -1015,47 +886,4 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline' as const,
   },
 
-  // Step 6 — Account creation
-  cardSubtitle: { fontSize: 13, color: '#9ca3af', marginBottom: 16 },
-  accountInput: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    paddingHorizontal: 14,
-    height: 48,
-    fontSize: 15,
-    color: '#f7f2ec',
-    marginBottom: 12,
-  },
-  passwordRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8, marginBottom: 12 },
-  eyeBtn: { padding: 8 },
-  errorText: { fontSize: 13, color: '#ef4444', marginTop: -6, marginBottom: 8 },
-  privacyRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 },
-  privacyText: { fontSize: 12, color: '#6b7280', flex: 1 },
-
-  // Step 7 — Plan selection
-  planIntro: { fontSize: 14, color: '#9ca3af', textAlign: 'center' as const, marginBottom: 12 },
-  planCard: {
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    marginBottom: 10,
-    overflow: 'hidden' as const,
-  },
-  planCardInner: { padding: 16 },
-  planHeader: { flexDirection: 'row' as const, justifyContent: 'space-between' as const, alignItems: 'flex-start' as const, marginBottom: 10 },
-  planName: { fontSize: 18, fontWeight: '800' },
-  planPrice: { fontSize: 13, color: '#9ca3af', marginTop: 2 },
-  planRight: { alignItems: 'flex-end' as const, gap: 6 },
-  planBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
-  planBadgeText: { fontSize: 10, fontWeight: '700', color: '#fff', letterSpacing: 0.5 },
-  planRadio: {
-    width: 22, height: 22, borderRadius: 11,
-    borderWidth: 2, borderColor: 'rgba(255,255,255,0.2)',
-    alignItems: 'center' as const, justifyContent: 'center' as const,
-  },
-  planFeatureRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8, marginBottom: 4 },
-  planFeatureText: { fontSize: 13, color: '#d1d5db', flex: 1 },
-  planFooter: { fontSize: 12, color: '#6b7280', textAlign: 'center' as const, marginTop: 8 },
 });

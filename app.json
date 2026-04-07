@@ -18,7 +18,11 @@
       "bundleIdentifier": "com.peptalkapp.peptalk",
       "infoPlist": {
         "NSHealthShareUsageDescription": "PepTalk uses HealthKit to auto-fill your daily check-ins with steps, weight, heart rate, and sleep data.",
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": [
+          "remote-notification",
+          "remote-notification"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -37,6 +41,13 @@
       "expo-router",
       "expo-font",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "eec93628-30ed-40ff-a0eb-669779d0f698"
+      }
+    },
+    "owner": "tedkeyser123"
   }
 }

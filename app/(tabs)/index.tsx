@@ -71,6 +71,7 @@ const QUICK_ACTIONS = [
   { id: 'nutrition', icon: 'nutrition-outline' as const, label: 'Nutrition', route: '/nutrition', colors: ['#f59e0b', '#d97706'] as [string, string] },
   { id: 'peptalk', icon: 'chatbubble-outline' as const, label: 'Ask Pepe', route: '/(tabs)/peptalk', colors: ['#8b5cf6', '#7c3aed'] as [string, string] },
   { id: 'journal', icon: 'book-outline' as const, label: 'Journal', route: '/journal', colors: ['#06b6d4', '#0891b2'] as [string, string] },
+  { id: 'bodymap', icon: 'body-outline' as const, label: 'Body Map', route: '/body-map', colors: ['#22c55e', '#16a34a'] as [string, string] },
 ];
 
 const HERO_BACKGROUND_IMAGES: Record<string, string> = {

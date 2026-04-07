@@ -15,7 +15,7 @@
       }
     },
     "preview": {
-      "distribution": "internal",
+      "distribution": "store",
       "ios": {
         "simulator": false
       },
@@ -36,12 +36,11 @@
   "submit": {
     "production": {
       "ios": {
-        "appleId": "",
-        "ascAppId": "",
-        "appleTeamId": ""
+        "appleId": "edward@giddyupp.com",
+        "ascAppId": "6760955746",
+        "appleTeamId": "6624WDHAHG"
       },
       "android": {
-        "serviceAccountKeyPath": "",
         "track": "internal"
       }
     }
