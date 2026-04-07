@@ -23,6 +23,7 @@ import {
   getCategoryIcon,
 } from '../../src/services/researchFeed';
 import { FeedItem, FeedCategory } from '../../src/types';
+import { useTheme } from '../../src/hooks/useTheme';
 
 // ─── Category filters ────────────────────────────────────────────────────────
 
@@ -81,6 +82,7 @@ function getCategoryImage(category: FeedCategory): string {
 // ─── Feed Item Card ──────────────────────────────────────────────────────────
 
 function FeedItemCard({ item }: { item: FeedItem }) {
+  const t = useTheme();
   const router = useRouter();
   const catColor = getCategoryColor(item.category);
 
@@ -116,22 +118,22 @@ function FeedItemCard({ item }: { item: FeedItem }) {
               {getCategoryLabel(item.category)}
             </Text>
           </View>
-          <Text style={styles.feedDate}>{formatDate(item.publishedAt)}</Text>
+          <Text style={[styles.feedDate, { color: t.textSecondary }]}>{formatDate(item.publishedAt)}</Text>
         </View>
 
         {/* Title */}
-        <Text style={styles.feedTitle} numberOfLines={3}>
+        <Text style={[styles.feedTitle, { color: t.text }]} numberOfLines={3}>
           {item.title}
         </Text>
 
         {/* Summary */}
-        <Text style={styles.feedSummary} numberOfLines={2}>
+        <Text style={[styles.feedSummary, { color: t.textSecondary }]} numberOfLines={2}>
           {item.summary}
         </Text>
 
         {/* Authors */}
         {item.authors && (
-          <Text style={styles.feedAuthors} numberOfLines={1}>
+          <Text style={[styles.feedAuthors, { color: t.textSecondary }]} numberOfLines={1}>
             {item.authors}
           </Text>
         )}
@@ -145,7 +147,7 @@ function FeedItemCard({ item }: { item: FeedItem }) {
                 style={styles.peptideTag}
                 onPress={() => router.push(`/peptide/${p!.id}`)}
               >
-                <Text style={styles.peptideTagText}>
+                <Text style={[styles.peptideTagText, { color: t.isDark ? '#b9cbb6' : '#3d6b35' }]}>
                   {p!.abbreviation || p!.name}
                 </Text>
               </TouchableOpacity>
@@ -154,9 +156,9 @@ function FeedItemCard({ item }: { item: FeedItem }) {
         )}
 
         {/* Source + external link indicator */}
-        <View style={styles.sourceRow}>
-          <Text style={styles.sourceText}>{item.source}</Text>
-          <Ionicons name="open-outline" size={12} color="#6b7280" />
+        <View style={[styles.sourceRow, { borderTopColor: t.glassBorder }]}>
+          <Text style={[styles.sourceText, { color: t.textSecondary }]}>{item.source}</Text>
+          <Ionicons name="open-outline" size={12} color={t.textSecondary} />
         </View>
           </View>
         </View>
@@ -168,6 +170,7 @@ function FeedItemCard({ item }: { item: FeedItem }) {
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export default function FeedScreen() {
+  const t = useTheme();
   const router = useRouter();
   const {
     isLoading,
@@ -207,8 +210,8 @@ export default function FeedScreen() {
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.title}>Research Feed</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.title, { color: t.text }]}>Research Feed</Text>
+            <Text style={[styles.subtitle, { color: t.textSecondary }]}>
               Latest peptide research from PubMed
             </Text>
           </View>
@@ -236,6 +239,7 @@ export default function FeedScreen() {
               key={cat.key}
               style={[
                 styles.filterChip,
+                { backgroundColor: t.glass, borderColor: t.glassBorder },
                 isActive ? styles.filterChipActive : undefined,
               ]}
               onPress={() => setCategory(cat.key)}
@@ -243,11 +247,12 @@ export default function FeedScreen() {
               <Ionicons
                 name={cat.icon as any}
                 size={14}
-                color={isActive ? '#0f1720' : '#9ca3af'}
+                color={isActive ? '#0f1720' : t.textSecondary}
               />
               <Text
                 style={[
                   styles.filterChipText,
+                  { color: t.textSecondary },
                   isActive ? styles.filterChipTextActive : undefined,
                 ]}
               >
@@ -260,7 +265,7 @@ export default function FeedScreen() {
 
       {/* Item count */}
       {digest && !isLoading && (
-        <Text style={styles.itemCount}>
+        <Text style={[styles.itemCount, { color: t.textSecondary }]}>
           {items.length} article{items.length !== 1 ? 's' : ''}
           {selectedCategory !== 'all'
             ? ` in ${getCategoryLabel(selectedCategory as FeedCategory)}`
@@ -283,7 +288,7 @@ export default function FeedScreen() {
       {isLoading && !digest && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#e3a7a1" />
-          <Text style={styles.loadingText}>
+          <Text style={[styles.loadingText, { color: t.textSecondary }]}>
             Fetching latest research from PubMed...
           </Text>
         </View>
@@ -296,8 +301,8 @@ export default function FeedScreen() {
   const ListEmpty = !isLoading && !error ? (
     <GlassCard style={styles.emptyCard}>
       <Ionicons name="document-text-outline" size={40} color="#6b7280" />
-      <Text style={styles.emptyTitle}>No Articles Found</Text>
-      <Text style={styles.emptyText}>
+      <Text style={[styles.emptyTitle, { color: t.text }]}>No Articles Found</Text>
+      <Text style={[styles.emptyText, { color: t.textSecondary }]}>
         {selectedCategory !== 'all'
           ? `No ${getCategoryLabel(selectedCategory as FeedCategory).toLowerCase()} articles available. Try a different category.`
           : 'Pull down to refresh and fetch the latest research.'}
@@ -309,7 +314,7 @@ export default function FeedScreen() {
 
   const ListFooter = items.length > 0 ? (
     <View style={styles.footer}>
-      <Text style={styles.footerText}>
+      <Text style={[styles.footerText, { color: t.textSecondary }]}>
         Data sourced from PubMed (NCBI). Articles open in your browser.
       </Text>
       <Disclaimer />
@@ -317,7 +322,7 @@ export default function FeedScreen() {
   ) : null;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <FlatList
         data={isLoading && !digest ? [] : items}
         renderItem={renderItem}

@@ -30,10 +30,11 @@ import { trackCheckInSaved } from '../../src/services/analyticsEvents';
 import {
   isHealthDataAvailable,
   requestHealthPermissions,
-  syncToCheckIn,
+  syncAllWatchToCheckIn,
   getHealthSourceLabel,
 } from '../../src/services/healthDataService';
 import { Colors } from '../../src/constants/theme';
+import { useTheme } from '../../src/hooks/useTheme';
 import {
   EMOTION_OPTIONS,
   SIDE_EFFECT_TAGS,
@@ -92,15 +93,17 @@ const RatingRow: React.FC<{
   value: CheckInRating;
   onChange: (value: CheckInRating) => void;
 }> = ({ label, value, onChange }) => {
+  const t = useTheme();
   return (
     <View style={styles.ratingRow}>
-      <Text style={styles.ratingLabel}>{label}</Text>
+      <Text style={[styles.ratingLabel, { color: t.tint }]}>{label}</Text>
       <View style={styles.ratingPills}>
         {ratingValues.map((rating) => (
           <AnimatedPress
             key={rating}
             style={[
               styles.ratingPill,
+              { borderColor: t.glassBorder },
               value === rating && styles.ratingPillActive,
             ]}
             onPress={() => { selectionTick(); onChange(rating); }}
@@ -109,6 +112,7 @@ const RatingRow: React.FC<{
             <Text
               style={[
                 styles.ratingText,
+                { color: t.textSecondary },
                 value === rating && styles.ratingTextActive,
               ]}
             >
@@ -117,7 +121,7 @@ const RatingRow: React.FC<{
           </AnimatedPress>
         ))}
       </View>
-      <Text style={styles.ratingHint}>{ratingLabel(value)}</Text>
+      <Text style={[styles.ratingHint, { color: t.textMuted }]}>{ratingLabel(value)}</Text>
     </View>
   );
 };
@@ -129,39 +133,45 @@ const RatingRow: React.FC<{
 const SeverityPicker: React.FC<{
   value: CheckInRating;
   onChange: (v: CheckInRating) => void;
-}> = ({ value, onChange }) => (
-  <View style={styles.severityRow}>
-    <Text style={styles.severityLabel}>Severity</Text>
-    <View style={styles.severityPills}>
-      {ratingValues.map((v) => (
-        <TouchableOpacity
-          key={v}
-          onPress={() => onChange(v)}
-          style={[
-            styles.severityPill,
-            value === v && styles.severityPillActive,
-          ]}
-          activeOpacity={0.7}
-        >
-          <Text
+}> = ({ value, onChange }) => {
+  const t = useTheme();
+  return (
+    <View style={styles.severityRow}>
+      <Text style={[styles.severityLabel, { color: t.textSecondary }]}>Severity</Text>
+      <View style={styles.severityPills}>
+        {ratingValues.map((v) => (
+          <TouchableOpacity
+            key={v}
+            onPress={() => onChange(v)}
             style={[
-              styles.severityText,
-              value === v && styles.severityTextActive,
+              styles.severityPill,
+              { borderColor: t.glassBorder },
+              value === v && styles.severityPillActive,
             ]}
+            activeOpacity={0.7}
           >
-            {v}
-          </Text>
-        </TouchableOpacity>
-      ))}
+            <Text
+              style={[
+                styles.severityText,
+                { color: t.textSecondary },
+                value === v && styles.severityTextActive,
+              ]}
+            >
+              {v}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Main Screen
 // ---------------------------------------------------------------------------
 
 export default function CheckInScreen() {
+  const t = useTheme();
   const { entries, saveCheckIn, getCheckInByDate, getStreak, getEmotionFrequency } =
     useCheckinStore();
   const { getActiveProtocols } = useDoseLogStore();
@@ -189,6 +199,13 @@ export default function CheckInScreen() {
   const [weight, setWeight] = useState('');
   const [restingHeartRate, setRestingHeartRate] = useState('');
   const [steps, setSteps] = useState('');
+  // Apple Watch metrics
+  const [hrvMs, setHrvMs] = useState('');
+  const [vo2Max, setVo2Max] = useState('');
+  const [spo2, setSpo2] = useState('');
+  const [respiratoryRate, setRespiratoryRate] = useState('');
+  const [activeCalories, setActiveCalories] = useState('');
+  const [sleepStagesData, setSleepStagesData] = useState<import('../../src/types').SleepStageData | undefined>();
   const [notes, setNotes] = useState('');
 
   // ── Health sync state ────────────────────────────────────────────────────
@@ -235,6 +252,12 @@ export default function CheckInScreen() {
       existingEntry.restingHeartRate ? String(existingEntry.restingHeartRate) : ''
     );
     setSteps(existingEntry.steps ? String(existingEntry.steps) : '');
+    setHrvMs(existingEntry.hrvMs ? String(existingEntry.hrvMs) : '');
+    setVo2Max(existingEntry.vo2Max ? String(existingEntry.vo2Max) : '');
+    setSpo2(existingEntry.spo2 ? String(existingEntry.spo2) : '');
+    setRespiratoryRate(existingEntry.respiratoryRate ? String(existingEntry.respiratoryRate) : '');
+    setActiveCalories(existingEntry.activeCalories ? String(existingEntry.activeCalories) : '');
+    setSleepStagesData(existingEntry.sleepStages);
     setNotes(existingEntry.notes ?? '');
     setEmotionTags(existingEntry.emotionTags ?? []);
     setOverallFeeling(existingEntry.overallFeeling ?? '');
@@ -283,7 +306,7 @@ export default function CheckInScreen() {
         return;
       }
 
-      const data = await syncToCheckIn();
+      const data = await syncAllWatchToCheckIn();
       const filled: string[] = [];
 
       if (data.steps != null) {
@@ -299,12 +322,36 @@ export default function CheckInScreen() {
         filled.push('heart rate');
       }
       if (data.sleepHours != null) {
-        // Map sleep hours to a 1-5 quality rating as a convenience
         const hrs = data.sleepHours;
         const quality: CheckInRating =
           hrs >= 8 ? 5 : hrs >= 7 ? 4 : hrs >= 6 ? 3 : hrs >= 5 ? 2 : 1;
         setSleepQuality(quality);
         filled.push('sleep');
+      }
+      // Apple Watch metrics
+      if (data.hrvMs != null) {
+        setHrvMs(String(data.hrvMs));
+        filled.push('HRV');
+      }
+      if (data.vo2Max != null) {
+        setVo2Max(String(data.vo2Max));
+        filled.push('VO2 max');
+      }
+      if (data.spo2 != null) {
+        setSpo2(String(data.spo2));
+        filled.push('blood oxygen');
+      }
+      if (data.respiratoryRate != null) {
+        setRespiratoryRate(String(data.respiratoryRate));
+        filled.push('respiratory rate');
+      }
+      if (data.activeCalories != null) {
+        setActiveCalories(String(data.activeCalories));
+        filled.push('active calories');
+      }
+      if (data.sleepStages != null) {
+        setSleepStagesData(data.sleepStages);
+        filled.push('sleep stages');
       }
 
       setHealthSynced(true);
@@ -350,6 +397,12 @@ export default function CheckInScreen() {
       weightLbs: toNumber(weight),
       restingHeartRate: toNumber(restingHeartRate),
       steps: toNumber(steps),
+      hrvMs: toNumber(hrvMs),
+      vo2Max: toNumber(vo2Max),
+      spo2: toNumber(spo2),
+      respiratoryRate: toNumber(respiratoryRate),
+      activeCalories: toNumber(activeCalories),
+      sleepStages: sleepStagesData,
       notes,
       emotionTags,
       overallFeeling,
@@ -439,15 +492,15 @@ export default function CheckInScreen() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         {/* ── Header ───────────────────────────────────────────────────────── */}
         <View style={styles.header}>
-          <Text style={styles.title}>Daily Check-In</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: t.text }]}>Daily Check-In</Text>
+          <Text style={[styles.subtitle, { color: t.textSecondary }]}>
             {isToday
               ? 'Log how you feel, track your metrics, and build a research profile.'
               : `Checking in for ${dateKey}`}
@@ -464,15 +517,15 @@ export default function CheckInScreen() {
         <GlassCard style={styles.summaryCard}>
           <View style={styles.summaryRow}>
             <View>
-              <Text style={styles.summaryLabel}>Streak</Text>
-              <Text style={styles.summaryValue}>{streak} day(s)</Text>
+              <Text style={[styles.summaryLabel, { color: t.textSecondary }]}>Streak</Text>
+              <Text style={[styles.summaryValue, { color: t.text }]}>{streak} day(s)</Text>
             </View>
-            <View style={styles.summaryDivider} />
+            <View style={[styles.summaryDivider, { backgroundColor: t.glassBorder }]} />
             <View>
-              <Text style={styles.summaryLabel}>
+              <Text style={[styles.summaryLabel, { color: t.textSecondary }]}>
                 {isToday ? 'Today' : dateKey}
               </Text>
-              <Text style={styles.summaryValue}>
+              <Text style={[styles.summaryValue, { color: t.text }]}>
                 {existingEntry ? 'Completed' : 'Pending'}
               </Text>
             </View>
@@ -483,7 +536,7 @@ export default function CheckInScreen() {
         {entries.length >= 3 && (
           <>
             <GlassCard style={styles.formCard}>
-              <Text style={styles.sectionTitle}>14-Day Trends</Text>
+              <Text style={[styles.sectionTitle, { color: t.text }]}>14-Day Trends</Text>
               <View style={styles.trendGrid}>
                 <TrendCard label="Mood" data={trendData.mood} color="#e3a7a1" unit="/5" />
                 <TrendCard label="Energy" data={trendData.energy} color="#eab308" unit="/5" />
@@ -496,17 +549,17 @@ export default function CheckInScreen() {
 
             {emotionFreq.length > 0 && (
               <GlassCard style={styles.formCard}>
-                <Text style={styles.sectionTitle}>Top Emotions (14 days)</Text>
+                <Text style={[styles.sectionTitle, { color: t.text }]}>Top Emotions (14 days)</Text>
                 {emotionFreq.map(([tag, count]) => {
                   const opt = EMOTION_OPTIONS.find(o => o.value === tag);
                   return (
                     <View key={tag} style={styles.emotionBarRow}>
-                      <Text style={styles.emotionBarLabel}>{opt?.label ?? tag}</Text>
-                      <View style={styles.emotionBar}>
+                      <Text style={[styles.emotionBarLabel, { color: t.textSecondary }]}>{opt?.label ?? tag}</Text>
+                      <View style={[styles.emotionBar, { backgroundColor: t.glass }]}>
                         <View style={[styles.emotionBarFill, { flex: count, backgroundColor: getSentimentColor(opt?.sentiment ?? 'neutral') }]} />
                         <View style={{ flex: Math.max(0, 14 - count) }} />
                       </View>
-                      <Text style={styles.emotionBarCount}>{count}</Text>
+                      <Text style={[styles.emotionBarCount, { color: t.text }]}>{count}</Text>
                     </View>
                   );
                 })}
@@ -521,7 +574,7 @@ export default function CheckInScreen() {
 
         {/* ── Ratings ──────────────────────────────────────────────────────── */}
         <GlassCard style={styles.formCard}>
-          <Text style={styles.sectionTitle}>How are you today?</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>How are you today?</Text>
 
           <RatingRow label="Mood" value={mood} onChange={setMood} />
           <RatingRow label="Energy" value={energy} onChange={setEnergy} />
@@ -537,8 +590,8 @@ export default function CheckInScreen() {
 
         {/* ── Emotion Tags ─────────────────────────────────────────────────── */}
         <GlassCard style={styles.formCard}>
-          <Text style={styles.sectionTitle}>Emotion Tags</Text>
-          <Text style={styles.sectionHint}>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Emotion Tags</Text>
+          <Text style={[styles.sectionHint, { color: t.textMuted }]}>
             Tap to toggle -- select all that apply
           </Text>
 
@@ -552,6 +605,7 @@ export default function CheckInScreen() {
                   activeOpacity={0.7}
                   style={[
                     styles.chip,
+                    { borderColor: t.glassBorder, backgroundColor: t.glass },
                     selected && {
                       backgroundColor: getSentimentColor(opt.sentiment),
                       borderColor: getSentimentBorder(opt.sentiment),
@@ -561,12 +615,13 @@ export default function CheckInScreen() {
                   <Ionicons
                     name={opt.icon as any}
                     size={14}
-                    color={selected ? getSentimentBorder(opt.sentiment) : '#9ca3af'}
+                    color={selected ? getSentimentBorder(opt.sentiment) : t.textSecondary}
                     style={{ marginRight: 4 }}
                   />
                   <Text
                     style={[
                       styles.chipText,
+                      { color: t.textSecondary },
                       selected && {
                         color: getSentimentBorder(opt.sentiment),
                         fontWeight: '700',
@@ -583,13 +638,13 @@ export default function CheckInScreen() {
 
         {/* ── Overall Feeling ──────────────────────────────────────────────── */}
         <GlassCard style={styles.formCard}>
-          <Text style={styles.sectionTitle}>How are you feeling overall?</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>How are you feeling overall?</Text>
           <TextInput
-            style={styles.feelingInput}
+            style={[styles.feelingInput, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
             value={overallFeeling}
             onChangeText={setOverallFeeling}
             placeholder="Describe how you're feeling in your own words..."
-            placeholderTextColor="#6b7280"
+            placeholderTextColor={t.placeholder}
             multiline
           />
         </GlassCard>
@@ -597,8 +652,8 @@ export default function CheckInScreen() {
         {/* ── Peptide Effects (only if active protocols) ───────────────────── */}
         {activeProtocols.length > 0 && (
           <GlassCard style={styles.formCard}>
-            <Text style={styles.sectionTitle}>Peptide Effects</Text>
-            <Text style={styles.sectionHint}>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Peptide Effects</Text>
+            <Text style={[styles.sectionHint, { color: t.textMuted }]}>
               Track how each peptide in your active protocols is affecting you
             </Text>
 
@@ -615,8 +670,8 @@ export default function CheckInScreen() {
               };
 
               return (
-                <View key={protocol.peptideId} style={styles.pepEffectBlock}>
-                  <Text style={styles.pepEffectName}>{pepName}</Text>
+                <View key={protocol.peptideId} style={[styles.pepEffectBlock, { borderBottomColor: t.glassBorder }]}>
+                  <Text style={[styles.pepEffectName, { color: t.isDark ? '#e3a7a1' : '#b5736b' }]}>{pepName}</Text>
 
                   {/* Sentiment selector */}
                   <View style={styles.sentimentRow}>
@@ -635,6 +690,7 @@ export default function CheckInScreen() {
                           activeOpacity={0.7}
                           style={[
                             styles.sentimentChip,
+                            { borderColor: t.glassBorder, backgroundColor: t.glass },
                             active && {
                               backgroundColor: `${so.color}33`,
                               borderColor: so.color,
@@ -644,12 +700,13 @@ export default function CheckInScreen() {
                           <Ionicons
                             name={so.icon as any}
                             size={14}
-                            color={active ? so.color : '#9ca3af'}
+                            color={active ? so.color : t.textSecondary}
                             style={{ marginRight: 4 }}
                           />
                           <Text
                             style={[
                               styles.sentimentChipText,
+                              { color: t.textSecondary },
                               active && { color: so.color, fontWeight: '700' },
                             ]}
                           >
@@ -662,13 +719,13 @@ export default function CheckInScreen() {
 
                   {/* Effect text input */}
                   <TextInput
-                    style={styles.pepEffectInput}
+                    style={[styles.pepEffectInput, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
                     value={pe.effect}
                     onChangeText={(text) =>
                       updatePeptideEffect(protocol.peptideId, 'effect', text)
                     }
                     placeholder={`Effects noticed from ${pepName}...`}
-                    placeholderTextColor="#6b7280"
+                    placeholderTextColor={t.placeholder}
                   />
 
                   {/* Severity 1-5 */}
@@ -686,8 +743,8 @@ export default function CheckInScreen() {
 
         {/* ── Side Effects Quick-Tags ──────────────────────────────────────── */}
         <GlassCard style={styles.formCard}>
-          <Text style={styles.sectionTitle}>Side Effects</Text>
-          <Text style={styles.sectionHint}>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Side Effects</Text>
+          <Text style={[styles.sectionHint, { color: t.textMuted }]}>
             Tap any side effects you experienced
           </Text>
 
@@ -701,12 +758,14 @@ export default function CheckInScreen() {
                   activeOpacity={0.7}
                   style={[
                     styles.chip,
+                    { borderColor: t.glassBorder, backgroundColor: t.glass },
                     selected && styles.sideEffectChipActive,
                   ]}
                 >
                   <Text
                     style={[
                       styles.chipText,
+                      { color: t.textSecondary },
                       selected && styles.sideEffectChipTextActive,
                     ]}
                   >
@@ -721,7 +780,7 @@ export default function CheckInScreen() {
         {/* ── Metrics ──────────────────────────────────────────────────────── */}
         <GlassCard style={styles.formCard}>
           <View style={styles.metricHeaderRow}>
-            <Text style={styles.sectionTitle}>Metrics</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Metrics</Text>
             <TouchableOpacity
               style={[
                 styles.healthSyncButton,
@@ -759,50 +818,153 @@ export default function CheckInScreen() {
 
           <View style={styles.metricGrid}>
             <View style={styles.metricInput}>
-              <Text style={styles.metricLabel}>Weight (lbs)</Text>
+              <Text style={[styles.metricLabel, { color: t.textSecondary }]}>Weight (lbs)</Text>
               <TextInput
-                style={styles.metricField}
+                style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
                 value={weight}
                 onChangeText={setWeight}
                 keyboardType="numeric"
                 placeholder="--"
-                placeholderTextColor="#6b7280"
+                placeholderTextColor={t.placeholder}
               />
             </View>
             <View style={styles.metricInput}>
-              <Text style={styles.metricLabel}>Resting HR</Text>
+              <Text style={[styles.metricLabel, { color: t.textSecondary }]}>Resting HR</Text>
               <TextInput
-                style={styles.metricField}
+                style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
                 value={restingHeartRate}
                 onChangeText={setRestingHeartRate}
                 keyboardType="numeric"
                 placeholder="--"
-                placeholderTextColor="#6b7280"
+                placeholderTextColor={t.placeholder}
               />
             </View>
             <View style={styles.metricInput}>
-              <Text style={styles.metricLabel}>Steps</Text>
+              <Text style={[styles.metricLabel, { color: t.textSecondary }]}>Steps</Text>
               <TextInput
-                style={styles.metricField}
+                style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
                 value={steps}
                 onChangeText={setSteps}
                 keyboardType="numeric"
                 placeholder="--"
-                placeholderTextColor="#6b7280"
+                placeholderTextColor={t.placeholder}
               />
             </View>
           </View>
+
+          {/* ── Apple Watch Metrics ─────────────────────────────────────── */}
+          {(hrvMs || vo2Max || spo2 || respiratoryRate || activeCalories || sleepStagesData) && (
+            <>
+              <Text style={[styles.sectionTitle, { marginTop: 16, marginBottom: 8, fontSize: 14, color: Colors.pepTeal }]}>
+                ⌚ Apple Watch Data
+              </Text>
+              <View style={styles.metricGrid}>
+                {hrvMs !== '' && (
+                  <View style={styles.metricInput}>
+                    <Text style={[styles.metricLabel, { color: t.textSecondary }]}>HRV (ms)</Text>
+                    <TextInput
+                      style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
+                      value={hrvMs}
+                      onChangeText={setHrvMs}
+                      keyboardType="numeric"
+                      placeholder="--"
+                      placeholderTextColor={t.placeholder}
+                    />
+                  </View>
+                )}
+                {vo2Max !== '' && (
+                  <View style={styles.metricInput}>
+                    <Text style={[styles.metricLabel, { color: t.textSecondary }]}>VO2 Max</Text>
+                    <TextInput
+                      style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
+                      value={vo2Max}
+                      onChangeText={setVo2Max}
+                      keyboardType="numeric"
+                      placeholder="--"
+                      placeholderTextColor={t.placeholder}
+                    />
+                  </View>
+                )}
+                {spo2 !== '' && (
+                  <View style={styles.metricInput}>
+                    <Text style={[styles.metricLabel, { color: t.textSecondary }]}>SpO2 (%)</Text>
+                    <TextInput
+                      style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
+                      value={spo2}
+                      onChangeText={setSpo2}
+                      keyboardType="numeric"
+                      placeholder="--"
+                      placeholderTextColor={t.placeholder}
+                    />
+                  </View>
+                )}
+                {respiratoryRate !== '' && (
+                  <View style={styles.metricInput}>
+                    <Text style={[styles.metricLabel, { color: t.textSecondary }]}>Resp Rate</Text>
+                    <TextInput
+                      style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
+                      value={respiratoryRate}
+                      onChangeText={setRespiratoryRate}
+                      keyboardType="numeric"
+                      placeholder="--"
+                      placeholderTextColor={t.placeholder}
+                    />
+                  </View>
+                )}
+                {activeCalories !== '' && (
+                  <View style={styles.metricInput}>
+                    <Text style={[styles.metricLabel, { color: t.textSecondary }]}>Active Cal</Text>
+                    <TextInput
+                      style={[styles.metricField, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
+                      value={activeCalories}
+                      onChangeText={setActiveCalories}
+                      keyboardType="numeric"
+                      placeholder="--"
+                      placeholderTextColor={t.placeholder}
+                    />
+                  </View>
+                )}
+              </View>
+              {sleepStagesData && (
+                <View style={{ marginTop: 8, padding: 12, backgroundColor: t.glass, borderRadius: 12 }}>
+                  <Text style={[styles.metricLabel, { marginBottom: 8, color: t.textSecondary }]}>Sleep Stages</Text>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={{ alignItems: 'center' }}>
+                      <Text style={{ color: '#818cf8', fontSize: 16, fontWeight: '700' }}>{sleepStagesData.deep}h</Text>
+                      <Text style={{ color: t.textSecondary, fontSize: 11 }}>Deep</Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                      <Text style={{ color: '#60a5fa', fontSize: 16, fontWeight: '700' }}>{sleepStagesData.core}h</Text>
+                      <Text style={{ color: t.textSecondary, fontSize: 11 }}>Core</Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                      <Text style={{ color: '#a78bfa', fontSize: 16, fontWeight: '700' }}>{sleepStagesData.rem}h</Text>
+                      <Text style={{ color: t.textSecondary, fontSize: 11 }}>REM</Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                      <Text style={{ color: '#f87171', fontSize: 16, fontWeight: '700' }}>{sleepStagesData.awake}h</Text>
+                      <Text style={{ color: t.textSecondary, fontSize: 11 }}>Awake</Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                      <Text style={{ color: Colors.pepTeal, fontSize: 16, fontWeight: '700' }}>{sleepStagesData.total}h</Text>
+                      <Text style={{ color: t.textSecondary, fontSize: 11 }}>Total</Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+            </>
+          )}
         </GlassCard>
 
         {/* ── Notes ────────────────────────────────────────────────────────── */}
         <GlassCard style={styles.formCard}>
-          <Text style={styles.sectionTitle}>Notes</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Notes</Text>
           <TextInput
-            style={styles.notesInput}
+            style={[styles.notesInput, { backgroundColor: t.inputBg, color: t.text, borderColor: t.inputBorder }]}
             value={notes}
             onChangeText={setNotes}
             placeholder="How are you feeling? Anything notable?"
-            placeholderTextColor="#6b7280"
+            placeholderTextColor={t.placeholder}
             multiline
           />
         </GlassCard>
@@ -817,21 +979,21 @@ export default function CheckInScreen() {
 
         {/* ── Recent Check-Ins ─────────────────────────────────────────────── */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Check-Ins</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Recent Check-Ins</Text>
         </View>
         {recentEntries.length > 0 ? (
           recentEntries.map((entry) => (
             <GlassCard key={entry.id} style={styles.recentCard}>
               <View style={styles.recentRow}>
-                <Text style={styles.recentDate}>{entry.date}</Text>
-                <Text style={styles.recentMood}>Mood {entry.mood}/5</Text>
+                <Text style={[styles.recentDate, { color: t.text }]}>{entry.date}</Text>
+                <Text style={[styles.recentMood, { color: t.isDark ? '#e3a7a1' : '#b5736b' }]}>Mood {entry.mood}/5</Text>
               </View>
-              <Text style={styles.recentMeta}>
+              <Text style={[styles.recentMeta, { color: t.textSecondary }]}>
                 Energy {entry.energy}/5 · Sleep {entry.sleepQuality}/5 · Stress{' '}
                 {entry.stress}/5
               </Text>
               {entry.emotionTags && entry.emotionTags.length > 0 && (
-                <Text style={styles.recentEmotions}>
+                <Text style={[styles.recentEmotions, { color: t.isDark ? '#10b981' : '#047857' }]}>
                   {entry.emotionTags
                     .map((t) => {
                       const opt = EMOTION_OPTIONS.find((o) => o.value === t);
@@ -841,7 +1003,7 @@ export default function CheckInScreen() {
                 </Text>
               )}
               {entry.sideEffectTags && entry.sideEffectTags.length > 0 && (
-                <Text style={styles.recentSideEffects}>
+                <Text style={[styles.recentSideEffects, { color: t.isDark ? '#f87171' : '#dc2626' }]}>
                   Side effects: {entry.sideEffectTags.join(', ')}
                 </Text>
               )}
@@ -849,7 +1011,7 @@ export default function CheckInScreen() {
           ))
         ) : (
           <GlassCard style={styles.recentCard}>
-            <Text style={styles.emptyText}>
+            <Text style={[styles.emptyText, { color: t.textSecondary }]}>
               No check-ins yet. Start with today.
             </Text>
           </GlassCard>

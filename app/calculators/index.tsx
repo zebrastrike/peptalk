@@ -8,18 +8,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../src/hooks/useTheme';
 import { Colors, Spacing, FontSizes, BorderRadius, Gradients } from '../../src/constants/theme';
 
 export default function CalculatorsHubScreen() {
   const router = useRouter();
+  const t = useTheme();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
+          <Ionicons name="chevron-back" size={24} color={t.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Calculators</Text>
+        <Text style={[styles.headerTitle, { color: t.text }]}>Calculators</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -27,7 +29,7 @@ export default function CalculatorsHubScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
       >
-        <Text style={styles.subtitle}>
+        <Text style={[styles.subtitle, { color: t.textSecondary }]}>
           Tools to help you calculate dosing and reconstitution for your peptide protocols.
         </Text>
 
@@ -37,22 +39,22 @@ export default function CalculatorsHubScreen() {
           onPress={() => router.push('/calculators/dosing')}
         >
           <LinearGradient
-            colors={[Gradients.card[0], Gradients.card[1]]}
+            colors={t.isDark ? [Gradients.card[0], Gradients.card[1]] : [t.card, t.card]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.card}
+            style={[styles.card, { borderColor: t.glassBorder }]}
           >
-            <View style={styles.cardIcon}>
+            <View style={[styles.cardIcon, { backgroundColor: t.glass }]}>
               <Ionicons name="calculator-outline" size={32} color={Colors.pepBlue} />
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Dosing Calculator</Text>
-              <Text style={styles.cardDesc}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>Dosing Calculator</Text>
+              <Text style={[styles.cardDesc, { color: t.textSecondary }]}>
                 Calculate your dose per injection, weekly totals, and monthly vial supply based on
                 peptide, body weight, target dose, and frequency.
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={Colors.darkTextSecondary} />
+            <Ionicons name="chevron-forward" size={20} color={t.textSecondary} />
           </LinearGradient>
         </TouchableOpacity>
 
@@ -62,29 +64,29 @@ export default function CalculatorsHubScreen() {
           onPress={() => router.push('/calculators/reconstitution')}
         >
           <LinearGradient
-            colors={[Gradients.card[0], Gradients.card[1]]}
+            colors={t.isDark ? [Gradients.card[0], Gradients.card[1]] : [t.card, t.card]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.card}
+            style={[styles.card, { borderColor: t.glassBorder }]}
           >
-            <View style={styles.cardIcon}>
+            <View style={[styles.cardIcon, { backgroundColor: t.glass }]}>
               <Ionicons name="flask-outline" size={32} color={Colors.pepTeal} />
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Reconstitution Calculator</Text>
-              <Text style={styles.cardDesc}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>Reconstitution Calculator</Text>
+              <Text style={[styles.cardDesc, { color: t.textSecondary }]}>
                 Determine concentration, injection volume, and doses per vial when mixing
                 lyophilized peptides with bacteriostatic water.
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={Colors.darkTextSecondary} />
+            <Ionicons name="chevron-forward" size={20} color={t.textSecondary} />
           </LinearGradient>
         </TouchableOpacity>
 
         {/* Disclaimer */}
         <View style={styles.disclaimerBox}>
-          <Ionicons name="information-circle-outline" size={18} color={Colors.darkTextSecondary} />
-          <Text style={styles.disclaimerText}>
+          <Ionicons name="information-circle-outline" size={18} color={t.textSecondary} />
+          <Text style={[styles.disclaimerText, { color: t.textSecondary }]}>
             These calculators are informational tools only. Always consult a qualified healthcare
             provider before starting any peptide protocol.
           </Text>

@@ -35,6 +35,8 @@ import { useHealthProfileStore } from '../../src/store/useHealthProfileStore';
 import { generateLocalBotResponse } from '../../src/services/peptalkBot';
 import { generateAIResponse, isAIAvailable } from '../../src/services/llmService';
 import { canSendToCloud } from '../../src/services/privacyGuard';
+import { generateCorrelationInsights, buildCorrelationSummaryForBot } from '../../src/services/watchCorrelationService';
+import { getPeptideById } from '../../src/data/peptides';
 import { useJournalStore } from '../../src/store/useJournalStore';
 import { ChatMessage, EnhancedBotContext, GoalType } from '../../src/types';
 import { getGoalLabel } from '../../src/constants/goals';
@@ -47,6 +49,7 @@ import {
   BorderRadius,
   Gradients,
 } from '../../src/constants/theme';
+import { useTheme } from '../../src/hooks/useTheme';
 
 /* ─── Journal Toast Component ────────────────────────────────────── */
 
@@ -82,6 +85,7 @@ const JournalToast: React.FC = () => {
 /* ─── Main Screen ────────────────────────────────────────────────── */
 
 export default function PepTalkScreen() {
+  const t = useTheme();
   const router = useRouter();
   const { prefill, message: prefillMessage } = useLocalSearchParams<{
     prefill?: string;
@@ -115,7 +119,17 @@ export default function PepTalkScreen() {
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
     const cutoff = fourteenDaysAgo.toISOString().slice(0, 10);
 
-    return {
+    const activeProtos = protocols.filter((p) => p.isActive);
+
+    // Generate peptide ↔ Watch biometric correlations
+    const insights = generateCorrelationInsights(
+      activeProtos,
+      checkIns,
+      (id) => getPeptideById(id)?.name ?? id,
+    );
+    const correlationSummary = buildCorrelationSummaryForBot(insights);
+
+    const ctx: EnhancedBotContext & { _correlationSummary?: string } = {
       userProfile: profile,
       recentCheckIns: checkIns.slice(0, 14),
       currentStack,
@@ -124,11 +138,14 @@ export default function PepTalkScreen() {
         .map((s) => s.name),
       conversationHistory: messages.slice(-10),
       recentDoses: doses.filter((d) => d.date >= cutoff),
-      activeProtocols: protocols.filter((p) => p.isActive),
+      activeProtocols: activeProtos,
       recentEffects: [],
       healthAlerts: alerts.filter((a) => !a.dismissed),
       healthProfile: healthProfile.setupComplete ? healthProfile : null,
+      _correlationSummary: correlationSummary,
     };
+
+    return ctx;
   }, [
     profile,
     checkIns,
@@ -307,11 +324,11 @@ export default function PepTalkScreen() {
         <View style={styles.emptyIconWrap}>
           <PepTalkCharacter size={100} variant="full" animated />
         </View>
-        <Text style={styles.emptyTitle}>Pepe</Text>
-        <Text style={styles.emptySubtitle}>
+        <Text style={[styles.emptyTitle, { color: t.text }]}>Pepe</Text>
+        <Text style={[styles.emptySubtitle, { color: t.textSecondary }]}>
           Your personal health companion
         </Text>
-        <Text style={styles.emptyDesc}>
+        <Text style={[styles.emptyDesc, { color: t.textSecondary }]}>
           I can help you learn about peptides, check interactions, track your
           health journey, and give you personalized insights.
         </Text>
@@ -354,7 +371,7 @@ export default function PepTalkScreen() {
                   color={Colors.pepBlueLight}
                   style={{ marginRight: 8 }}
                 />
-                <Text style={styles.starterChipText}>{prompt}</Text>
+                <Text style={[styles.starterChipText, { color: t.text }]}>{prompt}</Text>
               </LinearGradient>
             </AnimatedPress>
           ))}
@@ -366,38 +383,38 @@ export default function PepTalkScreen() {
 
   return (
     <PaywallGate feature="pepe_ai_unlimited">
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: t.bg }]}>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         {/* ── Header ─────────────────────────────────────────── */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: t.isDark ? 'rgba(15,23,32,0.85)' : 'rgba(247,242,236,0.92)', borderBottomColor: t.cardBorder }]}>
           <View style={styles.headerLeft}>
             <PepTalkCharacter size={28} variant="mini" />
             <View>
-              <Text style={styles.headerTitle}>PepTalk</Text>
+              <Text style={[styles.headerTitle, { color: t.text }]}>PepTalk</Text>
             </View>
             {/* AI status indicator */}
-            <View style={styles.statusBadge}>
+            <View style={[styles.statusBadge, { backgroundColor: t.glass, borderColor: t.glassBorder }]}>
               <View
                 style={[
                   styles.statusDot,
                   { backgroundColor: useAI ? Colors.success : Colors.pepBlueLight },
                 ]}
               />
-              <Text style={styles.statusLabel}>
+              <Text style={[styles.statusLabel, { color: t.textSecondary }]}>
                 {useAI ? 'AI' : 'Local'}
               </Text>
             </View>
           </View>
           {messages.length > 0 && (
-            <TouchableOpacity onPress={clearChat} style={styles.clearBtn}>
+            <TouchableOpacity onPress={clearChat} style={[styles.clearBtn, { backgroundColor: t.glass }]}>
               <Ionicons
                 name="trash-outline"
                 size={18}
-                color={Colors.darkTextSecondary}
+                color={t.textSecondary}
               />
             </TouchableOpacity>
           )}
@@ -443,7 +460,7 @@ export default function PepTalkScreen() {
                   end={{ x: 1, y: 1 }}
                   style={styles.quickReplyGradient}
                 >
-                  <Text style={styles.quickReplyText}>{reply}</Text>
+                  <Text style={[styles.quickReplyText, { color: t.isDark ? Colors.pepBlueLight : '#2563eb' }]}>{reply}</Text>
                 </LinearGradient>
               </AnimatedPress>
             ))}
@@ -477,7 +494,7 @@ export default function PepTalkScreen() {
                       style={{ marginRight: 6 }}
                     />
                   )}
-                  <Text style={styles.actionBtnText}>{action.label}</Text>
+                  <Text style={[styles.actionBtnText, { color: t.isDark ? '#c4b5fd' : '#7c3aed' }]}>{action.label}</Text>
                   <Ionicons name="chevron-forward" size={14} color="rgba(167,139,250,0.6)" />
                 </LinearGradient>
               </AnimatedPress>
@@ -486,15 +503,15 @@ export default function PepTalkScreen() {
         )}
 
         {/* ── Input Bar ──────────────────────────────────────── */}
-        <View style={styles.inputBarWrap}>
+        <View style={[styles.inputBarWrap, { backgroundColor: t.isDark ? 'rgba(15,23,32,0.90)' : 'rgba(247,242,236,0.95)', borderTopColor: t.cardBorder }]}>
           <View style={styles.inputRow}>
-            <View style={styles.inputWrap}>
+            <View style={[styles.inputWrap, { backgroundColor: t.card, borderColor: t.inputBorder }]}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: t.text }]}
                 value={inputText}
                 onChangeText={setInputText}
                 placeholder="Ask about peptides..."
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.textSecondary}
                 multiline
                 maxLength={500}
                 onSubmitEditing={handleSend}
@@ -515,7 +532,7 @@ export default function PepTalkScreen() {
                 colors={
                   inputText.trim()
                     ? ['#3B82F6', '#06B6D4']
-                    : [Colors.darkCard, Colors.darkCard]
+                    : [t.card, t.card]
                 }
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -527,7 +544,7 @@ export default function PepTalkScreen() {
                   color={
                     inputText.trim()
                       ? '#ffffff'
-                      : Colors.darkTextSecondary
+                      : t.textSecondary
                   }
                 />
               </LinearGradient>
@@ -536,7 +553,7 @@ export default function PepTalkScreen() {
         </View>
 
         {/* ── Disclaimer ─────────────────────────────────────── */}
-        <Text style={styles.disclaimer}>
+        <Text style={[styles.disclaimer, { color: t.textSecondary }]}>
           I'm here to educate — always chat with your doctor for medical
           decisions.
         </Text>

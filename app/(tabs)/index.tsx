@@ -26,6 +26,7 @@ import { CategoryGrid } from '../../src/components/CategoryGrid';
 import { PeptideCard } from '../../src/components/PeptideCard';
 import { Disclaimer } from '../../src/components/Disclaimer';
 import { Colors, FontSizes, Spacing, BorderRadius } from '../../src/constants/theme';
+import { useTheme } from '../../src/hooks/useTheme';
 import {
   isHealthDataAvailable,
   getHealthMetrics,
@@ -33,6 +34,7 @@ import {
   HealthMetrics,
 } from '../../src/services/healthDataService';
 import { useOnboardingStore } from '../../src/store/useOnboardingStore';
+import { useAuthStore } from '../../src/store/useAuthStore';
 import { useHealthProfileStore } from '../../src/store/useHealthProfileStore';
 import { useCheckinStore } from '../../src/store/useCheckinStore';
 import { useDoseLogStore } from '../../src/store/useDoseLogStore';
@@ -44,6 +46,7 @@ import { useStackStore } from '../../src/store/useStackStore';
 import { usePlanStore } from '../../src/store/usePlanStore';
 import { getSegmentByProfile } from '../../src/constants/segments';
 import { getEthnicityProfile } from '../../src/constants/ethnicityProfiles';
+import { getTestProfile } from '../../src/constants/testProfiles';
 import { PEPTIDES } from '../../src/data/peptides';
 import { PeptideCategory } from '../../src/types';
 import { trackPeptideSearch } from '../../src/services/analyticsEvents';
@@ -134,6 +137,7 @@ interface TimelineEvent {
 // ─── Main Component ─────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
+  const t = useTheme();
   const router = useRouter();
   const { category } = useLocalSearchParams<{ category?: string }>();
   const activeCategory =
@@ -182,6 +186,7 @@ export default function DashboardScreen() {
 
   // ── Stores ────────────────────────────────────────────────────────────────
   const profile = useOnboardingStore((s) => s.profile);
+  const userEmail = useAuthStore((s) => s.user?.email);
   const healthProfile = useHealthProfileStore((s) => s.profile);
   const entries = useCheckinStore((s) => s.entries);
   const protocols = useDoseLogStore((s) => s.protocols);
@@ -203,17 +208,22 @@ export default function DashboardScreen() {
 
   // ── Derived ───────────────────────────────────────────────────────────────
 
+  // Use hardcoded test profile if available, fall back to onboarding store
+  const testProfile = useMemo(() => getTestProfile(userEmail), [userEmail]);
+  const effectiveGender = testProfile?.gender ?? profile.gender;
+  const effectiveAgeRange = testProfile?.ageRange ?? profile.ageRange;
+
   const segment = useMemo(
-    () => getSegmentByProfile(profile.gender, profile.ageRange),
-    [profile.gender, profile.ageRange],
+    () => getSegmentByProfile(effectiveGender, effectiveAgeRange),
+    [effectiveGender, effectiveAgeRange],
   );
 
   const ethnicityProfile = useMemo(
-    () => getEthnicityProfile(profile.ethnicity),
-    [profile.ethnicity],
+    () => getEthnicityProfile(testProfile?.ethnicity ?? profile.ethnicity),
+    [testProfile?.ethnicity, profile.ethnicity],
   );
 
-  const hasDemographics = Boolean(profile.gender && profile.ageRange);
+  const hasDemographics = Boolean(effectiveGender && effectiveAgeRange);
   const accentColor = ethnicityProfile?.paletteAccent ?? segment.palette.primary;
 
   const todayCheckin = useMemo(
@@ -565,7 +575,7 @@ export default function DashboardScreen() {
   // ── Main Render ───────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -688,7 +698,7 @@ export default function DashboardScreen() {
                   <PepTalkCharacter size={40} animated />
                 </View>
                 <View style={styles.pepeSaysContent}>
-                  <Text style={styles.pepeSaysMessage}>
+                  <Text style={[styles.pepeSaysMessage, { color: t.text }]}>
                     {pepeSuggestion.message}
                   </Text>
                 </View>
@@ -723,8 +733,8 @@ export default function DashboardScreen() {
             style={styles.section}
           >
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Today's Plan</Text>
-              <Text style={styles.sectionBadge}>
+              <Text style={[styles.sectionTitle, { color: t.text }]}>Today's Plan</Text>
+              <Text style={[styles.sectionBadge, { color: t.textSecondary, backgroundColor: t.glass }]}>
                 {weeklyProgress}% this week
               </Text>
             </View>
@@ -799,12 +809,13 @@ export default function DashboardScreen() {
                         <Text
                           style={[
                             styles.planItemTitle,
+                            { color: t.text },
                             item.completed && styles.planItemTitleDone,
                           ]}
                         >
                           {item.title}
                         </Text>
-                        <Text style={styles.planItemTime}>{item.time}</Text>
+                        <Text style={[styles.planItemTime, { color: t.textSecondary }]}>{item.time}</Text>
                       </View>
                       <Ionicons
                         name="chevron-forward"
@@ -818,7 +829,7 @@ export default function DashboardScreen() {
 
               {/* Weekly progress bar */}
               <View style={styles.planProgressWrap}>
-                <View style={styles.planProgressTrack}>
+                <View style={[styles.planProgressTrack, { backgroundColor: t.glass }]}>
                   <LinearGradient
                     colors={[accentColor, segment.palette.accent]}
                     start={{ x: 0, y: 0 }}
@@ -851,8 +862,8 @@ export default function DashboardScreen() {
                 style={styles.statCardInner}
               >
                 <Ionicons name="flame" size={20} color="#f59e0b" />
-                <Text style={styles.statValue}>{streak}</Text>
-                <Text style={styles.statLabel}>Streak</Text>
+                <Text style={[styles.statValue, { color: t.text }]}>{streak}</Text>
+                <Text style={[styles.statLabel, { color: t.textSecondary }]}>Streak</Text>
               </LinearGradient>
             </View>
 
@@ -863,8 +874,8 @@ export default function DashboardScreen() {
                 style={styles.statCardInner}
               >
                 <Ionicons name="flask" size={20} color="#14b8a6" />
-                <Text style={styles.statValue}>{activeProtocolCount}</Text>
-                <Text style={styles.statLabel}>Protocols</Text>
+                <Text style={[styles.statValue, { color: t.text }]}>{activeProtocolCount}</Text>
+                <Text style={[styles.statLabel, { color: t.textSecondary }]}>Protocols</Text>
               </LinearGradient>
             </View>
 
@@ -879,10 +890,10 @@ export default function DashboardScreen() {
                   size={20}
                   color="#e3a7a1"
                 />
-                <Text style={styles.statValue}>
+                <Text style={[styles.statValue, { color: t.text }]}>
                   {todayCheckin ? `${todayCheckin.mood}/5` : '--'}
                 </Text>
-                <Text style={styles.statLabel}>Mood</Text>
+                <Text style={[styles.statLabel, { color: t.textSecondary }]}>Mood</Text>
               </LinearGradient>
             </View>
 
@@ -893,10 +904,10 @@ export default function DashboardScreen() {
                 style={styles.statCardInner}
               >
                 <Ionicons name="trophy" size={20} color="#3b82f6" />
-                <Text style={styles.statValue}>
+                <Text style={[styles.statValue, { color: t.text }]}>
                   {nextMilestone ? `${nextMilestone.daysLeft}d` : '--'}
                 </Text>
-                <Text style={styles.statLabel}>Milestone</Text>
+                <Text style={[styles.statLabel, { color: t.textSecondary }]}>Milestone</Text>
               </LinearGradient>
             </View>
           </View>
@@ -906,7 +917,7 @@ export default function DashboardScreen() {
             3. QUICK ACTIONS - Horizontal scroll of gradient action buttons
         ══════════════════════════════════════════════════════════════════ */}
         <Animated.View entering={FadeInDown.delay(150).duration(500)}>
-          <Text style={[styles.sectionTitle, { paddingHorizontal: Spacing.lg }]}>
+          <Text style={[styles.sectionTitle, { paddingHorizontal: Spacing.lg, color: t.text }]}>
             Quick Actions
           </Text>
           <ScrollView
@@ -948,7 +959,7 @@ export default function DashboardScreen() {
           entering={FadeInDown.delay(175).duration(500)}
           style={styles.section}
         >
-          <Text style={styles.sectionTitle}>Dosing Calculators</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Dosing Calculators</Text>
           <View style={styles.calcRow}>
             <AnimatedPress
               style={styles.calcCard}
@@ -1005,11 +1016,11 @@ export default function DashboardScreen() {
           entering={FadeInDown.delay(200).duration(500)}
           style={styles.section}
         >
-          <Text style={styles.sectionTitle}>Today's Progress</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Today's Progress</Text>
           <View style={styles.ringsRow}>
             <AnimatedPress
               onPress={() => router.push('/nutrition')}
-              style={styles.ringCard}
+              style={[styles.ringCard, { backgroundColor: t.glass }]}
             >
               <ProgressRing
                 progress={dailyMacros.caloriePercent}
@@ -1020,15 +1031,15 @@ export default function DashboardScreen() {
                 subLabel="cal"
                 labelSize={16}
               />
-              <Text style={styles.ringLabel}>Calories</Text>
-              <Text style={styles.ringTarget}>
+              <Text style={[styles.ringLabel, { color: t.text }]}>Calories</Text>
+              <Text style={[styles.ringTarget, { color: t.textSecondary }]}>
                 / {dailyMacros.targets.calories}
               </Text>
             </AnimatedPress>
 
             <AnimatedPress
               onPress={() => router.push('/nutrition')}
-              style={styles.ringCard}
+              style={[styles.ringCard, { backgroundColor: t.glass }]}
             >
               <ProgressRing
                 progress={dailyMacros.proteinPercent}
@@ -1039,15 +1050,15 @@ export default function DashboardScreen() {
                 subLabel="protein"
                 labelSize={16}
               />
-              <Text style={styles.ringLabel}>Protein</Text>
-              <Text style={styles.ringTarget}>
+              <Text style={[styles.ringLabel, { color: t.text }]}>Protein</Text>
+              <Text style={[styles.ringTarget, { color: t.textSecondary }]}>
                 / {dailyMacros.targets.proteinGrams}g
               </Text>
             </AnimatedPress>
 
             <AnimatedPress
               onPress={() => router.push('/nutrition')}
-              style={styles.ringCard}
+              style={[styles.ringCard, { backgroundColor: t.glass }]}
             >
               <ProgressRing
                 progress={waterPercent}
@@ -1058,8 +1069,8 @@ export default function DashboardScreen() {
                 subLabel="oz"
                 labelSize={16}
               />
-              <Text style={styles.ringLabel}>Water</Text>
-              <Text style={styles.ringTarget}>
+              <Text style={[styles.ringLabel, { color: t.text }]}>Water</Text>
+              <Text style={[styles.ringTarget, { color: t.textSecondary }]}>
                 / {mealTargets.waterOz ?? 100} oz
               </Text>
             </AnimatedPress>
@@ -1074,8 +1085,8 @@ export default function DashboardScreen() {
           style={styles.section}
         >
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Today's Timeline</Text>
-            <Text style={styles.sectionBadge}>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Today's Timeline</Text>
+            <Text style={[styles.sectionBadge, { color: t.textSecondary, backgroundColor: t.glass }]}>
               {timelineEvents.length} event{timelineEvents.length !== 1 ? 's' : ''}
             </Text>
           </View>
@@ -1087,10 +1098,10 @@ export default function DashboardScreen() {
                 size={32}
                 color="rgba(255,255,255,0.2)"
               />
-              <Text style={styles.timelineEmptyTitle}>
+              <Text style={[styles.timelineEmptyTitle, { color: t.text }]}>
                 No events logged yet today
               </Text>
-              <Text style={styles.timelineEmptySubtitle}>
+              <Text style={[styles.timelineEmptySubtitle, { color: t.textSecondary }]}>
                 Start your day with a check-in or log a dose
               </Text>
             </GlassCard>
@@ -1141,7 +1152,7 @@ export default function DashboardScreen() {
                     <View style={styles.timelineCardWrap}>
                       <GlassCard style={styles.timelineCard}>
                         <View style={styles.timelineCardHeader}>
-                          <Text style={styles.timelineCardTitle}>
+                          <Text style={[styles.timelineCardTitle, { color: t.text }]}>
                             {event.title}
                           </Text>
                           <Text
@@ -1154,7 +1165,7 @@ export default function DashboardScreen() {
                           </Text>
                         </View>
                         {event.subtitle && (
-                          <Text style={styles.timelineCardSubtitle}>
+                          <Text style={[styles.timelineCardSubtitle, { color: t.textSecondary }]}>
                             {event.subtitle}
                           </Text>
                         )}
@@ -1174,7 +1185,7 @@ export default function DashboardScreen() {
           entering={FadeInDown.delay(300).duration(500)}
           style={styles.section}
         >
-          <Text style={styles.sectionTitle}>7-Day Trends</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>7-Day Trends</Text>
           <View style={styles.trendsRow}>
             <TrendCard
               label="Mood"
@@ -1202,9 +1213,9 @@ export default function DashboardScreen() {
                 variant="glow"
                 glowColor={segment.palette.primary}
               >
-                <Text style={styles.trendSummaryLabel}>Check-ins</Text>
-                <Text style={styles.trendSummaryValue}>{entries.length}</Text>
-                <Text style={styles.trendSummarySubtext}>total logged</Text>
+                <Text style={[styles.trendSummaryLabel, { color: t.text }]}>Check-ins</Text>
+                <Text style={[styles.trendSummaryValue, { color: t.text }]}>{entries.length}</Text>
+                <Text style={[styles.trendSummarySubtext, { color: t.textSecondary }]}>total logged</Text>
                 {entries.length >= 7 && (
                   <View style={styles.trendSummaryBadge}>
                     <Ionicons name="trending-up" size={14} color="#22c55e" />
@@ -1227,7 +1238,7 @@ export default function DashboardScreen() {
             style={styles.section}
           >
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Health Snapshot</Text>
+              <Text style={[styles.sectionTitle, { color: t.text }]}>Health Snapshot</Text>
               <View style={styles.healthSourceBadge}>
                 <Ionicons
                   name="heart-circle"
@@ -1242,7 +1253,7 @@ export default function DashboardScreen() {
             <GlassCard variant="glow" glowColor={Colors.pepTeal}>
               <View style={styles.healthMetricsGrid}>
                 {healthMetrics.steps != null && (
-                  <View style={styles.healthMetricItem}>
+                  <View style={[styles.healthMetricItem, { backgroundColor: t.glass }]}>
                     <View
                       style={[
                         styles.healthMetricIconWrap,
@@ -1255,15 +1266,15 @@ export default function DashboardScreen() {
                         color={Colors.pepTeal}
                       />
                     </View>
-                    <Text style={styles.healthMetricValue}>
+                    <Text style={[styles.healthMetricValue, { color: t.text }]}>
                       {healthMetrics.steps.toLocaleString()}
                     </Text>
-                    <Text style={styles.healthMetricLabel}>Steps</Text>
+                    <Text style={[styles.healthMetricLabel, { color: t.textSecondary }]}>Steps</Text>
                   </View>
                 )}
 
                 {healthMetrics.restingHeartRate != null && (
-                  <View style={styles.healthMetricItem}>
+                  <View style={[styles.healthMetricItem, { backgroundColor: t.glass }]}>
                     <View
                       style={[
                         styles.healthMetricIconWrap,
@@ -1276,15 +1287,15 @@ export default function DashboardScreen() {
                         color="#ef4444"
                       />
                     </View>
-                    <Text style={styles.healthMetricValue}>
+                    <Text style={[styles.healthMetricValue, { color: t.text }]}>
                       {healthMetrics.restingHeartRate}
                     </Text>
-                    <Text style={styles.healthMetricLabel}>BPM</Text>
+                    <Text style={[styles.healthMetricLabel, { color: t.textSecondary }]}>BPM</Text>
                   </View>
                 )}
 
                 {healthMetrics.sleepHours != null && (
-                  <View style={styles.healthMetricItem}>
+                  <View style={[styles.healthMetricItem, { backgroundColor: t.glass }]}>
                     <View
                       style={[
                         styles.healthMetricIconWrap,
@@ -1297,15 +1308,15 @@ export default function DashboardScreen() {
                         color="#3b82f6"
                       />
                     </View>
-                    <Text style={styles.healthMetricValue}>
+                    <Text style={[styles.healthMetricValue, { color: t.text }]}>
                       {healthMetrics.sleepHours}
                     </Text>
-                    <Text style={styles.healthMetricLabel}>Hrs Sleep</Text>
+                    <Text style={[styles.healthMetricLabel, { color: t.textSecondary }]}>Hrs Sleep</Text>
                   </View>
                 )}
 
                 {healthMetrics.weightLbs != null && (
-                  <View style={styles.healthMetricItem}>
+                  <View style={[styles.healthMetricItem, { backgroundColor: t.glass }]}>
                     <View
                       style={[
                         styles.healthMetricIconWrap,
@@ -1318,10 +1329,10 @@ export default function DashboardScreen() {
                         color="#8b5cf6"
                       />
                     </View>
-                    <Text style={styles.healthMetricValue}>
+                    <Text style={[styles.healthMetricValue, { color: t.text }]}>
                       {healthMetrics.weightLbs}
                     </Text>
-                    <Text style={styles.healthMetricLabel}>lbs</Text>
+                    <Text style={[styles.healthMetricLabel, { color: t.textSecondary }]}>lbs</Text>
                   </View>
                 )}
               </View>
@@ -1355,8 +1366,8 @@ export default function DashboardScreen() {
                 <Text style={styles.xpLevelNumber}>{level.level}</Text>
               </LinearGradient>
               <View style={styles.xpInfo}>
-                <Text style={styles.xpTitle}>{level.title}</Text>
-                <Text style={styles.xpSubtitle}>
+                <Text style={[styles.xpTitle, { color: t.text }]}>{level.title}</Text>
+                <Text style={[styles.xpSubtitle, { color: t.textSecondary }]}>
                   {level.currentXP} XP
                   {level.next
                     ? ` · ${level.next.xpRequired - level.currentXP} to next`
@@ -1379,7 +1390,7 @@ export default function DashboardScreen() {
                 </Text>
               </View>
             </View>
-            <View style={styles.xpBarTrack}>
+            <View style={[styles.xpBarTrack, { backgroundColor: t.glass }]}>
               <LinearGradient
                 colors={[segment.palette.primary, segment.palette.accent]}
                 start={{ x: 0, y: 0 }}
@@ -1400,7 +1411,7 @@ export default function DashboardScreen() {
           entering={FadeInDown.delay(400).duration(500)}
           style={styles.section}
         >
-          <Text style={styles.sectionTitle}>Ask Pepe</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Ask Pepe</Text>
 
           {/* Prompt chips */}
           <ScrollView
@@ -1413,7 +1424,7 @@ export default function DashboardScreen() {
                 key={prompt}
                 style={[
                   styles.promptChip,
-                  { borderColor: segment.palette.primary + '40' },
+                  { borderColor: segment.palette.primary + '40', backgroundColor: t.glass },
                 ]}
                 onPress={() => handlePromptChip(prompt)}
                 activeOpacity={0.7}
@@ -1434,9 +1445,9 @@ export default function DashboardScreen() {
           {/* Chat input */}
           <View style={styles.chatContainer}>
             <TextInput
-              style={styles.chatInput}
+              style={[styles.chatInput, { color: t.text, backgroundColor: t.inputBg, borderColor: t.inputBorder }]}
               placeholder="Ask about peptides, protocols, health..."
-              placeholderTextColor="#6b7280"
+              placeholderTextColor={t.placeholder}
               value={chatText}
               onChangeText={setChatText}
               onSubmitEditing={handleSendChat}
@@ -1463,7 +1474,7 @@ export default function DashboardScreen() {
             entering={FadeInDown.delay(425).duration(500)}
             style={styles.section}
           >
-            <Text style={styles.sectionTitle}>Get Started</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Get Started</Text>
             <GlassCard variant="gradient">
               {setupItems.map((item) => (
                 <TouchableOpacity
@@ -1486,6 +1497,7 @@ export default function DashboardScreen() {
                   <Text
                     style={[
                       styles.checklistLabel,
+                      { color: t.text },
                       item.complete && styles.checklistLabelDone,
                     ]}
                   >
@@ -1509,10 +1521,10 @@ export default function DashboardScreen() {
           entering={FadeInDown.delay(450).duration(500)}
           style={styles.section}
         >
-          <Text style={styles.sectionTitle}>Health Tools</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Health Tools</Text>
           <View style={styles.toolsRow}>
             <AnimatedPress
-              style={styles.healthToolCard}
+              style={[styles.healthToolCard, { backgroundColor: t.glass }]}
               onPress={() => router.push('/workouts')}
             >
               <LinearGradient
@@ -1521,10 +1533,10 @@ export default function DashboardScreen() {
               >
                 <Ionicons name="barbell-outline" size={22} color="#fff" />
               </LinearGradient>
-              <Text style={styles.healthToolLabel}>Workouts</Text>
+              <Text style={[styles.healthToolLabel, { color: t.text }]}>Workouts</Text>
             </AnimatedPress>
             <AnimatedPress
-              style={styles.healthToolCard}
+              style={[styles.healthToolCard, { backgroundColor: t.glass }]}
               onPress={() => router.push('/nutrition')}
             >
               <LinearGradient
@@ -1533,10 +1545,10 @@ export default function DashboardScreen() {
               >
                 <Ionicons name="nutrition-outline" size={22} color="#fff" />
               </LinearGradient>
-              <Text style={styles.healthToolLabel}>Nutrition</Text>
+              <Text style={[styles.healthToolLabel, { color: t.text }]}>Nutrition</Text>
             </AnimatedPress>
             <AnimatedPress
-              style={styles.healthToolCard}
+              style={[styles.healthToolCard, { backgroundColor: t.glass }]}
               onPress={() => router.push('/subscription')}
             >
               <LinearGradient
@@ -1545,7 +1557,7 @@ export default function DashboardScreen() {
               >
                 <Ionicons name="diamond-outline" size={22} color="#fff" />
               </LinearGradient>
-              <Text style={styles.healthToolLabel}>Plans</Text>
+              <Text style={[styles.healthToolLabel, { color: t.text }]}>Plans</Text>
             </AnimatedPress>
           </View>
         </Animated.View>
@@ -1573,7 +1585,7 @@ export default function DashboardScreen() {
 
             {profile.interestCategories.length > 0 && (
               <View style={styles.focusSection}>
-                <Text style={styles.sectionTitle}>Your Focus</Text>
+                <Text style={[styles.sectionTitle, { color: t.text }]}>Your Focus</Text>
                 <View style={styles.focusChips}>
                   {profile.interestCategories.map((interest) => (
                     <TouchableOpacity
@@ -1606,8 +1618,8 @@ export default function DashboardScreen() {
             )}
 
             {activeCategory && (
-              <View style={styles.filterRow}>
-                <Text style={styles.filterText}>
+              <View style={[styles.filterRow, { backgroundColor: t.glass }]}>
+                <Text style={[styles.filterText, { color: t.text }]}>
                   Filter: {activeCategory}
                 </Text>
                 <TouchableOpacity
@@ -1628,13 +1640,13 @@ export default function DashboardScreen() {
 
             {!searchQuery.trim() && (
               <View style={styles.categoriesSection}>
-                <Text style={styles.sectionTitle}>Categories</Text>
+                <Text style={[styles.sectionTitle, { color: t.text }]}>Categories</Text>
                 <CategoryGrid />
               </View>
             )}
 
             <View style={styles.allPeptidesHeader}>
-              <Text style={styles.sectionTitle}>
+              <Text style={[styles.sectionTitle, { color: t.text }]}>
                 {searchQuery.trim()
                   ? `Results (${filteredPeptides.length})`
                   : activeCategory
@@ -1645,8 +1657,8 @@ export default function DashboardScreen() {
 
             {filteredPeptides.length === 0 ? (
               <View style={styles.emptyContainer}>
-                <Text style={styles.emptyTitle}>No peptides found</Text>
-                <Text style={styles.emptySubtitle}>
+                <Text style={[styles.emptyTitle, { color: t.text }]}>No peptides found</Text>
+                <Text style={[styles.emptySubtitle, { color: t.textSecondary }]}>
                   Try adjusting your search query
                 </Text>
               </View>

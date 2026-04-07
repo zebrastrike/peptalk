@@ -19,6 +19,99 @@ interface DailyTotals {
   fiberGrams: number;
 }
 
+export interface RecentFood {
+  /** Unique key for dedup (normalized food name + brand) */
+  key: string;
+  foodId: string;
+  foodName: string;
+  brand?: string;
+  /** Last logged serving label e.g. "1 sandwich" */
+  servingLabel: string;
+  /** Last logged weight in grams */
+  grams: number;
+  /** Macros for the last logged amount */
+  calories: number;
+  proteinGrams: number;
+  carbsGrams: number;
+  fatGrams: number;
+  /** Per-100g nutrition (needed to recalculate if user changes serving) */
+  per100g: {
+    calories: number;
+    proteinGrams: number;
+    carbsGrams: number;
+    fatGrams: number;
+    fiberGrams: number;
+  };
+  /** Image URL if available */
+  imageUrl?: string;
+  emoji?: string;
+  /** When it was last logged */
+  loggedAt: string; // ISO
+}
+
+/** Cached food from API searches — builds local database over time */
+export interface CachedFood {
+  id: string;
+  name: string;
+  brand?: string;
+  per100g: {
+    calories: number;
+    proteinGrams: number;
+    carbsGrams: number;
+    fatGrams: number;
+    fiberGrams: number;
+    sodiumMg?: number;
+    sugarGrams?: number;
+    cholesterolMg?: number;
+    saturatedFatGrams?: number;
+  };
+  servings: { label: string; grams: number; isUniversal?: boolean }[];
+  defaultServingGrams: number;
+  category?: string;
+  emoji?: string;
+  imageUrl?: string;
+  /** Normalized search key for matching */
+  searchKey: string;
+  cachedAt: string; // ISO
+}
+
+/** Ingredient in a custom meal/recipe */
+export interface CustomMealIngredient {
+  foodId: string;
+  foodName: string;
+  brand?: string;
+  /** Weight of this ingredient in the recipe */
+  grams: number;
+  /** Per-100g nutrition for recalculation */
+  per100g: {
+    calories: number;
+    proteinGrams: number;
+    carbsGrams: number;
+    fatGrams: number;
+    fiberGrams: number;
+  };
+  imageUrl?: string;
+  emoji?: string;
+}
+
+/** A saved custom meal / recipe */
+export interface CustomMeal {
+  id: string;
+  name: string;
+  /** All ingredients with their weights */
+  ingredients: CustomMealIngredient[];
+  /** Sum of all ingredient weights */
+  totalGrams: number;
+  /** Total macros for the full recipe */
+  totalCalories: number;
+  totalProteinGrams: number;
+  totalCarbsGrams: number;
+  totalFatGrams: number;
+  totalFiberGrams: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface PlannedMeal {
   id: string;
   date: string; // YYYY-MM-DD
@@ -40,6 +133,12 @@ interface MealState {
   waterLog: Record<string, number>;
   /** Future-dated planned meals */
   mealPlan: PlannedMeal[];
+  /** Recently logged foods for quick re-logging */
+  recentFoods: RecentFood[];
+  /** Local food cache — grows over time from searches */
+  foodCache: CachedFood[];
+  /** User-created custom meals / recipes */
+  customMeals: CustomMeal[];
 }
 
 interface MealActions {
@@ -75,6 +174,20 @@ interface MealActions {
   completePlannedMeal: (mealId: string) => void;
   getPlannedMealsByDate: (date: string) => PlannedMeal[];
 
+  // Recent foods
+  addRecentFood: (food: RecentFood) => void;
+  clearRecentFoods: () => void;
+
+  // Food cache
+  cacheFoods: (foods: CachedFood[]) => void;
+  searchCachedFoods: (query: string) => CachedFood[];
+  clearFoodCache: () => void;
+
+  // Custom meals
+  addCustomMeal: (meal: CustomMeal) => void;
+  updateCustomMeal: (mealId: string, updates: Partial<CustomMeal>) => void;
+  removeCustomMeal: (mealId: string) => void;
+
   clearAll: () => void;
 }
 
@@ -103,6 +216,9 @@ export const useMealStore = create<MealState & MealActions>()(
       customFoods: [],
       waterLog: {},
       mealPlan: [],
+      recentFoods: [],
+      foodCache: [],
+      customMeals: [],
 
       // -----------------------------------------------------------------------
       // Targets
@@ -220,6 +336,61 @@ export const useMealStore = create<MealState & MealActions>()(
         get().mealPlan.filter((m) => m.date === date),
 
       // -----------------------------------------------------------------------
+      // Recent foods
+      // -----------------------------------------------------------------------
+
+      addRecentFood: (food) => {
+        const existing = get().recentFoods;
+        // Remove any previous entry with the same key (dedup by food name)
+        const filtered = existing.filter((f) => f.key !== food.key);
+        // Add new entry at the front, keep max 20
+        const updated = [food, ...filtered].slice(0, 20);
+        set({ recentFoods: updated });
+      },
+
+      clearRecentFoods: () => set({ recentFoods: [] }),
+
+      // -----------------------------------------------------------------------
+      // Food cache
+      // -----------------------------------------------------------------------
+
+      cacheFoods: (foods) => {
+        const existing = get().foodCache;
+        const existingKeys = new Set(existing.map((f) => f.searchKey));
+        const newFoods = foods.filter((f) => !existingKeys.has(f.searchKey));
+        if (newFoods.length === 0) return;
+        // Keep max 500 cached foods, drop oldest when full
+        const updated = [...newFoods, ...existing].slice(0, 500);
+        set({ foodCache: updated });
+      },
+
+      searchCachedFoods: (query) => {
+        const q = query.toLowerCase();
+        return get().foodCache.filter(
+          (f) => f.searchKey.includes(q) || f.name.toLowerCase().includes(q) || (f.brand && f.brand.toLowerCase().includes(q)),
+        );
+      },
+
+      clearFoodCache: () => set({ foodCache: [] }),
+
+      // -----------------------------------------------------------------------
+      // Custom meals
+      // -----------------------------------------------------------------------
+
+      addCustomMeal: (meal) =>
+        set({ customMeals: [meal, ...get().customMeals] }),
+
+      updateCustomMeal: (mealId, updates) =>
+        set({
+          customMeals: get().customMeals.map((m) =>
+            m.id === mealId ? { ...m, ...updates, updatedAt: new Date().toISOString() } : m,
+          ),
+        }),
+
+      removeCustomMeal: (mealId) =>
+        set({ customMeals: get().customMeals.filter((m) => m.id !== mealId) }),
+
+      // -----------------------------------------------------------------------
       // Clear
       // -----------------------------------------------------------------------
 
@@ -230,6 +401,9 @@ export const useMealStore = create<MealState & MealActions>()(
           customFoods: [],
           waterLog: {},
           mealPlan: [],
+          recentFoods: [],
+          foodCache: [],
+          customMeals: [],
         }),
     }),
     {
@@ -241,6 +415,9 @@ export const useMealStore = create<MealState & MealActions>()(
         customFoods: state.customFoods,
         waterLog: state.waterLog,
         mealPlan: state.mealPlan,
+        recentFoods: state.recentFoods,
+        foodCache: state.foodCache,
+        customMeals: state.customMeals,
       }),
     },
   ),

@@ -23,6 +23,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
+import { useTheme } from '../../src/hooks/useTheme';
 import { Colors, Gradients, Spacing, FontSizes, BorderRadius } from '../../src/constants/theme';
 import { useMealStore } from '../../src/store/useMealStore';
 import type { MealEntry, MealType } from '../../src/types/fitness';
@@ -83,15 +84,16 @@ function MacroBar({
   color: string;
   unit: string;
 }) {
+  const t = useTheme();
   const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
 
   return (
     <View style={styles.macroBar}>
       <View style={styles.macroBarHeader}>
-        <Text style={styles.macroBarLabel}>{label}</Text>
-        <Text style={styles.macroBarValue}>
+        <Text style={[styles.macroBarLabel, { color: t.text }]}>{label}</Text>
+        <Text style={[styles.macroBarValue, { color: t.text }]}>
           {Math.round(current)}{unit}{' '}
-          <Text style={styles.macroBarTarget}>/ {target}{unit}</Text>
+          <Text style={[styles.macroBarTarget, { color: t.textSecondary }]}>/ {target}{unit}</Text>
         </Text>
       </View>
       <View style={styles.macroBarTrack}>
@@ -489,6 +491,7 @@ function EditMealModal({ meal, visible, onClose, onSave, onDelete }: EditMealMod
 // ---------------------------------------------------------------------------
 
 function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
+  const t = useTheme();
   const clampedPct = Math.min(100, Math.max(0, pct));
   const ringSize   = size;
   const thickness  = 8;
@@ -536,13 +539,13 @@ function WaterRing({ pct, size = 100 }: { pct: number; size?: number }) {
           width: innerSize,
           height: innerSize,
           borderRadius: innerSize / 2,
-          backgroundColor: Colors.darkBg,
+          backgroundColor: t.bg,
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
         <Ionicons name="water" size={20} color={Colors.pepCyan} />
-        <Text style={{ fontSize: FontSizes.lg, fontWeight: '800', color: Colors.darkText, marginTop: 2 }}>
+        <Text style={{ fontSize: FontSizes.lg, fontWeight: '800', color: t.text, marginTop: 2 }}>
           {clampedPct}%
         </Text>
       </View>
@@ -562,6 +565,7 @@ const WATER_QUICK_ADD: { oz: number; label: string; icon: string }[] = [
 ];
 
 function WaterTracker() {
+  const t = useTheme();
   const { logWater, getWater, targets } = useMealStore();
   const dateKey   = today();
   const current   = getWater(dateKey);
@@ -574,10 +578,10 @@ function WaterTracker() {
       <View style={styles.waterTop}>
         <WaterRing pct={pct} size={100} />
         <View style={styles.waterStats}>
-          <Text style={styles.waterTitle}>Hydration</Text>
-          <Text style={styles.waterValue}>
+          <Text style={[styles.waterTitle, { color: t.text }]}>Hydration</Text>
+          <Text style={[styles.waterValue, { color: t.text }]}>
             {current} oz{' '}
-            <Text style={styles.waterTarget}>/ {target} oz</Text>
+            <Text style={[styles.waterTarget, { color: t.textSecondary }]}>/ {target} oz</Text>
           </Text>
           <View style={styles.macroBarTrack}>
             <View style={[styles.macroBarFill, { width: `${pct}%`, backgroundColor: Colors.pepCyan }]} />
@@ -602,9 +606,9 @@ function WaterTracker() {
         ))}
       </View>
 
-      <View style={styles.waterFooter}>
-        <Ionicons name="flag-outline" size={14} color={Colors.darkTextSecondary} />
-        <Text style={styles.waterFooterText}>
+      <View style={[styles.waterFooter, { borderTopColor: t.glassBorder }]}>
+        <Ionicons name="flag-outline" size={14} color={t.textSecondary} />
+        <Text style={[styles.waterFooterText, { color: t.textSecondary }]}>
           Daily target: {target} oz ({Math.round(target / 8)} glasses)
         </Text>
       </View>
@@ -618,6 +622,7 @@ function WaterTracker() {
 
 export default function NutritionScreen() {
   const router = useRouter();
+  const t = useTheme();
   const { meals, addMeal, removeMeal, updateMeal, getDailyProgress, targets } = useMealStore();
 
   const [showLog,     setShowLog]     = useState(false);
@@ -655,18 +660,18 @@ export default function NutritionScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
+          <Ionicons name="chevron-back" size={24} color={t.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Nutrition</Text>
+        <Text style={[styles.headerTitle, { color: t.text }]}>Nutrition</Text>
         <TouchableOpacity
           onPress={() => router.push('/nutrition/targets' as any)}
           style={styles.backBtn}
         >
-          <Ionicons name="settings-outline" size={22} color={Colors.darkText} />
+          <Ionicons name="settings-outline" size={22} color={t.text} />
         </TouchableOpacity>
       </View>
 
@@ -685,10 +690,10 @@ export default function NutritionScreen() {
           <GlassCard variant="gradient">
             <View style={styles.calHeader}>
               <View>
-                <Text style={styles.calLabel}>Calories Today</Text>
-                <Text style={styles.calValue}>
+                <Text style={[styles.calLabel, { color: t.textSecondary }]}>Calories Today</Text>
+                <Text style={[styles.calValue, { color: t.text }]}>
                   {Math.round(progress.totals.calories)}
-                  <Text style={styles.calTarget}> / {targets.calories}</Text>
+                  <Text style={[styles.calTarget, { color: t.textSecondary }]}> / {targets.calories}</Text>
                 </Text>
               </View>
               <View style={styles.calCircle}>
@@ -700,7 +705,7 @@ export default function NutritionScreen() {
 
         {/* Macros */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Macros</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Macros</Text>
           <GlassCard>
             <MacroBar label="Protein" current={progress.totals.proteinGrams} target={targets.proteinGrams} color={Colors.pepTeal}  unit="g" />
             <MacroBar label="Carbs"   current={progress.totals.carbsGrams}   target={targets.carbsGrams}   color={Colors.pepBlue}  unit="g" />
@@ -710,14 +715,14 @@ export default function NutritionScreen() {
 
         {/* Water */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Hydration</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Hydration</Text>
           <WaterTracker />
         </View>
 
         {/* Today's meals */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Today's Meals</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Today's Meals</Text>
             {/* Action buttons: food search + quick log */}
             <View style={styles.mealHeaderActions}>
               <TouchableOpacity
@@ -743,9 +748,9 @@ export default function NutritionScreen() {
           {todayMeals.length === 0 ? (
             <GlassCard>
               <View style={styles.emptyMeals}>
-                <Ionicons name="restaurant-outline" size={32} color={Colors.darkTextSecondary} />
-                <Text style={styles.emptyTitle}>No meals logged</Text>
-                <Text style={styles.emptyDesc}>
+                <Ionicons name="restaurant-outline" size={32} color={t.textSecondary} />
+                <Text style={[styles.emptyTitle, { color: t.text }]}>No meals logged</Text>
+                <Text style={[styles.emptyDesc, { color: t.textSecondary }]}>
                   Tap the search button or + to log what you eat
                 </Text>
               </View>
@@ -762,8 +767,8 @@ export default function NutritionScreen() {
                     />
                   </View>
                   <View style={styles.mealInfo}>
-                    <Text style={styles.mealTypeLabel}>{MEAL_LABELS[meal.mealType]}</Text>
-                    <Text style={styles.mealDesc} numberOfLines={1}>
+                    <Text style={[styles.mealTypeLabel, { color: t.text }]}>{MEAL_LABELS[meal.mealType]}</Text>
+                    <Text style={[styles.mealDesc, { color: t.textSecondary }]} numberOfLines={1}>
                       {mealDescription(meal)}
                     </Text>
                     {meal.notes ? (
@@ -774,15 +779,15 @@ export default function NutritionScreen() {
                   </View>
                   <View style={styles.mealCal}>
                     <Text style={styles.mealCalNum}>{mealCalories(meal)}</Text>
-                    <Text style={styles.mealCalLabel}>cal</Text>
+                    <Text style={[styles.mealCalLabel, { color: t.textSecondary }]}>cal</Text>
                   </View>
                   {/* Edit button */}
                   <TouchableOpacity
-                    style={styles.editBtn}
+                    style={[styles.editBtn, { backgroundColor: t.glass }]}
                     onPress={() => setEditingMeal(meal)}
                     hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                   >
-                    <Ionicons name="pencil" size={15} color={Colors.darkTextSecondary} />
+                    <Ionicons name="pencil" size={15} color={t.textSecondary} />
                   </TouchableOpacity>
                 </View>
               </GlassCard>
@@ -805,12 +810,12 @@ export default function NutritionScreen() {
                   <Ionicons name="sparkles" size={22} color="#fff" />
                 </LinearGradient>
                 <View style={styles.aiInfo}>
-                  <Text style={styles.aiTitle}>AI Recipe Generator</Text>
-                  <Text style={styles.aiDesc}>
+                  <Text style={[styles.aiTitle, { color: t.text }]}>AI Recipe Generator</Text>
+                  <Text style={[styles.aiDesc, { color: t.textSecondary }]}>
                     Get personalized recipes based on your macros and preferences
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color={Colors.darkTextSecondary} />
+                <Ionicons name="chevron-forward" size={20} color={t.textSecondary} />
               </View>
             </GlassCard>
           </TouchableOpacity>

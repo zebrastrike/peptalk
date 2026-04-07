@@ -18,6 +18,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
+import { useTheme } from '../../src/hooks/useTheme';
 import {
   Colors,
   Spacing,
@@ -60,6 +61,7 @@ function CategoryPicker({
   selected: GroceryCategory;
   onSelect: (cat: GroceryCategory) => void;
 }) {
+  const t = useTheme();
   return (
     <View style={styles.catRow}>
       {CATEGORIES.map((c) => (
@@ -67,6 +69,7 @@ function CategoryPicker({
           key={c.key}
           style={[
             styles.catChip,
+            { backgroundColor: t.glass, borderColor: t.glassBorder },
             selected === c.key && {
               backgroundColor: CATEGORY_COLORS[c.key] + '30',
               borderColor: CATEGORY_COLORS[c.key],
@@ -80,12 +83,13 @@ function CategoryPicker({
             color={
               selected === c.key
                 ? CATEGORY_COLORS[c.key]
-                : Colors.darkTextSecondary
+                : t.textSecondary
             }
           />
           <Text
             style={[
               styles.catChipText,
+              { color: t.textSecondary },
               selected === c.key && { color: CATEGORY_COLORS[c.key] },
             ]}
           >
@@ -110,26 +114,28 @@ function GroceryRow({
   onToggle: () => void;
   onDelete: () => void;
 }) {
+  const t = useTheme();
   return (
-    <View style={styles.itemRow}>
+    <View style={[styles.itemRow, { backgroundColor: t.glass, borderColor: t.glassBorder }]}>
       <TouchableOpacity onPress={onToggle} style={styles.checkArea}>
         <Ionicons
           name={item.checked ? 'checkbox' : 'square-outline'}
           size={22}
-          color={item.checked ? Colors.success : Colors.darkTextSecondary}
+          color={item.checked ? Colors.success : t.textSecondary}
         />
       </TouchableOpacity>
       <View style={styles.itemInfo}>
         <Text
           style={[
             styles.itemName,
-            item.checked && styles.itemNameChecked,
+            { color: t.text },
+            item.checked && [styles.itemNameChecked, { color: t.textSecondary }],
           ]}
         >
           {item.name}
         </Text>
         {item.addedFrom ? (
-          <Text style={styles.itemSource}>from {item.addedFrom}</Text>
+          <Text style={[styles.itemSource, { color: t.textSecondary }]}>from {item.addedFrom}</Text>
         ) : null}
       </View>
       <TouchableOpacity onPress={onDelete} style={styles.deleteBtn}>
@@ -145,6 +151,7 @@ function GroceryRow({
 
 export default function GroceryListScreen() {
   const router = useRouter();
+  const t = useTheme();
   const { items, addItem, removeItem, toggleItem, clearChecked, clearAll } =
     useGroceryStore();
   const [newName, setNewName] = useState('');
@@ -183,13 +190,13 @@ export default function GroceryListScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
+          <Ionicons name="chevron-back" size={24} color={t.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Grocery List</Text>
+        <Text style={[styles.headerTitle, { color: t.text }]}>Grocery List</Text>
         <View style={styles.backBtn} />
       </View>
 
@@ -198,11 +205,11 @@ export default function GroceryListScreen() {
         <GlassCard>
           <View style={styles.inputRow}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: t.inputBg, borderColor: t.inputBorder, color: t.text }]}
               value={newName}
               onChangeText={setNewName}
               placeholder="Add an item..."
-              placeholderTextColor={Colors.darkTextSecondary}
+              placeholderTextColor={t.placeholder}
               onSubmitEditing={handleAdd}
               returnKeyType="done"
             />
@@ -227,10 +234,10 @@ export default function GroceryListScreen() {
           <Ionicons
             name="cart-outline"
             size={64}
-            color={Colors.darkTextSecondary}
+            color={t.textSecondary}
           />
-          <Text style={styles.emptyTitle}>Your list is empty</Text>
-          <Text style={styles.emptyDesc}>
+          <Text style={[styles.emptyTitle, { color: t.text }]}>Your list is empty</Text>
+          <Text style={[styles.emptyDesc, { color: t.textSecondary }]}>
             Add items above to start building your grocery list
           </Text>
         </View>
@@ -255,7 +262,7 @@ export default function GroceryListScreen() {
               >
                 {section.title}
               </Text>
-              <Text style={styles.sectionCount}>{section.data.length}</Text>
+              <Text style={[styles.sectionCount, { color: t.textSecondary }]}>{section.data.length}</Text>
             </View>
           )}
           renderItem={({ item }) => (
@@ -271,7 +278,7 @@ export default function GroceryListScreen() {
 
       {/* Bottom actions */}
       {checkedCount > 0 && (
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { backgroundColor: t.bg, borderTopColor: t.glassBorder }]}>
           <GradientButton
             label={`Clear Completed (${checkedCount})`}
             onPress={() =>

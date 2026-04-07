@@ -38,6 +38,7 @@ import {
   BorderRadius,
   Gradients,
 } from '../../src/constants/theme';
+import { useTheme } from '../../src/hooks/useTheme';
 
 // ---------------------------------------------------------------------------
 // Dosing tips — contextual timing/protocol reminders after logging
@@ -238,6 +239,7 @@ function TodayGlow() {
 // ---------------------------------------------------------------------------
 
 export default function CalendarScreen() {
+  const t = useTheme();
   const router = useRouter();
   const now = new Date();
   const [viewMonth, setViewMonth] = useState(now.getMonth());
@@ -441,15 +443,15 @@ export default function CalendarScreen() {
   // -- Dose Disclaimer Gate
   if (!hasAcceptedDoseDisclaimer) {
     return (
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={[styles.safe, { backgroundColor: t.bg }]}>
         <View style={styles.disclaimerGate}>
           <Ionicons name="journal-outline" size={48} color={Colors.pepBlue} />
-          <Text style={styles.disclaimerGateTitle}>Wellness Journal</Text>
-          <Text style={styles.disclaimerGateSubtitle}>
+          <Text style={[styles.disclaimerGateTitle, { color: t.text }]}>Wellness Journal</Text>
+          <Text style={[styles.disclaimerGateSubtitle, { color: t.textSecondary }]}>
             Before you begin, please read and acknowledge the following:
           </Text>
           <GlassCard variant="glow" glowColor={Colors.pepBlue}>
-            <Text style={styles.disclaimerGateText}>
+            <Text style={[styles.disclaimerGateText, { color: t.textSecondary }]}>
               {DOSE_LOG_GATE_DISCLAIMER}
             </Text>
           </GlassCard>
@@ -463,14 +465,14 @@ export default function CalendarScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: t.bg }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerTitle}>My Calendar</Text>
-              <Text style={styles.headerSub}>Wellness journal & personal tracking</Text>
+              <Text style={[styles.headerTitle, { color: t.text }]}>My Calendar</Text>
+              <Text style={[styles.headerSub, { color: t.textSecondary }]}>Wellness journal & personal tracking</Text>
             </View>
             <View style={styles.headerIconWrap}>
               <Ionicons name="calendar" size={22} color={Colors.rose} />
@@ -486,16 +488,16 @@ export default function CalendarScreen() {
                 key={alert.id}
                 style={[
                   styles.alertCard,
-                  { borderLeftColor: alertLevelColor(alert.level) },
+                  { borderLeftColor: alertLevelColor(alert.level), backgroundColor: t.card },
                 ]}
               >
                 <View style={styles.alertHeader}>
-                  <Text style={styles.alertTitle}>{alert.title}</Text>
+                  <Text style={[styles.alertTitle, { color: t.text }]}>{alert.title}</Text>
                   <TouchableOpacity onPress={() => dismissAlert(alert.id)}>
-                    <Ionicons name="close" size={18} color={Colors.darkTextSecondary} />
+                    <Ionicons name="close" size={18} color={t.textSecondary} />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.alertMessage}>{alert.message}</Text>
+                <Text style={[styles.alertMessage, { color: t.textSecondary }]}>{alert.message}</Text>
                 <Text style={styles.alertAction}>{alert.actionLabel}</Text>
               </View>
             ))}
@@ -508,22 +510,22 @@ export default function CalendarScreen() {
           <View style={styles.calendarNav}>
             <TouchableOpacity onPress={prevMonth} style={styles.navBtn} activeOpacity={0.7}>
               <LinearGradient
-                colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)']}
-                style={styles.navBtnGradient}
+                colors={t.isDark ? ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)'] : ['rgba(0,0,0,0.06)', 'rgba(0,0,0,0.03)']}
+                style={[styles.navBtnGradient, { borderColor: t.glassBorder }]}
               >
-                <Ionicons name="chevron-back" size={18} color={Colors.darkText} />
+                <Ionicons name="chevron-back" size={18} color={t.text} />
               </LinearGradient>
             </TouchableOpacity>
             <View style={styles.monthYearWrap}>
-              <Text style={styles.calendarMonth}>{MONTHS[viewMonth]}</Text>
-              <Text style={styles.calendarYear}>{viewYear}</Text>
+              <Text style={[styles.calendarMonth, { color: t.text }]}>{MONTHS[viewMonth]}</Text>
+              <Text style={[styles.calendarYear, { color: t.textSecondary }]}>{viewYear}</Text>
             </View>
             <TouchableOpacity onPress={nextMonth} style={styles.navBtn} activeOpacity={0.7}>
               <LinearGradient
-                colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)']}
-                style={styles.navBtnGradient}
+                colors={t.isDark ? ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)'] : ['rgba(0,0,0,0.06)', 'rgba(0,0,0,0.03)']}
+                style={[styles.navBtnGradient, { borderColor: t.glassBorder }]}
               >
-                <Ionicons name="chevron-forward" size={18} color={Colors.darkText} />
+                <Ionicons name="chevron-forward" size={18} color={t.text} />
               </LinearGradient>
             </TouchableOpacity>
           </View>
@@ -564,7 +566,7 @@ export default function CalendarScreen() {
                       colors={[Colors.rose, '#c98a84']}
                       style={styles.selectedRing}
                     >
-                      <View style={styles.selectedInner}>
+                      <View style={[styles.selectedInner, { backgroundColor: t.bg }]}>
                         <Text style={styles.dayTextSelected}>
                           {date.getDate()}
                         </Text>
@@ -586,7 +588,8 @@ export default function CalendarScreen() {
                     <Text
                       style={[
                         styles.dayText,
-                        !isCurrentMonth && styles.dayTextMuted,
+                        { color: t.text },
+                        !isCurrentMonth && [styles.dayTextMuted, { color: t.textSecondary }],
                       ]}
                     >
                       {date.getDate()}
@@ -607,26 +610,26 @@ export default function CalendarScreen() {
           </View>
 
           {/* Legend */}
-          <View style={styles.legend}>
+          <View style={[styles.legend, { borderTopColor: t.glassBorder }]}>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, styles.dotDose]} />
-              <Text style={styles.legendText}>Doses</Text>
+              <Text style={[styles.legendText, { color: t.textSecondary }]}>Doses</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, styles.dotCheckin]} />
-              <Text style={styles.legendText}>Check-in</Text>
+              <Text style={[styles.legendText, { color: t.textSecondary }]}>Check-in</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, styles.dotJournal]} />
-              <Text style={styles.legendText}>Journal</Text>
+              <Text style={[styles.legendText, { color: t.textSecondary }]}>Journal</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, styles.dotWorkout]} />
-              <Text style={styles.legendText}>Workout</Text>
+              <Text style={[styles.legendText, { color: t.textSecondary }]}>Workout</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, styles.dotMeal]} />
-              <Text style={styles.legendText}>Meal</Text>
+              <Text style={[styles.legendText, { color: t.textSecondary }]}>Meal</Text>
             </View>
           </View>
         </GlassCard>
@@ -635,7 +638,7 @@ export default function CalendarScreen() {
         <DayDetailPanel selectedDate={selectedDate}>
           <View style={styles.dayDetail}>
             <View style={styles.dayDetailHeader}>
-              <Text style={styles.dayDetailTitle}>
+              <Text style={[styles.dayDetailTitle, { color: t.text }]}>
                 {new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', {
                   weekday: 'long',
                   month: 'long',
@@ -659,11 +662,11 @@ export default function CalendarScreen() {
             {!hasAnyEvents && (
               <GlassCard style={styles.emptyStateCard}>
                 <View style={styles.emptyStateInner}>
-                  <View style={styles.emptyIconWrap}>
-                    <Ionicons name="calendar-outline" size={36} color={Colors.darkTextSecondary} />
+                  <View style={[styles.emptyIconWrap, { backgroundColor: t.glass }]}>
+                    <Ionicons name="calendar-outline" size={36} color={t.textSecondary} />
                   </View>
-                  <Text style={styles.emptyStateTitle}>No events yet</Text>
-                  <Text style={styles.emptyStateText}>
+                  <Text style={[styles.emptyStateTitle, { color: t.text }]}>No events yet</Text>
+                  <Text style={[styles.emptyStateText, { color: t.textSecondary }]}>
                     Tap a quick-add button below to log your first entry for this day.
                   </Text>
                 </View>
@@ -678,8 +681,8 @@ export default function CalendarScreen() {
                     <Ionicons name="heart-circle" size={20} color={Colors.powder} />
                   </View>
                   <View style={styles.eventCardHeaderText}>
-                    <Text style={styles.eventCardTitle}>Check-in</Text>
-                    <Text style={styles.eventCardTime}>Daily wellness check</Text>
+                    <Text style={[styles.eventCardTitle, { color: t.text }]}>Check-in</Text>
+                    <Text style={[styles.eventCardTime, { color: t.textSecondary }]}>Daily wellness check</Text>
                   </View>
                 </View>
                 <View style={styles.checkinBadgeRow}>
@@ -687,29 +690,29 @@ export default function CalendarScreen() {
                     colors={['rgba(199, 215, 230, 0.15)', 'rgba(199, 215, 230, 0.05)']}
                     style={styles.checkinBadge}
                   >
-                    <Text style={styles.checkinBadgeLabel}>Mood</Text>
-                    <Text style={styles.checkinBadgeValue}>{ratingLabel(selectedDayCheckin.mood)}</Text>
+                    <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Mood</Text>
+                    <Text style={[styles.checkinBadgeValue, { color: t.tint }]}>{ratingLabel(selectedDayCheckin.mood)}</Text>
                   </LinearGradient>
                   <LinearGradient
                     colors={['rgba(199, 215, 230, 0.15)', 'rgba(199, 215, 230, 0.05)']}
                     style={styles.checkinBadge}
                   >
-                    <Text style={styles.checkinBadgeLabel}>Energy</Text>
-                    <Text style={styles.checkinBadgeValue}>{ratingLabel(selectedDayCheckin.energy)}</Text>
+                    <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Energy</Text>
+                    <Text style={[styles.checkinBadgeValue, { color: t.tint }]}>{ratingLabel(selectedDayCheckin.energy)}</Text>
                   </LinearGradient>
                   <LinearGradient
                     colors={['rgba(199, 215, 230, 0.15)', 'rgba(199, 215, 230, 0.05)']}
                     style={styles.checkinBadge}
                   >
-                    <Text style={styles.checkinBadgeLabel}>Sleep</Text>
-                    <Text style={styles.checkinBadgeValue}>{ratingLabel(selectedDayCheckin.sleepQuality)}</Text>
+                    <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Sleep</Text>
+                    <Text style={[styles.checkinBadgeValue, { color: t.tint }]}>{ratingLabel(selectedDayCheckin.sleepQuality)}</Text>
                   </LinearGradient>
                 </View>
                 {selectedDayCheckin.emotionTags && selectedDayCheckin.emotionTags.length > 0 && (
                   <View style={styles.emotionTagRow}>
                     {selectedDayCheckin.emotionTags.map((tag) => (
                       <View key={tag} style={styles.emotionTag}>
-                        <Text style={styles.emotionTagText}>
+                        <Text style={[styles.emotionTagText, { color: t.tint }]}>
                           {tag.replace('_', ' ')}
                         </Text>
                       </View>
@@ -717,7 +720,7 @@ export default function CalendarScreen() {
                   </View>
                 )}
                 {selectedDayCheckin.overallFeeling ? (
-                  <Text style={styles.checkinFeeling}>
+                  <Text style={[styles.checkinFeeling, { color: t.textSecondary }]}>
                     "{selectedDayCheckin.overallFeeling}"
                   </Text>
                 ) : null}
@@ -741,28 +744,28 @@ export default function CalendarScreen() {
                             <Ionicons name="barbell" size={20} color={Colors.pepTeal} />
                           </View>
                           <View style={styles.eventCardHeaderText}>
-                            <Text style={styles.eventCardTitle}>
+                            <Text style={[styles.eventCardTitle, { color: t.text }]}>
                               {wlog.dayId
                                 ? `Week ${wlog.weekNumber} · ${wlog.dayId}`
                                 : 'Freestyle Workout'}
                             </Text>
-                            <Text style={styles.eventCardTime}>Workout</Text>
+                            <Text style={[styles.eventCardTime, { color: t.textSecondary }]}>Workout</Text>
                           </View>
-                          <Ionicons name="chevron-forward" size={16} color={Colors.darkTextSecondary} />
+                          <Ionicons name="chevron-forward" size={16} color={t.textSecondary} />
                         </View>
                         <View style={styles.workoutMetaRow}>
                           <View style={styles.workoutMetaItem}>
                             <Ionicons name="time-outline" size={14} color={Colors.pepTeal} />
-                            <Text style={styles.workoutMetaText}>{wlog.durationMinutes} min</Text>
+                            <Text style={[styles.workoutMetaText, { color: t.textSecondary }]}>{wlog.durationMinutes} min</Text>
                           </View>
                           <View style={styles.workoutMetaItem}>
                             <Ionicons name="checkmark-circle-outline" size={14} color={Colors.pepTeal} />
-                            <Text style={styles.workoutMetaText}>{completedSets} sets</Text>
+                            <Text style={[styles.workoutMetaText, { color: t.textSecondary }]}>{completedSets} sets</Text>
                           </View>
                           {wlog.rating && (
                             <View style={styles.workoutMetaItem}>
                               <Ionicons name="star" size={14} color="#f59e0b" />
-                              <Text style={styles.workoutMetaText}>{wlog.rating}/5</Text>
+                              <Text style={[styles.workoutMetaText, { color: t.textSecondary }]}>{wlog.rating}/5</Text>
                             </View>
                           )}
                         </View>
@@ -792,15 +795,15 @@ export default function CalendarScreen() {
                             <Ionicons name="nutrition" size={20} color="#f59e0b" />
                           </View>
                           <View style={styles.eventCardHeaderText}>
-                            <Text style={styles.eventCardTitle}>
+                            <Text style={[styles.eventCardTitle, { color: t.text }]}>
                               {meal.mealType.charAt(0).toUpperCase() +
                                 meal.mealType.slice(1)}
                             </Text>
-                            <Text style={styles.eventCardTime}>
+                            <Text style={[styles.eventCardTime, { color: t.textSecondary }]}>
                               {totalCal} cal
                             </Text>
                           </View>
-                          <Ionicons name="chevron-forward" size={16} color={Colors.darkTextSecondary} />
+                          <Ionicons name="chevron-forward" size={16} color={t.textSecondary} />
                         </View>
                       </GlassCard>
                     </TouchableOpacity>
@@ -820,10 +823,10 @@ export default function CalendarScreen() {
                           <Ionicons name="flask" size={20} color={Colors.rose} />
                         </View>
                         <View style={styles.eventCardHeaderText}>
-                          <Text style={styles.eventCardTitle}>
+                          <Text style={[styles.eventCardTitle, { color: t.text }]}>
                             {dose.peptideId}
                           </Text>
-                          <Text style={styles.eventCardTime}>{dose.time}</Text>
+                          <Text style={[styles.eventCardTime, { color: t.textSecondary }]}>{dose.time}</Text>
                         </View>
                         <TouchableOpacity
                           onPress={() =>
@@ -838,15 +841,15 @@ export default function CalendarScreen() {
                           }
                           style={styles.deleteBtn}
                         >
-                          <Ionicons name="trash-outline" size={16} color={Colors.darkTextSecondary} />
+                          <Ionicons name="trash-outline" size={16} color={t.textSecondary} />
                         </TouchableOpacity>
                       </View>
-                      <Text style={styles.doseInfo}>
+                      <Text style={[styles.doseInfo, { color: t.textSecondary }]}>
                         {dose.amount} {dose.unit} · {dose.route}
                         {dose.injectionSite ? ` · ${dose.injectionSite}` : ''}
                       </Text>
                       {dose.notes && (
-                        <Text style={styles.doseNotes}>{dose.notes}</Text>
+                        <Text style={[styles.doseNotes]}>{dose.notes}</Text>
                       )}
                     </GlassCard>
                   );
@@ -864,8 +867,8 @@ export default function CalendarScreen() {
                         <Ionicons name="journal" size={20} color="#8b5cf6" />
                       </View>
                       <View style={styles.eventCardHeaderText}>
-                        <Text style={styles.eventCardTitle}>{entry.title}</Text>
-                        <Text style={styles.eventCardTime}>{entry.time}</Text>
+                        <Text style={[styles.eventCardTitle, { color: t.text }]}>{entry.title}</Text>
+                        <Text style={[styles.eventCardTime, { color: t.textSecondary }]}>{entry.time}</Text>
                       </View>
                     </View>
                     <View style={styles.journalCardHeader}>
@@ -886,19 +889,19 @@ export default function CalendarScreen() {
                       </View>
                     </View>
                     {entry.content.length > 0 && (
-                      <Text style={styles.journalPreview} numberOfLines={2}>
+                      <Text style={[styles.journalPreview, { color: t.textSecondary }]} numberOfLines={2}>
                         {entry.content}
                       </Text>
                     )}
                     {entry.tags.length > 0 && (
                       <View style={styles.journalTagRow}>
-                        {entry.tags.slice(0, 4).map((t) => (
-                          <View key={t} style={styles.journalTag}>
-                            <Text style={styles.journalTagText}>{t}</Text>
+                        {entry.tags.slice(0, 4).map((tag) => (
+                          <View key={tag} style={styles.journalTag}>
+                            <Text style={styles.journalTagText}>{tag}</Text>
                           </View>
                         ))}
                         {entry.tags.length > 4 && (
-                          <Text style={styles.journalTagMore}>+{entry.tags.length - 4}</Text>
+                          <Text style={[styles.journalTagMore, { color: t.textSecondary }]}>+{entry.tags.length - 4}</Text>
                         )}
                       </View>
                     )}
@@ -915,8 +918,8 @@ export default function CalendarScreen() {
                     <Ionicons name="warning" size={20} color={Colors.error} />
                   </View>
                   <View style={styles.eventCardHeaderText}>
-                    <Text style={styles.eventCardTitle}>Side Effects</Text>
-                    <Text style={styles.eventCardTime}>Reported today</Text>
+                    <Text style={[styles.eventCardTitle, { color: t.text }]}>Side Effects</Text>
+                    <Text style={[styles.eventCardTime, { color: t.textSecondary }]}>Reported today</Text>
                   </View>
                 </View>
                 <View style={styles.sideEffectRow}>
@@ -1011,11 +1014,11 @@ export default function CalendarScreen() {
 
         {/* Personal Schedules */}
         <View style={styles.protocolSection}>
-          <Text style={styles.sectionTitle}>My Schedules</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>My Schedules</Text>
           {activeProtocols.length === 0 ? (
             <GlassCard style={styles.emptyProtocolCard}>
-              <Ionicons name="clipboard-outline" size={24} color={Colors.darkTextSecondary} />
-              <Text style={styles.noDoses}>
+              <Ionicons name="clipboard-outline" size={24} color={t.textSecondary} />
+              <Text style={[styles.noDoses, { color: t.textSecondary }]}>
                 No active schedules. Create one to track your personal routine.
               </Text>
             </GlassCard>
@@ -1028,15 +1031,15 @@ export default function CalendarScreen() {
                       <Ionicons name="repeat" size={18} color={Colors.sage} />
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={styles.protocolName}>
+                      <Text style={[styles.protocolName, { color: t.text }]}>
                         {proto.peptideId}
                       </Text>
-                      <Text style={styles.protocolInfo}>
+                      <Text style={[styles.protocolInfo, { color: t.textSecondary }]}>
                         {proto.dose} {proto.unit} · {proto.route} · {proto.frequency}
                       </Text>
                     </View>
                   </View>
-                  <Text style={styles.protocolDates}>
+                  <Text style={[styles.protocolDates, { color: t.textSecondary }]}>
                     Started {proto.startDate}
                     {proto.endDate ? ` · Ends ${proto.endDate}` : ''}
                   </Text>
@@ -1049,7 +1052,7 @@ export default function CalendarScreen() {
         {/* Journal disclaimer */}
         <View style={styles.disclaimerBox}>
           <Ionicons name="shield-checkmark" size={16} color={Colors.pepBlue} />
-          <Text style={styles.disclaimerText}>
+          <Text style={[styles.disclaimerText, { color: t.textSecondary }]}>
             This is your personal wellness journal. Entries are private and
             stored only on your device. PepTalk does not recommend, prescribe,
             or endorse any substances. Consult your healthcare provider for
@@ -1067,16 +1070,16 @@ export default function CalendarScreen() {
         presentationStyle="pageSheet"
         onRequestClose={() => setShowLogModal(false)}
       >
-        <SafeAreaView style={styles.modalSafe}>
+        <SafeAreaView style={[styles.modalSafe, { backgroundColor: t.bg }]}>
           <ScrollView contentContainerStyle={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add Entry</Text>
-              <TouchableOpacity onPress={() => setShowLogModal(false)} style={styles.modalCloseBtn}>
-                <Ionicons name="close" size={22} color={Colors.darkText} />
+              <Text style={[styles.modalTitle, { color: t.text }]}>Add Entry</Text>
+              <TouchableOpacity onPress={() => setShowLogModal(false)} style={[styles.modalCloseBtn, { backgroundColor: t.glass }]}>
+                <Ionicons name="close" size={22} color={t.text} />
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.modalDate}>
+            <Text style={[styles.modalDate, { color: t.textSecondary }]}>
               {new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', {
                 weekday: 'long',
                 month: 'long',
@@ -1085,25 +1088,25 @@ export default function CalendarScreen() {
             </Text>
 
             {/* Substance / supplement -- free text */}
-            <Text style={styles.fieldLabel}>Substance / Supplement</Text>
+            <Text style={[styles.fieldLabel, { color: t.textSecondary }]}>Substance / Supplement</Text>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { backgroundColor: t.card, color: t.text }]}
               value={logSubstanceName}
               onChangeText={setLogSubstanceName}
               placeholder="Type what you took..."
-              placeholderTextColor={Colors.darkTextSecondary}
+              placeholderTextColor={t.textSecondary}
               autoCapitalize="words"
             />
 
             {/* Amount + Unit */}
-            <Text style={styles.fieldLabel}>Amount Noted</Text>
+            <Text style={[styles.fieldLabel, { color: t.textSecondary }]}>Amount Noted</Text>
             <View style={styles.amountRow}>
               <TextInput
-                style={[styles.textInput, { flex: 1 }]}
+                style={[styles.textInput, { flex: 1, backgroundColor: t.card, color: t.text }]}
                 value={logAmount}
                 onChangeText={setLogAmount}
                 placeholder="e.g. 250"
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.textSecondary}
                 keyboardType="decimal-pad"
               />
               <View style={styles.unitRow}>
@@ -1112,6 +1115,7 @@ export default function CalendarScreen() {
                     key={u}
                     style={[
                       styles.unitChip,
+                      { backgroundColor: t.card },
                       logUnit === u && styles.unitChipActive,
                     ]}
                     onPress={() => setLogUnit(u)}
@@ -1124,7 +1128,7 @@ export default function CalendarScreen() {
                         <Text style={styles.unitChipTextActive}>{u}</Text>
                       </LinearGradient>
                     ) : (
-                      <Text style={styles.unitChipText}>{u}</Text>
+                      <Text style={[styles.unitChipText, { color: t.textSecondary }]}>{u}</Text>
                     )}
                   </TouchableOpacity>
                 ))}
@@ -1132,13 +1136,14 @@ export default function CalendarScreen() {
             </View>
 
             {/* Route */}
-            <Text style={styles.fieldLabel}>Route</Text>
+            <Text style={[styles.fieldLabel, { color: t.textSecondary }]}>Route</Text>
             <View style={styles.routeRow}>
               {ROUTES.map((r) => (
                 <TouchableOpacity
                   key={r}
                   style={[
                     styles.routeChip,
+                    { backgroundColor: t.card },
                     logRoute === r && styles.routeChipActive,
                   ]}
                   onPress={() => setLogRoute(r)}
@@ -1146,6 +1151,7 @@ export default function CalendarScreen() {
                   <Text
                     style={[
                       styles.routeChipText,
+                      { color: t.textSecondary },
                       logRoute === r && styles.routeChipTextActive,
                     ]}
                   >
@@ -1156,30 +1162,30 @@ export default function CalendarScreen() {
             </View>
 
             {/* Injection site */}
-            <Text style={styles.fieldLabel}>Injection Site (optional)</Text>
+            <Text style={[styles.fieldLabel, { color: t.textSecondary }]}>Injection Site (optional)</Text>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { backgroundColor: t.card, color: t.text }]}
               value={logSite}
               onChangeText={setLogSite}
               placeholder="e.g. abdomen left, deltoid right"
-              placeholderTextColor={Colors.darkTextSecondary}
+              placeholderTextColor={t.textSecondary}
             />
 
             {/* Notes */}
-            <Text style={styles.fieldLabel}>Notes (optional)</Text>
+            <Text style={[styles.fieldLabel, { color: t.textSecondary }]}>Notes (optional)</Text>
             <TextInput
-              style={[styles.textInput, { minHeight: 60 }]}
+              style={[styles.textInput, { minHeight: 60, backgroundColor: t.card, color: t.text }]}
               value={logNotes}
               onChangeText={setLogNotes}
               placeholder="How did you feel? Any effects?"
-              placeholderTextColor={Colors.darkTextSecondary}
+              placeholderTextColor={t.textSecondary}
               multiline
             />
 
             {/* Journal disclaimer in modal */}
             <View style={styles.modalDisclaimer}>
               <Ionicons name="shield-checkmark-outline" size={14} color={Colors.pepBlue} />
-              <Text style={styles.modalDisclaimerText}>
+              <Text style={[styles.modalDisclaimerText, { color: t.textSecondary }]}>
                 This is your personal record. PepTalk does not recommend or
                 endorse any substance.
               </Text>

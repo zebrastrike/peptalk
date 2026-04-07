@@ -184,6 +184,15 @@ export type EmotionTag =
   | 'anxious' | 'irritable' | 'sad' | 'fatigued' | 'brain_fog'
   | 'confident' | 'social' | 'creative' | 'overwhelmed' | 'numb';
 
+/** Sleep stage breakdown from Apple Watch */
+export interface SleepStageData {
+  awake: number;   // hours
+  core: number;    // hours
+  deep: number;    // hours
+  rem: number;     // hours
+  total: number;   // hours
+}
+
 export interface CheckInEntry {
   id: string;
   date: string; // YYYY-MM-DD (local date)
@@ -197,6 +206,13 @@ export interface CheckInEntry {
   weightLbs?: number;
   restingHeartRate?: number;
   steps?: number;
+  // Apple Watch metrics
+  hrvMs?: number;             // Heart Rate Variability (SDNN) in ms
+  vo2Max?: number;            // VO2 max in mL/(kg·min)
+  spo2?: number;              // Blood oxygen saturation %
+  respiratoryRate?: number;   // Breaths per minute
+  activeCalories?: number;    // Active energy burned (kcal)
+  sleepStages?: SleepStageData; // Sleep stage breakdown
   notes?: string;
   emotionTags?: EmotionTag[];
   overallFeeling?: string;

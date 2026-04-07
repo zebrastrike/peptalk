@@ -39,6 +39,9 @@ import {
   BorderRadius,
   Gradients,
 } from '../../src/constants/theme';
+import { useTheme } from '../../src/hooks/useTheme';
+import { useThemeStore } from '../../src/store/useThemeStore';
+import { getTestProfile } from '../../src/constants/testProfiles';
 
 // ---------------------------------------------------------------------------
 // Progress Ring Component
@@ -104,18 +107,20 @@ function ProgressRing({
 // ---------------------------------------------------------------------------
 // Tier Badge
 // ---------------------------------------------------------------------------
-const TIER_CONFIG: Record<string, { label: string; colors: [string, string]; icon: string }> = {
-  free: { label: 'Free', colors: ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)'], icon: 'person-outline' },
-  starter: { label: 'Starter', colors: ['#3B82F6', '#06B6D4'], icon: 'rocket-outline' },
-  pro: { label: 'Pro', colors: [Colors.rose, Colors.roseDark], icon: 'star' },
-  elite: { label: 'Elite', colors: ['#8B5CF6', '#EC4899'], icon: 'diamond' },
+const TIER_CONFIG: Record<string, { label: string; colors: { dark: [string, string]; light: [string, string] }; icon: string }> = {
+  free: { label: 'Free', colors: { dark: ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)'], light: ['#d1d5db', '#9ca3af'] }, icon: 'person-outline' },
+  starter: { label: 'Starter', colors: { dark: ['#3B82F6', '#06B6D4'], light: ['#3B82F6', '#06B6D4'] }, icon: 'rocket-outline' },
+  pro: { label: 'Pro', colors: { dark: [Colors.rose, Colors.roseDark], light: [Colors.rose, Colors.roseDark] }, icon: 'star' },
+  elite: { label: 'Elite', colors: { dark: ['#8B5CF6', '#EC4899'], light: ['#8B5CF6', '#EC4899'] }, icon: 'diamond' },
 };
 
 function TierBadge({ tier }: { tier: string }) {
   const config = TIER_CONFIG[tier] ?? TIER_CONFIG.free;
+  const t = useTheme();
+  const gradientColors = t.isDark ? config.colors.dark : config.colors.light;
   return (
     <LinearGradient
-      colors={config.colors}
+      colors={gradientColors}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       style={tierStyles.badge}
@@ -151,6 +156,7 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading } = useAuthStore();
+  const t = useTheme();
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) return;
@@ -165,12 +171,12 @@ function LoginForm() {
           colors={[Colors.rose, Colors.roseDark]}
           style={styles.brandIconGradient}
         >
-          <View style={styles.brandIconInner}>
+          <View style={[styles.brandIconInner, { backgroundColor: t.bg }]}>
             <Ionicons name="flask" size={36} color={Colors.rose} />
           </View>
         </LinearGradient>
-        <Text style={styles.brandTitle}>PepTalk</Text>
-        <Text style={styles.brandSubtitle}>
+        <Text style={[styles.brandTitle, { color: t.text }]}>PepTalk</Text>
+        <Text style={[styles.brandSubtitle, { color: t.textSecondary }]}>
           Sign in to save your stacks, sync favorites, and access Pro features
         </Text>
       </View>
@@ -178,15 +184,15 @@ function LoginForm() {
       {/* Login Form */}
       <GlassCard variant="elevated" style={styles.formCard}>
         <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Email</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="mail-outline" size={18} color="#9ca3af" />
+          <Text style={[styles.inputLabel, { color: t.textSecondary }]}>Email</Text>
+          <View style={[styles.inputContainer, { backgroundColor: t.inputBg, borderColor: t.inputBorder }]}>
+            <Ionicons name="mail-outline" size={18} color={t.textSecondary} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: t.text }]}
               value={email}
               onChangeText={setEmail}
               placeholder="your@email.com"
-              placeholderTextColor="#6b7280"
+              placeholderTextColor={t.placeholder}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -196,15 +202,15 @@ function LoginForm() {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Password</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={18} color="#9ca3af" />
+          <Text style={[styles.inputLabel, { color: t.textSecondary }]}>Password</Text>
+          <View style={[styles.inputContainer, { backgroundColor: t.inputBg, borderColor: t.inputBorder }]}>
+            <Ionicons name="lock-closed-outline" size={18} color={t.textSecondary} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: t.text }]}
               value={password}
               onChangeText={setPassword}
               placeholder="Enter password"
-              placeholderTextColor="#6b7280"
+              placeholderTextColor={t.placeholder}
               secureTextEntry
               selectionColor="#e3a7a1"
             />
@@ -244,7 +250,10 @@ function LoginForm() {
 function UserProfile() {
   const { user, logout, togglePro } = useAuthStore();
   const { tier } = useSubscriptionStore();
-  const [darkMode, setDarkMode] = useState(true);
+  const t = useTheme();
+  const themeMode = useThemeStore((s) => s.mode);
+  const setThemeMode = useThemeStore((s) => s.setMode);
+  const darkMode = t.isDark;
 
   if (!user) return null;
 
@@ -262,7 +271,7 @@ function UserProfile() {
           >
             <Image
               source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&q=80' }}
-              style={styles.avatar}
+              style={[styles.avatar, { backgroundColor: t.bg }]}
               defaultSource={undefined}
             />
           </LinearGradient>
@@ -278,8 +287,8 @@ function UserProfile() {
           )}
         </View>
 
-        <Text style={styles.userName}>{user.name ?? 'Researcher'}</Text>
-        <Text style={styles.userEmail}>{user.email}</Text>
+        <Text style={[styles.userName, { color: t.text }]}>{user.name ?? 'Researcher'}</Text>
+        <Text style={[styles.userEmail, { color: t.textSecondary }]}>{user.email}</Text>
 
         {/* Subscription Badge */}
         <View style={{ marginTop: Spacing.sm }}>
@@ -287,33 +296,33 @@ function UserProfile() {
         </View>
 
         {/* Stats */}
-        <View style={styles.statsRow}>
+        <View style={[styles.statsRow, { borderTopColor: t.glassBorder }]}>
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>
+            <Text style={[styles.statValue, { color: t.text }]}>
               {user.favoritePeptides.length}
             </Text>
-            <Text style={styles.statLabel}>Favorites</Text>
+            <Text style={[styles.statLabel, { color: t.textSecondary }]}>Favorites</Text>
           </View>
-          <View style={styles.statDivider} />
+          <View style={[styles.statDivider, { backgroundColor: t.glassBorder }]} />
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>
+            <Text style={[styles.statValue, { color: t.text }]}>
               {user.savedStacks.length}
             </Text>
-            <Text style={styles.statLabel}>Stacks</Text>
+            <Text style={[styles.statLabel, { color: t.textSecondary }]}>Stacks</Text>
           </View>
-          <View style={styles.statDivider} />
+          <View style={[styles.statDivider, { backgroundColor: t.glassBorder }]} />
           <View style={styles.statItem}>
-            <Text style={[styles.statValue, user.isPro && styles.proActive]}>
+            <Text style={[styles.statValue, { color: t.text }, user.isPro && styles.proActive]}>
               {user.isPro ? 'Active' : 'Free'}
             </Text>
-            <Text style={styles.statLabel}>Plan</Text>
+            <Text style={[styles.statLabel, { color: t.textSecondary }]}>Plan</Text>
           </View>
         </View>
       </GlassCard>
 
       {/* Settings Section */}
       <View style={styles.settingsSection}>
-        <Text style={styles.settingsSectionTitle}>Settings</Text>
+        <Text style={[styles.settingsSectionTitle, { color: t.text }]}>Settings</Text>
 
         {/* Pro Status Toggle */}
         <GlassCard style={styles.settingCard}>
@@ -323,8 +332,8 @@ function UserProfile() {
                 <Ionicons name="star-outline" size={18} color="#e3a7a1" />
               </View>
               <View style={styles.settingTextContainer}>
-                <Text style={styles.settingTitle}>Pro Status</Text>
-                <Text style={styles.settingDescription}>
+                <Text style={[styles.settingTitle, { color: t.text }]}>Pro Status</Text>
+                <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                   Access advanced analysis features
                 </Text>
               </View>
@@ -349,17 +358,17 @@ function UserProfile() {
                 <Ionicons name="moon-outline" size={18} color="#c7d7e6" />
               </View>
               <View style={styles.settingTextContainer}>
-                <Text style={styles.settingTitle}>Dark Mode</Text>
-                <Text style={styles.settingDescription}>
+                <Text style={[styles.settingTitle, { color: t.text }]}>Dark Mode</Text>
+                <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                   Toggle dark/light appearance
                 </Text>
               </View>
             </View>
             <Switch
               value={darkMode}
-              onValueChange={setDarkMode}
+              onValueChange={(val) => setThemeMode(val ? 'dark' : 'light')}
               trackColor={{
-                false: 'rgba(255,255,255,0.12)',
+                false: 'rgba(0,0,0,0.12)',
                 true: 'rgba(199, 215, 230, 0.4)',
               }}
               thumbColor={darkMode ? '#c7d7e6' : '#9ca3af'}
@@ -393,6 +402,15 @@ function ResearchProfileCard() {
     setDataShareConsent,
     reset,
   } = useOnboardingStore();
+  const { user } = useAuthStore();
+  const t = useTheme();
+
+  // Use hardcoded data for test accounts, fall back to onboarding store
+  const testProfile = getTestProfile(user?.email);
+  const displayGender = testProfile?.gender ?? profile.gender ?? 'Not set';
+  const displayAgeRange = testProfile?.ageRange ?? profile.ageRange ?? 'Not set';
+  const displayInterests = testProfile?.interests ?? (profile.interestCategories.length > 0 ? profile.interestCategories : null);
+  const displayGoals = testProfile?.goals ?? (profile.healthGoals.length > 0 ? profile.healthGoals : null);
 
   const handleSafetyToggle = (value: boolean) => {
     setAcceptedSafety(value);
@@ -425,7 +443,7 @@ function ResearchProfileCard() {
   return (
     <View style={styles.researchSection}>
       <View style={styles.sectionHeaderRow}>
-        <Text style={styles.settingsSectionTitle}>Research Profile</Text>
+        <Text style={[styles.settingsSectionTitle, { color: t.text }]}>Research Profile</Text>
         {!isComplete && (
           <View style={styles.incompleteBadgeWrap}>
             <Ionicons name="alert-circle" size={12} color="#f0d68a" />
@@ -434,28 +452,36 @@ function ResearchProfileCard() {
         )}
       </View>
       <GlassCard variant="elevated" style={styles.researchCard}>
-        <View style={styles.profileRow}>
-          <Text style={styles.profileLabel}>Gender</Text>
-          <Text style={styles.profileValue}>
-            {profile.gender ?? 'Not set'}
+        <View style={[styles.profileRow, { borderBottomColor: t.glassBorder }]}>
+          <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Gender</Text>
+          <Text style={[styles.profileValue, { color: t.text }]}>
+            {displayGender}
           </Text>
         </View>
-        <View style={styles.profileRow}>
-          <Text style={styles.profileLabel}>Age Range</Text>
-          <Text style={styles.profileValue}>
-            {profile.ageRange ?? 'Not set'}
+        <View style={[styles.profileRow, { borderBottomColor: t.glassBorder }]}>
+          <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Age Range</Text>
+          <Text style={[styles.profileValue, { color: t.text }]}>
+            {displayAgeRange}
+          </Text>
+        </View>
+        <View style={[styles.profileRow, { borderBottomColor: t.glassBorder }]}>
+          <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Goals</Text>
+          <Text style={[styles.profileValue, { color: t.text }]}>
+            {displayGoals
+              ? displayGoals.map((g) => g.replace(/_/g, ' ')).join(', ')
+              : 'Not set'}
           </Text>
         </View>
         <View style={[styles.profileRow, { borderBottomWidth: 0 }]}>
-          <Text style={styles.profileLabel}>Interests</Text>
-          <Text style={styles.profileValue}>
-            {profile.interestCategories.length > 0
-              ? profile.interestCategories.join(', ')
+          <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Interests</Text>
+          <Text style={[styles.profileValue, { color: t.text }]}>
+            {displayInterests
+              ? displayInterests.join(', ')
               : 'Not set'}
           </Text>
         </View>
 
-        <View style={styles.consentDivider} />
+        <View style={[styles.consentDivider, { backgroundColor: t.glassBorder }]} />
 
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
@@ -463,8 +489,8 @@ function ResearchProfileCard() {
               <Ionicons name="shield-outline" size={18} color="#f0d68a" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Safety Acknowledgement</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Safety Acknowledgement</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                 Research-only usage confirmed
               </Text>
             </View>
@@ -486,8 +512,8 @@ function ResearchProfileCard() {
               <Ionicons name="analytics-outline" size={18} color="#c7d7e6" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Data Sharing</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Data Sharing</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                 Share anonymous usage insights
               </Text>
             </View>
@@ -506,20 +532,12 @@ function ResearchProfileCard() {
 
       <View style={styles.profileActions}>
         <TouchableOpacity
-          style={styles.profileActionButton}
+          style={[styles.profileActionButton, { backgroundColor: t.glass, borderColor: t.glassBorder, flex: 1 }]}
           onPress={() => router.push('/onboarding?edit=true')}
           activeOpacity={0.7}
         >
-          <Ionicons name="create-outline" size={16} color="#c7d7e6" />
-          <Text style={styles.profileActionText}>Edit Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.profileActionButton}
-          onPress={handleReset}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="refresh-outline" size={16} color="#e3a7a1" />
-          <Text style={[styles.profileActionText, { color: '#e3a7a1' }]}>Restart</Text>
+          <Ionicons name="create-outline" size={16} color={t.tint} />
+          <Text style={[styles.profileActionText, { color: t.tint }]}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -534,11 +552,12 @@ function HealthProfileCard() {
   const { profile, getBMI } = useHealthProfileStore();
   const bmi = getBMI();
   const completeness = profile.profileCompleteness;
+  const t = useTheme();
 
   return (
     <View style={styles.researchSection}>
       <View style={styles.sectionHeaderRow}>
-        <Text style={styles.settingsSectionTitle}>Health Profile</Text>
+        <Text style={[styles.settingsSectionTitle, { color: t.text }]}>Health Profile</Text>
         {!profile.setupComplete && (
           <View style={styles.incompleteBadgeWrap}>
             <Ionicons name="alert-circle" size={12} color="#f0d68a" />
@@ -550,11 +569,11 @@ function HealthProfileCard() {
       </View>
       <GlassCard variant="elevated" style={styles.researchCard}>
         {/* Completeness Ring + Progress */}
-        <View style={healthStyles.progressSection}>
+        <View style={[healthStyles.progressSection, { borderBottomColor: t.glassBorder }]}>
           <ProgressRing progress={completeness} size={60} strokeWidth={4} color={Colors.sage} />
           <View style={healthStyles.progressInfo}>
-            <Text style={healthStyles.progressTitle}>Profile Completion</Text>
-            <View style={healthStyles.progressTrack}>
+            <Text style={[healthStyles.progressTitle, { color: t.text }]}>Profile Completion</Text>
+            <View style={[healthStyles.progressTrack, { backgroundColor: t.glass }]}>
               <LinearGradient
                 colors={[Colors.sage, Colors.sageDark]}
                 start={{ x: 0, y: 0 }}
@@ -565,7 +584,7 @@ function HealthProfileCard() {
                 ]}
               />
             </View>
-            <Text style={healthStyles.progressHint}>
+            <Text style={[healthStyles.progressHint, { color: t.textSecondary }]}>
               {completeness === 100
                 ? 'Your health profile is complete'
                 : `${100 - completeness}% remaining to complete`}
@@ -575,9 +594,9 @@ function HealthProfileCard() {
 
         {/* Quick stats */}
         {(profile.bodyMetrics.weightLbs || bmi !== null) && (
-          <View style={styles.profileRow}>
-            <Text style={styles.profileLabel}>Body</Text>
-            <Text style={styles.profileValue}>
+          <View style={[styles.profileRow, { borderBottomColor: t.glassBorder }]}>
+            <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Body</Text>
+            <Text style={[styles.profileValue, { color: t.text }]}>
               {[
                 profile.bodyMetrics.weightLbs
                   ? `${profile.bodyMetrics.weightLbs} lbs`
@@ -591,27 +610,27 @@ function HealthProfileCard() {
         )}
 
         {profile.primaryGoals.length > 0 && (
-          <View style={styles.profileRow}>
-            <Text style={styles.profileLabel}>Goals</Text>
-            <Text style={styles.profileValue} numberOfLines={2}>
+          <View style={[styles.profileRow, { borderBottomColor: t.glassBorder }]}>
+            <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Goals</Text>
+            <Text style={[styles.profileValue, { color: t.text }]} numberOfLines={2}>
               {profile.primaryGoals.slice(0, 3).join(', ')}
             </Text>
           </View>
         )}
 
         {profile.medical.conditions.length > 0 && (
-          <View style={styles.profileRow}>
-            <Text style={styles.profileLabel}>Conditions</Text>
-            <Text style={styles.profileValue} numberOfLines={2}>
+          <View style={[styles.profileRow, { borderBottomColor: t.glassBorder }]}>
+            <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Conditions</Text>
+            <Text style={[styles.profileValue, { color: t.text }]} numberOfLines={2}>
               {profile.medical.conditions.join(', ')}
             </Text>
           </View>
         )}
 
         {profile.medical.allergies.length > 0 && (
-          <View style={styles.profileRow}>
-            <Text style={styles.profileLabel}>Allergies</Text>
-            <Text style={styles.profileValue} numberOfLines={2}>
+          <View style={[styles.profileRow, { borderBottomColor: t.glassBorder }]}>
+            <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Allergies</Text>
+            <Text style={[styles.profileValue, { color: t.text }]} numberOfLines={2}>
               {profile.medical.allergies.join(', ')}
             </Text>
           </View>
@@ -619,8 +638,8 @@ function HealthProfileCard() {
 
         {profile.peptideExperience !== 'none' && (
           <View style={[styles.profileRow, { borderBottomWidth: 0 }]}>
-            <Text style={styles.profileLabel}>Experience</Text>
-            <Text style={styles.profileValue}>
+            <Text style={[styles.profileLabel, { color: t.textSecondary }]}>Experience</Text>
+            <Text style={[styles.profileValue, { color: t.text }]}>
               {profile.peptideExperience.charAt(0).toUpperCase() +
                 profile.peptideExperience.slice(1)}
             </Text>
@@ -641,9 +660,9 @@ function HealthProfileCard() {
           <Ionicons
             name={profile.setupComplete ? 'create-outline' : 'add-circle-outline'}
             size={16}
-            color={profile.setupComplete ? '#c7d7e6' : '#fff'}
+            color={profile.setupComplete ? t.tint : '#fff'}
           />
-          <Text style={[healthStyles.editButtonText, !profile.setupComplete && { color: '#fff' }]}>
+          <Text style={[healthStyles.editButtonText, { color: t.tint }, !profile.setupComplete && { color: '#fff' }]}>
             {profile.setupComplete ? 'Edit Health Profile' : 'Set Up Health Profile'}
           </Text>
         </LinearGradient>
@@ -657,6 +676,7 @@ function HealthProfileCard() {
 // ---------------------------------------------------------------------------
 function QuickLinksSection() {
   const router = useRouter();
+  const t = useTheme();
 
   const links = [
     { icon: 'document-text-outline' as const, label: 'Share Health Report', route: '/health-report' as const, color: '#3b82f6', desc: 'Generate and share with your provider' },
@@ -667,7 +687,7 @@ function QuickLinksSection() {
 
   return (
     <View style={styles.researchSection}>
-      <Text style={styles.settingsSectionTitle}>Quick Actions</Text>
+      <Text style={[styles.settingsSectionTitle, { color: t.text }]}>Quick Actions</Text>
 
       {/* Gradient action buttons for share/export */}
       <View style={actionStyles.row}>
@@ -715,10 +735,10 @@ function QuickLinksSection() {
               <Ionicons name={link.icon} size={18} color={link.color} />
             </View>
             <View style={linkStyles.textWrap}>
-              <Text style={linkStyles.label}>{link.label}</Text>
-              <Text style={linkStyles.desc}>{link.desc}</Text>
+              <Text style={[linkStyles.label, { color: t.text }]}>{link.label}</Text>
+              <Text style={[linkStyles.desc, { color: t.textSecondary }]}>{link.desc}</Text>
             </View>
-            <Ionicons name="chevron-forward" size={16} color="#9ca3af" />
+            <Ionicons name="chevron-forward" size={16} color={t.textSecondary} />
           </GlassCard>
         </TouchableOpacity>
       ))}
@@ -769,6 +789,7 @@ function NotificationSettings() {
     setMealReminderTime,
     toggleWeeklyReport,
   } = useNotificationStore();
+  const t = useTheme();
 
   const notifEnabled = preferences.enabled;
 
@@ -842,7 +863,7 @@ function NotificationSettings() {
 
   return (
     <View style={styles.researchSection}>
-      <Text style={styles.settingsSectionTitle}>Notifications</Text>
+      <Text style={[styles.settingsSectionTitle, { color: t.text }]}>Notifications</Text>
 
       {/* Master + Check-in + Dose */}
       <GlassCard variant="elevated" style={notifStyles.card}>
@@ -853,8 +874,8 @@ function NotificationSettings() {
               <Ionicons name="notifications-outline" size={18} color="#c7d7e6" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Enable Notifications</Text>
-              <Text style={styles.settingDescription}>Reminders and alerts</Text>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Enable Notifications</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>Reminders and alerts</Text>
             </View>
           </View>
           <Switch
@@ -872,8 +893,8 @@ function NotificationSettings() {
               <Ionicons name="today-outline" size={18} color="#b9cbb6" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Daily Check-In Reminder</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Daily Check-In Reminder</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                 Remind at {preferences.checkInReminderTime}
               </Text>
             </View>
@@ -896,8 +917,8 @@ function NotificationSettings() {
               <Ionicons name="alarm-outline" size={18} color="#e3a7a1" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Dose Reminders</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Dose Reminders</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                 Reminders for active protocols
               </Text>
             </View>
@@ -922,8 +943,8 @@ function NotificationSettings() {
               <Ionicons name="barbell-outline" size={18} color="#f59e0b" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Workout Reminders</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Workout Reminders</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                 Daily at {preferences.workoutReminderTime}
               </Text>
             </View>
@@ -947,12 +968,12 @@ function NotificationSettings() {
               return (
                 <TouchableOpacity
                   key={day}
-                  style={[notifStyles.dayChip, active && notifStyles.dayChipActive]}
+                  style={[notifStyles.dayChip, { backgroundColor: t.glass, borderColor: t.glassBorder }, active && notifStyles.dayChipActive]}
                   onPress={() => handleToggleWorkoutDay(day)}
                   activeOpacity={0.7}
                 >
                   <Text
-                    style={[notifStyles.dayChipText, active && notifStyles.dayChipTextActive]}
+                    style={[notifStyles.dayChipText, { color: t.textSecondary }, active && notifStyles.dayChipTextActive]}
                   >
                     {weekdayNumberToLabel(day)}
                   </Text>
@@ -971,8 +992,8 @@ function NotificationSettings() {
               <Ionicons name="nutrition-outline" size={18} color="#10b981" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Meal Reminders</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Meal Reminders</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                 Breakfast, lunch, and dinner
               </Text>
             </View>
@@ -992,7 +1013,7 @@ function NotificationSettings() {
         {preferences.mealRemindersEnabled && notifEnabled && (
           <View style={notifStyles.mealList}>
             {(['breakfast', 'lunch', 'dinner'] as const).map((meal) => (
-              <View key={meal} style={notifStyles.mealRow}>
+              <View key={meal} style={[notifStyles.mealRow, { backgroundColor: t.glass }]}>
                 <Ionicons
                   name={
                     meal === 'breakfast'
@@ -1002,9 +1023,9 @@ function NotificationSettings() {
                         : 'moon-outline'
                   }
                   size={16}
-                  color="#9ca3af"
+                  color={t.textSecondary}
                 />
-                <Text style={notifStyles.mealLabel}>
+                <Text style={[notifStyles.mealLabel, { color: t.text }]}>
                   {meal.charAt(0).toUpperCase() + meal.slice(1)}
                 </Text>
                 <Text style={notifStyles.mealTime}>
@@ -1024,8 +1045,8 @@ function NotificationSettings() {
               <Ionicons name="stats-chart-outline" size={18} color="#3b82f6" />
             </View>
             <View style={styles.settingTextContainer}>
-              <Text style={styles.settingTitle}>Weekly Health Report</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingTitle, { color: t.text }]}>Weekly Health Report</Text>
+              <Text style={[styles.settingDescription, { color: t.textSecondary }]}>
                 Summary every Sunday at 7:00 PM
               </Text>
             </View>
@@ -1065,38 +1086,39 @@ async function rescheduleAllMeals(mealTimes: Record<string, string>): Promise<vo
 // ---------------------------------------------------------------------------
 function LegalLinks() {
   const router = useRouter();
+  const t = useTheme();
 
   return (
-    <View style={linkStyles.legalSection}>
+    <View style={[linkStyles.legalSection, { borderTopColor: t.glassBorder }]}>
       <View style={linkStyles.legalRow}>
         <TouchableOpacity
           style={linkStyles.legalLink}
           onPress={() => router.push('/privacy')}
           activeOpacity={0.7}
         >
-          <Ionicons name="shield-checkmark-outline" size={14} color="#9ca3af" />
-          <Text style={linkStyles.privacyText}>Privacy Policy</Text>
+          <Ionicons name="shield-checkmark-outline" size={14} color={t.textSecondary} />
+          <Text style={[linkStyles.privacyText, { color: t.textSecondary }]}>Privacy Policy</Text>
         </TouchableOpacity>
-        <Text style={linkStyles.legalDivider}>|</Text>
+        <Text style={[linkStyles.legalDivider, { color: t.textMuted }]}>|</Text>
         <TouchableOpacity
           style={linkStyles.legalLink}
           onPress={() => router.push('/terms')}
           activeOpacity={0.7}
         >
-          <Ionicons name="document-text-outline" size={14} color="#9ca3af" />
-          <Text style={linkStyles.privacyText}>Terms of Service</Text>
+          <Ionicons name="document-text-outline" size={14} color={t.textSecondary} />
+          <Text style={[linkStyles.privacyText, { color: t.textSecondary }]}>Terms of Service</Text>
         </TouchableOpacity>
-        <Text style={linkStyles.legalDivider}>|</Text>
+        <Text style={[linkStyles.legalDivider, { color: t.textMuted }]}>|</Text>
         <TouchableOpacity
           style={linkStyles.legalLink}
           onPress={() => router.push('/subscription')}
           activeOpacity={0.7}
         >
-          <Ionicons name="card-outline" size={14} color="#9ca3af" />
-          <Text style={linkStyles.privacyText}>Subscription</Text>
+          <Ionicons name="card-outline" size={14} color={t.textSecondary} />
+          <Text style={[linkStyles.privacyText, { color: t.textSecondary }]}>Subscription</Text>
         </TouchableOpacity>
       </View>
-      <Text style={linkStyles.versionText}>PepTalk v1.0.0 (Beta)</Text>
+      <Text style={[linkStyles.versionText, { color: t.textMuted }]}>PepTalk v1.0.0 (Beta)</Text>
     </View>
   );
 }
@@ -1168,6 +1190,7 @@ const linkStyles = StyleSheet.create({
 // ---------------------------------------------------------------------------
 function DeleteDataSection() {
   const { deleteAllHealthData } = useHealthProfileStore();
+  const t = useTheme();
 
   const handleDelete = () => {
     Alert.alert(
@@ -1197,7 +1220,7 @@ function DeleteDataSection() {
         <Ionicons name="trash-outline" size={16} color="#ef4444" />
         <Text style={deleteStyles.text}>Delete My Data</Text>
       </TouchableOpacity>
-      <Text style={deleteStyles.hint}>
+      <Text style={[deleteStyles.hint, { color: t.textSecondary }]}>
         Permanently removes all health data, dose logs, check-ins, and chat history from this device.
       </Text>
     </View>
@@ -1235,9 +1258,10 @@ const deleteStyles = StyleSheet.create({
 // ---------------------------------------------------------------------------
 export default function ProfileScreen() {
   const { isAuthenticated } = useAuthStore();
+  const t = useTheme();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -1247,7 +1271,7 @@ export default function ProfileScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerRow}>
-            <Text style={styles.title}>Profile</Text>
+            <Text style={[styles.title, { color: t.text }]}>Profile</Text>
             <View style={styles.headerIconWrap}>
               <Ionicons name="person" size={20} color={Colors.rose} />
             </View>
@@ -1279,8 +1303,8 @@ export default function ProfileScreen() {
             >
               <Ionicons name="flask" size={18} color="#fff" />
             </LinearGradient>
-            <Text style={styles.brandFooterName}>PepTalk</Text>
-            <Text style={styles.brandFooterTagline}>
+            <Text style={[styles.brandFooterName, { color: t.text }]}>PepTalk</Text>
+            <Text style={[styles.brandFooterTagline, { color: t.textSecondary }]}>
               Evidence-driven peptide research tools
             </Text>
           </GlassCard>

@@ -23,6 +23,7 @@ import {
   BiologicalSex,
 } from '../src/types';
 import { Colors, FontSizes, Spacing, BorderRadius } from '../src/constants/theme';
+import { useTheme } from '../src/hooks/useTheme';
 
 // ---------------------------------------------------------------------------
 // Step definitions
@@ -133,6 +134,7 @@ const STRESS_SOURCES = [
 // ---------------------------------------------------------------------------
 
 export default function HealthProfileScreen() {
+  const t = useTheme();
   const router = useRouter();
   const store = useHealthProfileStore();
   const { profile, currentStep } = store;
@@ -787,14 +789,14 @@ export default function HealthProfileScreen() {
       </View>
 
       {/* Completeness summary */}
-      <View style={styles.completenessBox}>
-        <Text style={styles.completenessTitle}>
+      <View style={[styles.completenessBox, { backgroundColor: t.card, borderColor: t.glassBorder }]}>
+        <Text style={[styles.completenessTitle, { color: t.text }]}>
           Profile Completeness: {profile.profileCompleteness}%
         </Text>
-        <View style={styles.progressBar}>
+        <View style={[styles.progressBar, { backgroundColor: t.glass }]}>
           <View style={[styles.progressFill, { width: `${profile.profileCompleteness}%` }]} />
         </View>
-        <Text style={styles.completenessNote}>
+        <Text style={[styles.completenessNote, { color: t.textSecondary }]}>
           The more you share, the better PepTalk can serve you. You can always
           update this from your Profile tab.
         </Text>
@@ -803,19 +805,19 @@ export default function HealthProfileScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: t.bg }]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { borderBottomColor: t.glassBorder }]}>
           <TouchableOpacity onPress={prevStep}>
-            <Ionicons name="arrow-back" size={24} color={Colors.darkText} />
+            <Ionicons name="arrow-back" size={24} color={t.text} />
           </TouchableOpacity>
           <View style={{ flex: 1 }}>
-            <Text style={styles.headerTitle}>{STEP_TITLES[step]}</Text>
-            <Text style={styles.headerSub}>Step {step + 1} of {totalSteps}</Text>
+            <Text style={[styles.headerTitle, { color: t.text }]}>{STEP_TITLES[step]}</Text>
+            <Text style={[styles.headerSub, { color: t.textSecondary }]}>Step {step + 1} of {totalSteps}</Text>
           </View>
           <TouchableOpacity onPress={() => { saveCurrentStep(); router.back(); }}>
             <Text style={styles.skipText}>Save & Exit</Text>

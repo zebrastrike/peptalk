@@ -30,6 +30,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
+import { useTheme } from '../../src/hooks/useTheme';
 import {
   Colors,
   Spacing,
@@ -282,6 +283,7 @@ function FoodRow({
   food: BuiltinFood;
   onPress: (food: BuiltinFood) => void;
 }) {
+  const t = useTheme();
   const color = CATEGORY_COLORS[food.category];
 
   return (
@@ -294,16 +296,16 @@ function FoodRow({
         <Text style={styles.foodEmoji}>{food.emoji}</Text>
       </View>
       <View style={styles.foodInfo}>
-        <Text style={styles.foodName} numberOfLines={1}>{food.name}</Text>
-        <Text style={styles.foodMacros}>
+        <Text style={[styles.foodName, { color: t.text }]} numberOfLines={1}>{food.name}</Text>
+        <Text style={[styles.foodMacros, { color: t.textSecondary }]}>
           {food.per100g.proteinGrams}g protein · {food.per100g.carbsGrams}g carbs · {food.per100g.fatGrams}g fat
         </Text>
       </View>
       <View style={styles.foodCalBadge}>
         <Text style={styles.foodCalNum}>{food.per100g.calories}</Text>
-        <Text style={styles.foodCalLabel}>cal/100g</Text>
+        <Text style={[styles.foodCalLabel, { color: t.textSecondary }]}>cal/100g</Text>
       </View>
-      <Ionicons name="chevron-forward" size={16} color={Colors.darkTextSecondary} style={{ marginLeft: 4 }} />
+      <Ionicons name="chevron-forward" size={16} color={t.textSecondary} style={{ marginLeft: 4 }} />
     </TouchableOpacity>
   );
 }
@@ -314,6 +316,7 @@ function FoodRow({
 
 export default function FoodSearchScreen() {
   const router = useRouter();
+  const t = useTheme();
   const params = useLocalSearchParams<{ mealId?: string; mealType?: MealType }>();
   const { addMeal, updateMeal, meals } = useMealStore();
 
@@ -395,32 +398,32 @@ export default function FoodSearchScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
+          <Ionicons name="chevron-back" size={24} color={t.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Food Search</Text>
+        <Text style={[styles.headerTitle, { color: t.text }]}>Food Search</Text>
         <View style={{ width: 40 }} />
       </View>
 
       {/* Search bar */}
       <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <Ionicons name="search" size={18} color={Colors.darkTextSecondary} />
+        <View style={[styles.searchBar, { backgroundColor: t.inputBg, borderColor: t.inputBorder }]}>
+          <Ionicons name="search" size={18} color={t.textSecondary} />
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, { color: t.text }]}
             value={query}
             onChangeText={setQuery}
             placeholder="Search foods..."
-            placeholderTextColor={Colors.darkTextSecondary}
+            placeholderTextColor={t.placeholder}
             returnKeyType="search"
             clearButtonMode="while-editing"
           />
           {query.length > 0 && (
             <TouchableOpacity onPress={() => setQuery('')}>
-              <Ionicons name="close-circle" size={18} color={Colors.darkTextSecondary} />
+              <Ionicons name="close-circle" size={18} color={t.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -434,10 +437,10 @@ export default function FoodSearchScreen() {
         contentContainerStyle={styles.categoryScrollContent}
       >
         <TouchableOpacity
-          style={[styles.catChip, activeCategory === null && styles.catChipActive]}
+          style={[styles.catChip, { backgroundColor: t.glass, borderColor: t.glassBorder }, activeCategory === null && styles.catChipActive]}
           onPress={() => setActiveCategory(null)}
         >
-          <Text style={[styles.catChipText, activeCategory === null && styles.catChipTextActive]}>
+          <Text style={[styles.catChipText, { color: t.textSecondary }, activeCategory === null && styles.catChipTextActive]}>
             All
           </Text>
         </TouchableOpacity>
@@ -448,12 +451,13 @@ export default function FoodSearchScreen() {
               key={cat.key}
               style={[
                 styles.catChip,
+                { backgroundColor: t.glass, borderColor: t.glassBorder },
                 isActive && [styles.catChipActive, { backgroundColor: CATEGORY_COLORS[cat.key] + '33', borderColor: CATEGORY_COLORS[cat.key] + '66' }],
               ]}
               onPress={() => setActiveCategory(isActive ? null : cat.key)}
             >
               <Text style={styles.catChipEmoji}>{cat.emoji}</Text>
-              <Text style={[styles.catChipText, isActive && [styles.catChipTextActive, { color: CATEGORY_COLORS[cat.key] }]]}>
+              <Text style={[styles.catChipText, { color: t.textSecondary }, isActive && [styles.catChipTextActive, { color: CATEGORY_COLORS[cat.key] }]]}>
                 {cat.label}
               </Text>
             </TouchableOpacity>
@@ -463,7 +467,7 @@ export default function FoodSearchScreen() {
 
       {/* Results count */}
       <View style={styles.resultsHeader}>
-        <Text style={styles.resultsCount}>
+        <Text style={[styles.resultsCount, { color: t.textSecondary }]}>
           {results.length} food{results.length !== 1 ? 's' : ''}
           {activeCategory ? ` · ${activeCategory}` : ''}
           {query ? ` · "${query}"` : ''}
@@ -487,12 +491,12 @@ export default function FoodSearchScreen() {
         )}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <View style={[styles.separator, { backgroundColor: t.glassBorder }]} />}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Ionicons name="search-outline" size={40} color={Colors.darkTextSecondary} />
-            <Text style={styles.emptyTitle}>No foods found</Text>
-            <Text style={styles.emptyDesc}>Try a different search term or category</Text>
+            <Ionicons name="search-outline" size={40} color={t.textSecondary} />
+            <Text style={[styles.emptyTitle, { color: t.text }]}>No foods found</Text>
+            <Text style={[styles.emptyDesc, { color: t.textSecondary }]}>Try a different search term or category</Text>
           </View>
         }
         keyboardShouldPersistTaps="handled"

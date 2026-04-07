@@ -20,6 +20,7 @@ import { Disclaimer } from '../../src/components/Disclaimer';
 import { Peptide, PeptideCategory, PeptideInteraction } from '../../src/types';
 import { getInteraction } from '../../src/data/interactions';
 import { analyzeStack } from '../../src/services/analysisEngine';
+import { useTheme } from '../../src/hooks/useTheme';
 
 const MAX_STACK_SIZE = 5;
 
@@ -55,6 +56,7 @@ function getInteractionColor(type: string): string {
 }
 
 export default function StackBuilderScreen() {
+  const t = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<PeptideCategory | null>(null);
   const [showSaveInput, setShowSaveInput] = useState(false);
@@ -158,7 +160,7 @@ export default function StackBuilderScreen() {
   const showSearch = !searchQuery.trim() && !selectedCategory;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -167,8 +169,8 @@ export default function StackBuilderScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Stack Builder</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: t.text }]}>Stack Builder</Text>
+          <Text style={[styles.subtitle, { color: t.textSecondary }]}>
             Combine up to {MAX_STACK_SIZE} peptides and analyze their
             interactions
           </Text>
@@ -177,7 +179,7 @@ export default function StackBuilderScreen() {
         {/* ── Visual Slot Workspace ── */}
         <GlassCard style={styles.workspace}>
           <View style={styles.workspaceHeader}>
-            <Text style={styles.workspaceTitle}>
+            <Text style={[styles.workspaceTitle, { color: t.text }]}>
               Your Stack ({currentStack.length}/{MAX_STACK_SIZE})
             </Text>
             {currentStack.length > 0 && (
@@ -207,8 +209,8 @@ export default function StackBuilderScreen() {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <View style={styles.slotEmpty}>
-                      <Ionicons name="add" size={20} color="#4b5563" />
+                    <View style={[styles.slotEmpty, { backgroundColor: t.glass, borderColor: t.glassBorder }]}>
+                      <Ionicons name="add" size={20} color={t.textSecondary} />
                     </View>
                   )}
                 </View>
@@ -220,19 +222,19 @@ export default function StackBuilderScreen() {
         {/* ── Real-time Interaction Preview ── */}
         {pairwiseInteractions.length > 0 && (
           <View style={styles.previewSection}>
-            <Text style={styles.previewTitle}>Interaction Preview</Text>
+            <Text style={[styles.previewTitle, { color: t.text }]}>Interaction Preview</Text>
             {pairwiseInteractions.map((pair, index) => {
               const color = getInteractionColor(pair.interaction.interactionType);
               return (
                 <View
                   key={index}
-                  style={[styles.previewCard, { borderLeftColor: color }]}
+                  style={[styles.previewCard, { borderLeftColor: color, backgroundColor: t.glass }]}
                 >
                   <View style={styles.previewHeader}>
-                    <Text style={styles.previewPairText}>
+                    <Text style={[styles.previewPairText, { color: t.text }]}>
                       {pair.peptideA.abbreviation || pair.peptideA.name}
                       {' '}
-                      <Text style={styles.previewArrow}>{'\u2194'}</Text>
+                      <Text style={[styles.previewArrow, { color: t.textSecondary }]}>{'\u2194'}</Text>
                       {' '}
                       {pair.peptideB.abbreviation || pair.peptideB.name}
                     </Text>
@@ -256,7 +258,7 @@ export default function StackBuilderScreen() {
         {/* ── Category Filter Chips ── */}
         {currentStack.length < MAX_STACK_SIZE && (
           <View style={styles.pickerSection}>
-            <Text style={styles.sectionTitle}>Add Peptides</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Add Peptides</Text>
 
             <ScrollView
               horizontal
@@ -267,6 +269,7 @@ export default function StackBuilderScreen() {
               <TouchableOpacity
                 style={[
                   styles.filterChip,
+                  { backgroundColor: t.glass, borderColor: t.glassBorder },
                   !selectedCategory && styles.filterChipActive,
                 ]}
                 onPress={() => setSelectedCategory(null)}
@@ -275,6 +278,7 @@ export default function StackBuilderScreen() {
                 <Text
                   style={[
                     styles.filterChipText,
+                    { color: t.textSecondary },
                     !selectedCategory && styles.filterChipTextActive,
                   ]}
                 >
@@ -286,6 +290,7 @@ export default function StackBuilderScreen() {
                   key={cat}
                   style={[
                     styles.filterChip,
+                    { backgroundColor: t.glass, borderColor: t.glassBorder },
                     selectedCategory === cat && styles.filterChipActive,
                   ]}
                   onPress={() =>
@@ -296,6 +301,7 @@ export default function StackBuilderScreen() {
                   <Text
                     style={[
                       styles.filterChipText,
+                      { color: t.textSecondary },
                       selectedCategory === cat && styles.filterChipTextActive,
                     ]}
                   >
@@ -317,15 +323,15 @@ export default function StackBuilderScreen() {
                 {filteredPeptides.slice(0, 12).map((peptide) => (
                   <TouchableOpacity
                     key={peptide.id}
-                    style={styles.pickerItem}
+                    style={[styles.pickerItem, { backgroundColor: t.glass, borderColor: t.glassBorder }]}
                     onPress={() => handleAddPeptide(peptide.id)}
                     activeOpacity={0.7}
                   >
                     <View style={styles.pickerItemContent}>
-                      <Text style={styles.pickerItemName}>
+                      <Text style={[styles.pickerItemName, { color: t.text }]}>
                         {peptide.name}
                       </Text>
-                      <Text style={styles.pickerItemCategories}>
+                      <Text style={[styles.pickerItemCategories, { color: t.textSecondary }]}>
                         {peptide.categories.join(', ')}
                       </Text>
                     </View>
@@ -337,14 +343,14 @@ export default function StackBuilderScreen() {
                   </TouchableOpacity>
                 ))}
                 {filteredPeptides.length > 12 && (
-                  <Text style={styles.moreResultsText}>
+                  <Text style={[styles.moreResultsText, { color: t.textSecondary }]}>
                     +{filteredPeptides.length - 12} more results
                   </Text>
                 )}
               </View>
             )}
             {(searchQuery.trim() || selectedCategory) && filteredPeptides.length === 0 && (
-              <Text style={styles.noResultsText}>
+              <Text style={[styles.noResultsText, { color: t.textSecondary }]}>
                 No matching peptides found
               </Text>
             )}
@@ -374,7 +380,7 @@ export default function StackBuilderScreen() {
         </TouchableOpacity>
 
         {currentStack.length < 2 && currentStack.length > 0 && (
-          <Text style={styles.minWarning}>
+          <Text style={[styles.minWarning, { color: t.textSecondary }]}>
             Add at least 2 peptides to analyze interactions
           </Text>
         )}
@@ -385,11 +391,11 @@ export default function StackBuilderScreen() {
             {showSaveInput ? (
               <GlassCard style={styles.saveInputCard}>
                 <TextInput
-                  style={styles.saveInput}
+                  style={[styles.saveInput, { color: t.text }]}
                   value={stackName}
                   onChangeText={setStackName}
                   placeholder="Enter stack name..."
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor={t.textSecondary}
                   selectionColor="#e3a7a1"
                   autoFocus
                 />
@@ -401,7 +407,7 @@ export default function StackBuilderScreen() {
                       setStackName('');
                     }}
                   >
-                    <Text style={styles.saveCancelText}>Cancel</Text>
+                    <Text style={[styles.saveCancelText, { color: t.textSecondary }]}>Cancel</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.saveConfirmBtn}
@@ -417,8 +423,8 @@ export default function StackBuilderScreen() {
                 onPress={() => setShowSaveInput(true)}
                 activeOpacity={0.7}
               >
-                <Ionicons name="bookmark-outline" size={18} color="#c7d7e6" />
-                <Text style={styles.saveButtonText}>Save Stack</Text>
+                <Ionicons name="bookmark-outline" size={18} color={t.tint} />
+                <Text style={[styles.saveButtonText, { color: t.tint }]}>Save Stack</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -427,7 +433,7 @@ export default function StackBuilderScreen() {
         {/* Analysis Results */}
         {currentAnalysis && (
           <View style={styles.analysisSection}>
-            <Text style={styles.sectionTitle}>Full Analysis</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Full Analysis</Text>
             <AnalysisCard analysis={currentAnalysis} />
           </View>
         )}

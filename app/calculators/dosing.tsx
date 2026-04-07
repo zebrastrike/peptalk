@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
+import { useTheme } from '../../src/hooks/useTheme';
 import { Colors, Spacing, FontSizes, BorderRadius, Gradients } from '../../src/constants/theme';
 import { PEPTIDES } from '../../src/data/peptides';
 import { PROTOCOL_TEMPLATES } from '../../src/data/protocols';
@@ -38,6 +39,7 @@ const FREQUENCY_OPTIONS: { key: Frequency; label: string; perWeek: number }[] = 
 
 export default function DosingCalculatorScreen() {
   const router = useRouter();
+  const t = useTheme();
 
   // Inputs
   const [selectedPeptide, setSelectedPeptide] = useState<Peptide | null>(null);
@@ -100,12 +102,12 @@ export default function DosingCalculatorScreen() {
   const canCalculate = targetDose.trim() !== '' && parseFloat(targetDose) > 0;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
+          <Ionicons name="chevron-back" size={24} color={t.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Dosing Calculator</Text>
+        <Text style={[styles.headerTitle, { color: t.text }]}>Dosing Calculator</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -116,42 +118,43 @@ export default function DosingCalculatorScreen() {
       >
         {/* Peptide Selector */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Select Peptide</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Select Peptide</Text>
           <GlassCard>
             <TouchableOpacity style={styles.pickerTrigger} onPress={() => setPickerOpen(true)}>
               <Text
                 style={[
                   styles.pickerText,
-                  !selectedPeptide && styles.pickerPlaceholder,
+                  { color: t.text },
+                  !selectedPeptide && [styles.pickerPlaceholder, { color: t.textSecondary }],
                 ]}
               >
                 {selectedPeptide ? selectedPeptide.name : 'Choose a peptide...'}
               </Text>
-              <Ionicons name="chevron-down" size={18} color={Colors.darkTextSecondary} />
+              <Ionicons name="chevron-down" size={18} color={t.textSecondary} />
             </TouchableOpacity>
           </GlassCard>
         </View>
 
         {/* Body Weight */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Body Weight (optional)</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Body Weight (optional)</Text>
           <GlassCard>
             <View style={styles.row}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: t.inputBg, color: t.text }]}
                 placeholder="Enter weight"
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.placeholder}
                 keyboardType="numeric"
                 value={bodyWeight}
                 onChangeText={setBodyWeight}
               />
-              <View style={styles.toggleGroup}>
+              <View style={[styles.toggleGroup, { backgroundColor: t.glass }]}>
                 <TouchableOpacity
                   style={[styles.toggleBtn, weightUnit === 'lbs' && styles.toggleActive]}
                   onPress={() => setWeightUnit('lbs')}
                 >
                   <Text
-                    style={[styles.toggleText, weightUnit === 'lbs' && styles.toggleTextActive]}
+                    style={[styles.toggleText, { color: t.textSecondary }, weightUnit === 'lbs' && styles.toggleTextActive]}
                   >
                     lbs
                   </Text>
@@ -161,7 +164,7 @@ export default function DosingCalculatorScreen() {
                   onPress={() => setWeightUnit('kg')}
                 >
                   <Text
-                    style={[styles.toggleText, weightUnit === 'kg' && styles.toggleTextActive]}
+                    style={[styles.toggleText, { color: t.textSecondary }, weightUnit === 'kg' && styles.toggleTextActive]}
                   >
                     kg
                   </Text>
@@ -169,7 +172,7 @@ export default function DosingCalculatorScreen() {
               </View>
             </View>
             {bodyWeight !== '' && bodyWeightKg > 0 && (
-              <Text style={styles.conversionHint}>
+              <Text style={[styles.conversionHint, { color: t.textSecondary }]}>
                 {weightUnit === 'lbs'
                   ? `= ${bodyWeightKg.toFixed(1)} kg`
                   : `= ${(bodyWeightKg / 0.4536).toFixed(1)} lbs`}
@@ -180,13 +183,13 @@ export default function DosingCalculatorScreen() {
 
         {/* Target Dose */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Target Dose Per Injection</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Target Dose Per Injection</Text>
           <GlassCard>
             <View style={styles.row}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: t.inputBg, color: t.text }]}
                 placeholder="Enter dose"
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.placeholder}
                 keyboardType="numeric"
                 value={targetDose}
                 onChangeText={(v) => {
@@ -194,13 +197,13 @@ export default function DosingCalculatorScreen() {
                   setShowResults(false);
                 }}
               />
-              <View style={styles.toggleGroup}>
+              <View style={[styles.toggleGroup, { backgroundColor: t.glass }]}>
                 <TouchableOpacity
                   style={[styles.toggleBtn, doseUnit === 'mcg' && styles.toggleActive]}
                   onPress={() => setDoseUnit('mcg')}
                 >
                   <Text
-                    style={[styles.toggleText, doseUnit === 'mcg' && styles.toggleTextActive]}
+                    style={[styles.toggleText, { color: t.textSecondary }, doseUnit === 'mcg' && styles.toggleTextActive]}
                   >
                     mcg
                   </Text>
@@ -210,7 +213,7 @@ export default function DosingCalculatorScreen() {
                   onPress={() => setDoseUnit('mg')}
                 >
                   <Text
-                    style={[styles.toggleText, doseUnit === 'mg' && styles.toggleTextActive]}
+                    style={[styles.toggleText, { color: t.textSecondary }, doseUnit === 'mg' && styles.toggleTextActive]}
                   >
                     mg
                   </Text>
@@ -222,13 +225,13 @@ export default function DosingCalculatorScreen() {
 
         {/* Frequency */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Injection Frequency</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Injection Frequency</Text>
           <GlassCard>
             <View style={styles.freqGrid}>
               {FREQUENCY_OPTIONS.map((opt) => (
                 <TouchableOpacity
                   key={opt.key}
-                  style={[styles.freqBtn, frequency === opt.key && styles.freqBtnActive]}
+                  style={[styles.freqBtn, { backgroundColor: t.glass }, frequency === opt.key && styles.freqBtnActive]}
                   onPress={() => {
                     setFrequency(opt.key);
                     setShowResults(false);
@@ -237,6 +240,7 @@ export default function DosingCalculatorScreen() {
                   <Text
                     style={[
                       styles.freqBtnText,
+                      { color: t.textSecondary },
                       frequency === opt.key && styles.freqBtnTextActive,
                     ]}
                   >
@@ -260,7 +264,7 @@ export default function DosingCalculatorScreen() {
         {/* Results */}
         {showResults && canCalculate && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Results</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Results</Text>
             <GlassCard variant="glow">
               <ResultRow label="Dose per injection" value={formatDose(doseMcg)} />
               <ResultRow
@@ -291,34 +295,34 @@ export default function DosingCalculatorScreen() {
         {/* Protocol Typical Ranges */}
         {showResults && protocolsForPeptide.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Typical Ranges (from research)</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Typical Ranges (from research)</Text>
             {protocolsForPeptide.map((proto) => (
               <GlassCard key={proto.id} style={styles.protoCard}>
                 <Text style={styles.protoName}>{proto.name}</Text>
                 <View style={styles.protoRow}>
-                  <Text style={styles.protoLabel}>Typical Dose</Text>
-                  <Text style={styles.protoValue}>
+                  <Text style={[styles.protoLabel, { color: t.textSecondary }]}>Typical Dose</Text>
+                  <Text style={[styles.protoValue, { color: t.text }]}>
                     {proto.typicalDose.min}–{proto.typicalDose.max} {proto.typicalDose.unit}
                   </Text>
                 </View>
                 <View style={styles.protoRow}>
-                  <Text style={styles.protoLabel}>Frequency</Text>
-                  <Text style={styles.protoValue}>{proto.frequencyLabel}</Text>
+                  <Text style={[styles.protoLabel, { color: t.textSecondary }]}>Frequency</Text>
+                  <Text style={[styles.protoValue, { color: t.text }]}>{proto.frequencyLabel}</Text>
                 </View>
                 <View style={styles.protoRow}>
-                  <Text style={styles.protoLabel}>Duration</Text>
-                  <Text style={styles.protoValue}>
+                  <Text style={[styles.protoLabel, { color: t.textSecondary }]}>Duration</Text>
+                  <Text style={[styles.protoValue, { color: t.text }]}>
                     {proto.durationWeeks.min}–{proto.durationWeeks.max} weeks
                   </Text>
                 </View>
                 {proto.timing && (
                   <View style={styles.protoRow}>
-                    <Text style={styles.protoLabel}>Timing</Text>
-                    <Text style={styles.protoValue}>{proto.timing}</Text>
+                    <Text style={[styles.protoLabel, { color: t.textSecondary }]}>Timing</Text>
+                    <Text style={[styles.protoValue, { color: t.text }]}>{proto.timing}</Text>
                   </View>
                 )}
                 {proto.reconstitutionNotes && (
-                  <Text style={styles.protoNote}>{proto.reconstitutionNotes}</Text>
+                  <Text style={[styles.protoNote, { color: t.textSecondary }]}>{proto.reconstitutionNotes}</Text>
                 )}
               </GlassCard>
             ))}
@@ -327,8 +331,8 @@ export default function DosingCalculatorScreen() {
 
         {/* Disclaimer */}
         <View style={styles.disclaimerBox}>
-          <Ionicons name="information-circle-outline" size={16} color={Colors.darkTextSecondary} />
-          <Text style={styles.disclaimerText}>
+          <Ionicons name="information-circle-outline" size={16} color={t.textSecondary} />
+          <Text style={[styles.disclaimerText, { color: t.textSecondary }]}>
             This calculator is for informational purposes only. Always consult a healthcare provider
             for dosing guidance specific to your situation.
           </Text>
@@ -338,26 +342,26 @@ export default function DosingCalculatorScreen() {
       {/* Peptide Picker Modal */}
       <Modal visible={pickerOpen} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, { backgroundColor: t.card }]}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Select Peptide</Text>
+              <Text style={[styles.modalTitle, { color: t.text }]}>Select Peptide</Text>
               <TouchableOpacity onPress={() => setPickerOpen(false)}>
-                <Ionicons name="close" size={24} color={Colors.darkText} />
+                <Ionicons name="close" size={24} color={t.text} />
               </TouchableOpacity>
             </View>
-            <View style={styles.searchBox}>
-              <Ionicons name="search" size={18} color={Colors.darkTextSecondary} />
+            <View style={[styles.searchBox, { backgroundColor: t.inputBg }]}>
+              <Ionicons name="search" size={18} color={t.textSecondary} />
               <TextInput
-                style={styles.searchInput}
+                style={[styles.searchInput, { color: t.text }]}
                 placeholder="Search peptides..."
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.placeholder}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
                 autoFocus
               />
               {searchQuery.length > 0 && (
                 <TouchableOpacity onPress={() => setSearchQuery('')}>
-                  <Ionicons name="close-circle" size={18} color={Colors.darkTextSecondary} />
+                  <Ionicons name="close-circle" size={18} color={t.textSecondary} />
                 </TouchableOpacity>
               )}
             </View>
@@ -377,13 +381,13 @@ export default function DosingCalculatorScreen() {
                     setShowResults(false);
                   }}
                 >
-                  <Text style={styles.peptideItemName}>{item.name}</Text>
-                  <Text style={styles.peptideItemCat}>
+                  <Text style={[styles.peptideItemName, { color: t.text }]}>{item.name}</Text>
+                  <Text style={[styles.peptideItemCat, { color: t.textSecondary }]}>
                     {item.categories.join(', ')}
                   </Text>
                 </TouchableOpacity>
               )}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              ItemSeparatorComponent={() => <View style={[styles.separator, { backgroundColor: t.glassBorder }]} />}
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps="handled"
             />
@@ -403,10 +407,11 @@ function ResultRow({
   value: string;
   highlight?: boolean;
 }) {
+  const t = useTheme();
   return (
-    <View style={styles.resultRow}>
-      <Text style={styles.resultLabel}>{label}</Text>
-      <Text style={[styles.resultValue, highlight && styles.resultHighlight]}>{value}</Text>
+    <View style={[styles.resultRow, { borderBottomColor: t.glassBorder }]}>
+      <Text style={[styles.resultLabel, { color: t.textSecondary }]}>{label}</Text>
+      <Text style={[styles.resultValue, { color: t.text }, highlight && styles.resultHighlight]}>{value}</Text>
     </View>
   );
 }

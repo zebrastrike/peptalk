@@ -13,8 +13,8 @@ import { ErrorBoundary } from '../src/components/ErrorBoundary';
 import { CelebrationModal } from '../src/components/CelebrationModal';
 import { PepTalkCharacter } from '../src/components/PepTalkCharacter';
 import { useOnboardingStore } from '../src/store/useOnboardingStore';
-import { useAuthStore } from '../src/store/useAuthStore';
 import { configureNotificationHandler } from '../src/services/notificationService';
+import { useTheme } from '../src/hooks/useTheme';
 
 export default function RootLayout() {
   const router = useRouter();
@@ -22,8 +22,7 @@ export default function RootLayout() {
   const { edit } = useGlobalSearchParams<{ edit?: string }>();
   const isComplete = useOnboardingStore((state) => state.isComplete);
   const hasHydrated = useOnboardingStore((state) => state.hasHydrated);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const authHydrated = useAuthStore((state) => state.hasHydrated);
+  const t = useTheme();
 
   // Wait for the navigator (<Stack>) to mount before attempting navigation
   const [navReady, setNavReady] = useState(false);
@@ -59,33 +58,22 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (!navReady || !hasHydrated || !authHydrated) return;
-    const inAuth = segments[0] === 'auth';
+    if (!navReady || !hasHydrated) return;
     const inOnboarding = segments[0] === 'onboarding';
-
-    // 1. Not logged in → auth screen
-    if (!isAuthenticated && !inAuth) {
-      router.replace('/auth');
-      return;
-    }
-
-    // 2. Logged in but onboarding not done → onboarding
-    if (isAuthenticated && !isComplete && !inOnboarding) {
+    if (!isComplete && !inOnboarding) {
       router.replace('/onboarding');
       return;
     }
-
-    // 3. Logged in + onboarded → dashboard
-    if (isAuthenticated && isComplete && (inAuth || (inOnboarding && edit !== 'true'))) {
+    if (isComplete && inOnboarding && edit !== 'true') {
       router.replace('/(tabs)');
     }
-  }, [edit, hasHydrated, authHydrated, isAuthenticated, isComplete, navReady, router, segments]);
+  }, [edit, hasHydrated, isComplete, navReady, router, segments]);
 
   return (
     <ErrorBoundary>
     <SafeAreaProvider>
-      <View style={styles.container}>
-        <StatusBar style="light" />
+      <View style={[styles.container, { backgroundColor: t.bg }]}>
+        <StatusBar style={t.statusBar} />
         <CelebrationModal />
         {/* Splash Screen */}
         {splashVisible && (
@@ -97,15 +85,15 @@ export default function RootLayout() {
             pointerEvents="none"
           >
             <LinearGradient
-              colors={['#0f1720', '#0d2235', '#0f1720']}
+              colors={t.splashGradient as unknown as [string, string, ...string[]]}
               style={styles.splashGrad}
             >
               <Animated.View
                 style={{ transform: [{ scale: logoScale }], opacity: logoOpacity, alignItems: 'center' }}
               >
                 <PepTalkCharacter size={90} variant="full" animated glowColor="#14b8a6" />
-                <Text style={styles.splashTitle}>PepTalk</Text>
-                <Text style={styles.splashSub}>Your peptide journey starts here</Text>
+                <Text style={[styles.splashTitle, { color: t.text }]}>PepTalk</Text>
+                <Text style={[styles.splashSub, { color: t.textMuted }]}>Your peptide journey starts here</Text>
               </Animated.View>
             </LinearGradient>
           </Animated.View>
@@ -113,11 +101,10 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: '#0f1720' },
+            contentStyle: { backgroundColor: t.bg },
             animation: 'slide_from_right',
           }}
         >
-          <Stack.Screen name="auth" options={{ headerShown: false, animation: 'fade' }} />
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
@@ -125,7 +112,7 @@ export default function RootLayout() {
             options={{
               headerShown: true,
               headerTransparent: true,
-              headerTintColor: '#e8e6e3',
+              headerTintColor: t.headerTint,
               headerTitle: '',
               headerBackTitle: 'Back',
               headerStyle: { backgroundColor: 'transparent' },

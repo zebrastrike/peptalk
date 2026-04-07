@@ -23,6 +23,7 @@ import {
   BorderRadius,
   FontSizes,
 } from '../src/constants/theme';
+import { useTheme } from '../src/hooks/useTheme';
 import {
   isHealthKitAvailable,
   requestHealthKitPermissions,
@@ -103,6 +104,7 @@ const HEALTH_METRICS: HealthMetric[] = [
 // ---------------------------------------------------------------------------
 
 export default function HealthConnectSetupScreen() {
+  const t = useTheme();
   const router = useRouter();
   const [connecting, setConnecting] = useState(false);
   const [connected, setConnected] = useState(false);
@@ -164,16 +166,16 @@ export default function HealthConnectSetupScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
           style={styles.closeButton}
         >
-          <Ionicons name="close" size={24} color={Colors.darkText} />
+          <Ionicons name="close" size={24} color={t.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Connect Health Data</Text>
+        <Text style={[styles.headerTitle, { color: t.text }]}>Connect Health Data</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -189,10 +191,10 @@ export default function HealthConnectSetupScreen() {
             animated
             glowColor={Colors.pepTeal}
           />
-          <Text style={styles.introTitle}>
+          <Text style={[styles.introTitle, { color: t.text }]}>
             Let's connect your health data
           </Text>
-          <Text style={styles.introSubtitle}>
+          <Text style={[styles.introSubtitle, { color: t.textSecondary }]}>
             PepTalk can auto-fill your check-ins with real health metrics from
             your {isIOS ? 'Apple Watch or iPhone' : 'Android device'}.
           </Text>
@@ -200,14 +202,14 @@ export default function HealthConnectSetupScreen() {
 
         {/* What We Sync */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>What we'll sync</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>What we'll sync</Text>
           <GlassCard variant="gradient">
             {HEALTH_METRICS.map((metric, i) => (
               <View
                 key={metric.id}
                 style={[
                   styles.metricRow,
-                  i < HEALTH_METRICS.length - 1 && styles.metricRowBorder,
+                  i < HEALTH_METRICS.length - 1 && [styles.metricRowBorder, { borderBottomColor: t.glassBorder }],
                 ]}
               >
                 <View style={styles.metricIcon}>
@@ -218,8 +220,8 @@ export default function HealthConnectSetupScreen() {
                   />
                 </View>
                 <View style={styles.metricText}>
-                  <Text style={styles.metricLabel}>{metric.label}</Text>
-                  <Text style={styles.metricDesc}>{metric.description}</Text>
+                  <Text style={[styles.metricLabel, { color: t.text }]}>{metric.label}</Text>
+                  <Text style={[styles.metricDesc, { color: t.textSecondary }]}>{metric.description}</Text>
                 </View>
                 {connected && syncResult && (
                   <Ionicons
@@ -235,7 +237,7 @@ export default function HealthConnectSetupScreen() {
 
         {/* Platform Source */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Data Source</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Data Source</Text>
           {platformSources.map((source) => (
             <GlassCard key={source.id} variant="glow" glowColor={Colors.pepBlue}>
               <View style={styles.sourceRow}>
@@ -246,8 +248,8 @@ export default function HealthConnectSetupScreen() {
                   <Ionicons name={source.icon} size={24} color="#fff" />
                 </LinearGradient>
                 <View style={styles.sourceText}>
-                  <Text style={styles.sourceLabel}>{source.label}</Text>
-                  <Text style={styles.sourceDesc}>{source.description}</Text>
+                  <Text style={[styles.sourceLabel, { color: t.text }]}>{source.label}</Text>
+                  <Text style={[styles.sourceDesc, { color: t.textSecondary }]}>{source.description}</Text>
                 </View>
                 {connected && (
                   <View style={styles.connectedBadge}>
@@ -267,7 +269,7 @@ export default function HealthConnectSetupScreen() {
         {/* Privacy Note */}
         <View style={styles.privacyNote}>
           <Ionicons name="lock-closed" size={16} color={Colors.pepBlue} />
-          <Text style={styles.privacyText}>
+          <Text style={[styles.privacyText, { color: t.textSecondary }]}>
             Your health data stays on your device. PepTalk never uploads or
             shares your personal health information.
           </Text>
@@ -276,7 +278,7 @@ export default function HealthConnectSetupScreen() {
         {/* Sync Results */}
         {connected && syncResult && Object.keys(syncResult).length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Latest Sync</Text>
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Latest Sync</Text>
             <GlassCard>
               {syncResult.steps != null && (
                 <View style={styles.syncRow}>
@@ -285,7 +287,7 @@ export default function HealthConnectSetupScreen() {
                     size={18}
                     color={Colors.pepTeal}
                   />
-                  <Text style={styles.syncLabel}>Steps</Text>
+                  <Text style={[styles.syncLabel, { color: t.text }]}>Steps</Text>
                   <Text style={styles.syncValue}>
                     {syncResult.steps.toLocaleString()}
                   </Text>
@@ -298,7 +300,7 @@ export default function HealthConnectSetupScreen() {
                     size={18}
                     color={Colors.pepTeal}
                   />
-                  <Text style={styles.syncLabel}>Weight</Text>
+                  <Text style={[styles.syncLabel, { color: t.text }]}>Weight</Text>
                   <Text style={styles.syncValue}>
                     {syncResult.weightLbs} lbs
                   </Text>
@@ -311,7 +313,7 @@ export default function HealthConnectSetupScreen() {
                     size={18}
                     color={Colors.pepTeal}
                   />
-                  <Text style={styles.syncLabel}>Heart Rate</Text>
+                  <Text style={[styles.syncLabel, { color: t.text }]}>Heart Rate</Text>
                   <Text style={styles.syncValue}>
                     {syncResult.restingHeartRate} bpm
                   </Text>
@@ -324,7 +326,7 @@ export default function HealthConnectSetupScreen() {
                     size={18}
                     color={Colors.pepTeal}
                   />
-                  <Text style={styles.syncLabel}>Sleep</Text>
+                  <Text style={[styles.syncLabel, { color: t.text }]}>Sleep</Text>
                   <Text style={styles.syncValue}>
                     {syncResult.sleepHours} hrs
                   </Text>
@@ -341,7 +343,7 @@ export default function HealthConnectSetupScreen() {
           ) : connecting ? (
             <View style={styles.connectingRow}>
               <ActivityIndicator color={Colors.pepBlue} />
-              <Text style={styles.connectingText}>Connecting...</Text>
+              <Text style={[styles.connectingText, { color: t.textSecondary }]}>Connecting...</Text>
             </View>
           ) : (
             <GradientButton
@@ -357,7 +359,7 @@ export default function HealthConnectSetupScreen() {
         {/* Skip */}
         {!connected && (
           <TouchableOpacity onPress={handleDone} style={styles.skipButton}>
-            <Text style={styles.skipText}>Skip for now</Text>
+            <Text style={[styles.skipText, { color: t.textSecondary }]}>Skip for now</Text>
           </TouchableOpacity>
         )}
       </ScrollView>

@@ -12,15 +12,17 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { PepTalkCharacter } from '../src/components/PepTalkCharacter';
 import { GradientButton } from '../src/components/GradientButton';
 import { useOnboardingStore } from '../src/store/useOnboardingStore';
 import { useHealthProfileStore } from '../src/store/useHealthProfileStore';
-// Auth and subscription are handled on the /auth screen
+import { useAuthStore } from '../src/store/useAuthStore';
+import { useSubscriptionStore } from '../src/store/useSubscriptionStore';
 import { GlassCard } from '../src/components/GlassCard';
 import { OptionCard } from '../src/components/OptionCard';
+import { useTheme } from '../src/hooks/useTheme';
 import { CATEGORIES } from '../src/constants/categories';
 import { GOAL_OPTIONS } from '../src/constants/goals';
 import { trackOnboardingComplete } from '../src/services/analyticsEvents';
@@ -73,6 +75,8 @@ const STEP_TITLES = [
   'Topics of Interest',
   'Your Data',
   'Health Basics',
+  'Create Account',
+  'Choose Your Plan',
 ];
 
 const STEP_HERO_IMAGES: Record<number, string> = {
@@ -85,7 +89,11 @@ const STEP_HERO_IMAGES: Record<number, string> = {
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+  const isEditMode = edit === 'true';
+  const t = useTheme();
+  // In edit mode, skip Welcome (0) and start at Goals (1)
+  const [step, setStep] = useState(isEditMode ? 1 : 0);
 
   // Health basics state (Step 5)
   const [weightLbs, setWeightLbs] = useState('');
@@ -94,7 +102,18 @@ export default function OnboardingScreen() {
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>('moderate');
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
 
-  // Auth and subscription are now handled on the /auth screen before onboarding
+  // Account creation state (Step 6)
+  const [accountEmail, setAccountEmail] = useState('');
+  const [accountPassword, setAccountPassword] = useState('');
+  const [accountName, setAccountName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [accountError, setAccountError] = useState('');
+
+  // Plan selection state (Step 7)
+  const [selectedPlan, setSelectedPlan] = useState<'free' | 'pepe' | 'pepe_plus' | 'pepe_pro'>('free');
+
+  const login = useAuthStore((s) => s.login);
+  const setTier = useSubscriptionStore((s) => s.setTier);
 
   const {
     profile,
@@ -117,8 +136,9 @@ export default function OnboardingScreen() {
     if (step === 0) return profile.acceptedSafety;
     if (step === 1) return profile.healthGoals.length > 0;
     if (step === 2) return Boolean(profile.gender && profile.ageRange);
+    if (step === 6) return accountEmail.includes('@') && accountPassword.length >= 6 && accountName.length > 0;
     return true;
-  }, [profile.acceptedSafety, profile.healthGoals.length, profile.ageRange, profile.gender, step]);
+  }, [profile.acceptedSafety, profile.healthGoals.length, profile.ageRange, profile.gender, step, accountEmail, accountPassword, accountName]);
 
   const saveHealthBasics = () => {
     const weight = parseFloat(weightLbs);
@@ -161,9 +181,31 @@ export default function OnboardingScreen() {
       return;
     }
 
-    // Step 5 (Health Basics) — final step: save and complete
+    // Step 5 → save health basics
     if (step === 5) {
       saveHealthBasics();
+      if (isEditMode) {
+        // In edit mode, save and go back to profile
+        Alert.alert('Profile Updated', 'Your research profile has been saved.', [
+          { text: 'OK', onPress: () => router.back() },
+        ]);
+        return;
+      }
+      setStep(6);
+      return;
+    }
+
+    // Step 6: create account (new users only)
+    if (step === 6) {
+      setAccountError('');
+      await login(accountEmail, 'password123'); // stub login with email
+      setStep(7);
+      return;
+    }
+
+    // Step 7: final — apply plan and go to dashboard
+    if (step === 7) {
+      setTier(selectedPlan);
       completeOnboarding();
       trackOnboardingComplete(profile.interestCategories.length);
       router.replace('/(tabs)');
@@ -176,32 +218,34 @@ export default function OnboardingScreen() {
   };
 
   const handleSkipHealthBasics = () => {
-    completeOnboarding();
-    trackOnboardingComplete(profile.interestCategories.length);
-    router.replace('/(tabs)');
+    setStep(6); // Skip health basics → go to account creation
   };
 
   const handleBack = () => {
     if (step === 0) return;
+    if (isEditMode && step === 1) {
+      router.back();
+      return;
+    }
     setStep((prev) => prev - 1);
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top', 'bottom']}>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={styles.title}>Welcome to PepTalk</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: t.text }]}>{isEditMode ? 'Edit Profile' : 'Welcome to PepTalk'}</Text>
+          <Text style={[styles.subtitle, { color: t.textSecondary }]}>
             Your personal health companion
           </Text>
         </View>
 
         <View style={styles.stepHeader}>
-          <Text style={styles.stepTitle}>{STEP_TITLES[step]}</Text>
-          <View style={styles.progressBarContainer}>
+          <Text style={[styles.stepTitle, { color: t.text }]}>{STEP_TITLES[step]}</Text>
+          <View style={[styles.progressBarContainer, { backgroundColor: t.glass }]}>
             <LinearGradient
               colors={['#3B82F6', '#06B6D4']}
               start={{ x: 0, y: 0 }}
@@ -222,8 +266,8 @@ export default function OnboardingScreen() {
             </View>
 
             <GlassCard variant="glow" style={styles.welcomeCard}>
-              <Text style={styles.welcomeTitle}>Hey there!</Text>
-              <Text style={styles.welcomeText}>
+              <Text style={[styles.welcomeTitle, { color: t.text }]}>Hey there!</Text>
+              <Text style={[styles.welcomeText, { color: t.textSecondary }]}>
                 I'm Pepe — your friendly health companion for peptide
                 education, tracking, and personalized insights. Let's get you
                 set up!
@@ -233,29 +277,41 @@ export default function OnboardingScreen() {
             <View style={styles.trustRow}>
               <View style={styles.trustBadge}>
                 <Ionicons name="lock-closed" size={20} color="#3B82F6" />
-                <Text style={styles.trustText}>Encrypted data</Text>
+                <Text style={[styles.trustText, { color: t.textSecondary }]}>Encrypted data</Text>
               </View>
               <View style={styles.trustBadge}>
                 <Ionicons name="cart-outline" size={20} color="#3B82F6" />
-                <Text style={styles.trustText}>We never sell</Text>
+                <Text style={[styles.trustText, { color: t.textSecondary }]}>We never sell</Text>
               </View>
               <View style={styles.trustBadge}>
                 <Ionicons name="trash-outline" size={20} color="#3B82F6" />
-                <Text style={styles.trustText}>Delete anytime</Text>
+                <Text style={[styles.trustText, { color: t.textSecondary }]}>Delete anytime</Text>
               </View>
             </View>
 
-            <Text style={styles.softDisclaimer}>
+            <Text style={[styles.softDisclaimer, { color: t.textMuted }]}>
               PepTalk is an educational tool only — it does not provide medical
               advice, diagnose conditions, or recommend treatments. Always
               consult a licensed healthcare provider for medical decisions.
             </Text>
 
+            <TouchableOpacity
+              style={styles.loginLink}
+              onPress={() => {
+                completeOnboarding();
+                router.replace('/(tabs)');
+                setTimeout(() => router.push('/(tabs)/profile'), 100);
+              }}
+            >
+              <Ionicons name="log-in-outline" size={18} color="#3B82F6" />
+              <Text style={styles.loginLinkText}>Already have an account? Sign In</Text>
+            </TouchableOpacity>
+
             <GlassCard style={styles.card}>
               <View style={styles.toggleRow}>
                 <View style={styles.toggleText}>
-                  <Text style={styles.toggleTitle}>I understand and agree</Text>
-                  <Text style={styles.toggleSubtitle}>
+                  <Text style={[styles.toggleTitle, { color: t.text }]}>I understand and agree</Text>
+                  <Text style={[styles.toggleSubtitle, { color: t.textSecondary }]}>
                     I acknowledge PepTalk is for educational purposes only and
                     does not provide medical advice. I accept full responsibility
                     for my health decisions.
@@ -265,7 +321,7 @@ export default function OnboardingScreen() {
                   value={profile.acceptedSafety}
                   onValueChange={setAcceptedSafety}
                   trackColor={{
-                    false: 'rgba(255,255,255,0.12)',
+                    false: t.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)',
                     true: 'rgba(59, 130, 246, 0.4)',
                   }}
                   thumbColor={profile.acceptedSafety ? '#3B82F6' : '#9ca3af'}
@@ -284,8 +340,8 @@ export default function OnboardingScreen() {
               resizeMode="cover"
             />
             <GlassCard style={styles.card}>
-              <Text style={styles.cardTitle}>What are your health objectives?</Text>
-              <Text style={styles.cardText}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>What are your health objectives?</Text>
+              <Text style={[styles.cardText, { color: t.textSecondary }]}>
                 Select the goals that matter most to you. This helps PepTalk
                 show you relevant peptide research and personalized insights.
               </Text>
@@ -297,6 +353,7 @@ export default function OnboardingScreen() {
                       key={goal.value}
                       style={[
                         styles.goalChip,
+                        { borderColor: t.glassBorder, backgroundColor: t.glass },
                         selected && { backgroundColor: goal.color + '25', borderColor: goal.color + '80' },
                       ]}
                       onPress={() => toggleHealthGoal(goal.value)}
@@ -305,11 +362,12 @@ export default function OnboardingScreen() {
                       <Ionicons
                         name={goal.icon as any}
                         size={18}
-                        color={selected ? goal.color : '#9ca3af'}
+                        color={selected ? goal.color : t.textSecondary}
                       />
                       <Text
                         style={[
                           styles.goalChipText,
+                          { color: t.textSecondary },
                           selected && { color: goal.color },
                         ]}
                       >
@@ -337,13 +395,13 @@ export default function OnboardingScreen() {
               resizeMode="cover"
             />
             <GlassCard style={styles.card}>
-              <Text style={styles.cardTitle}>Demographics</Text>
-              <Text style={styles.cardText}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>Demographics</Text>
+              <Text style={[styles.cardText, { color: t.textSecondary }]}>
                 This helps us personalize research summaries and recommended
                 stacks.
               </Text>
 
-              <Text style={styles.groupTitle}>Gender</Text>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Gender</Text>
               <View style={styles.optionStack}>
                 {GENDER_OPTIONS.map((gender) => (
                   <OptionCard
@@ -355,7 +413,7 @@ export default function OnboardingScreen() {
                 ))}
               </View>
 
-              <Text style={styles.groupTitle}>Age Range</Text>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Age Range</Text>
               <View style={styles.optionStack}>
                 {AGE_OPTIONS.map((ageRange) => (
                   <OptionCard
@@ -367,8 +425,8 @@ export default function OnboardingScreen() {
                 ))}
               </View>
 
-              <Text style={styles.groupTitle}>Background (optional)</Text>
-              <Text style={styles.groupSubtext}>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Background (optional)</Text>
+              <Text style={[styles.groupSubtext, { color: t.textSecondary }]}>
                 Helps us surface research most relevant to your health profile.
               </Text>
               <View style={styles.optionStack}>
@@ -382,7 +440,7 @@ export default function OnboardingScreen() {
                 ))}
               </View>
 
-              <Text style={styles.groupTitle}>Marital Status (optional)</Text>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Marital Status (optional)</Text>
               <View style={styles.optionStack}>
                 {MARITAL_OPTIONS.map((status) => (
                   <OptionCard
@@ -394,7 +452,7 @@ export default function OnboardingScreen() {
                 ))}
               </View>
 
-              <Text style={styles.groupTitle}>How did you hear about us?</Text>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>How did you hear about us?</Text>
               <View style={styles.optionStack}>
                 {REFERRAL_OPTIONS.map((source) => (
                   <OptionCard
@@ -418,8 +476,8 @@ export default function OnboardingScreen() {
               resizeMode="cover"
             />
             <GlassCard style={styles.card}>
-              <Text style={styles.cardTitle}>Topics of Interest</Text>
-              <Text style={styles.cardText}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>Topics of Interest</Text>
+              <Text style={[styles.cardText, { color: t.textSecondary }]}>
                 Pick the topics you'd like to explore. You can always update
                 these later in your profile.
               </Text>
@@ -449,8 +507,8 @@ export default function OnboardingScreen() {
               resizeMode="cover"
             />
             <GlassCard style={styles.card}>
-              <Text style={styles.cardTitle}>Your Data, Your Control</Text>
-              <Text style={styles.cardText}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>Your Data, Your Control</Text>
+              <Text style={[styles.cardText, { color: t.textSecondary }]}>
                 All your health data is encrypted and stored locally on your device.
                 PepTalk does not transmit, sell, or share your personal health
                 information with any third party unless you explicitly opt in.
@@ -459,8 +517,8 @@ export default function OnboardingScreen() {
 
               <View style={styles.toggleRow}>
                 <View style={styles.toggleText}>
-                  <Text style={styles.toggleTitle}>Anonymous analytics</Text>
-                  <Text style={styles.toggleSubtitle}>
+                  <Text style={[styles.toggleTitle, { color: t.text }]}>Anonymous analytics</Text>
+                  <Text style={[styles.toggleSubtitle, { color: t.textSecondary }]}>
                     Optionally share anonymous usage patterns (which features
                     are used, screen navigation) to help improve PepTalk. This
                     data cannot identify you and never includes health info.
@@ -470,7 +528,7 @@ export default function OnboardingScreen() {
                   value={profile.dataShareConsent}
                   onValueChange={setDataShareConsent}
                   trackColor={{
-                    false: 'rgba(255,255,255,0.12)',
+                    false: t.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)',
                     true: 'rgba(59, 130, 246, 0.4)',
                   }}
                   thumbColor={profile.dataShareConsent ? '#3B82F6' : '#9ca3af'}
@@ -481,7 +539,7 @@ export default function OnboardingScreen() {
             <GlassCard style={styles.card}>
               <View style={styles.infoRow}>
                 <Ionicons name="lock-closed-outline" size={18} color="#3B82F6" />
-                <Text style={styles.infoText}>
+                <Text style={[styles.infoText, { color: t.textSecondary }]}>
                   Your data stays on your device unless you explicitly opt in
                   to cloud features. You are always in control.
                 </Text>
@@ -491,7 +549,7 @@ export default function OnboardingScreen() {
             <GlassCard style={styles.card}>
               <View style={styles.infoRow}>
                 <Ionicons name="shield-checkmark-outline" size={18} color="#3B82F6" />
-                <Text style={styles.infoText}>
+                <Text style={[styles.infoText, { color: t.textSecondary }]}>
                   By continuing, you agree to our Terms of Service and Privacy
                   Policy. PepTalk is for educational purposes only — it does not
                   provide medical advice. You accept responsibility for your own
@@ -503,7 +561,7 @@ export default function OnboardingScreen() {
             <GlassCard style={styles.card}>
               <View style={styles.infoRow}>
                 <Ionicons name="trash-outline" size={18} color="#6b7280" />
-                <Text style={styles.infoText}>
+                <Text style={[styles.infoText, { color: t.textSecondary }]}>
                   You can delete all your data at any time from your Profile.
                   We will never sell or share your personal health information.
                 </Text>
@@ -521,47 +579,47 @@ export default function OnboardingScreen() {
               resizeMode="cover"
             />
             <GlassCard variant="glow" style={styles.card}>
-              <Text style={styles.cardTitle}>Tell us more about you</Text>
-              <Text style={styles.cardText}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>Tell us more about you</Text>
+              <Text style={[styles.cardText, { color: t.textSecondary }]}>
                 This makes your dashboard feel personalized from day one. All
                 fields are optional.
               </Text>
 
-              <Text style={styles.groupTitle}>Weight (lbs)</Text>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Weight (lbs)</Text>
               <TextInput
-                style={styles.healthInput}
+                style={[styles.healthInput, { backgroundColor: t.inputBg, borderColor: t.inputBorder, color: t.text }]}
                 value={weightLbs}
                 onChangeText={setWeightLbs}
                 placeholder="e.g. 175"
-                placeholderTextColor="#6b7280"
+                placeholderTextColor={t.placeholder}
                 keyboardType="numeric"
               />
 
-              <Text style={styles.groupTitle}>Height</Text>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Height</Text>
               <View style={styles.heightRow}>
                 <View style={styles.heightField}>
                   <TextInput
-                    style={styles.healthInput}
+                    style={[styles.healthInput, { backgroundColor: t.inputBg, borderColor: t.inputBorder, color: t.text }]}
                     value={heightFeet}
                     onChangeText={setHeightFeet}
                     placeholder="Feet"
-                    placeholderTextColor="#6b7280"
+                    placeholderTextColor={t.placeholder}
                     keyboardType="numeric"
                   />
                 </View>
                 <View style={styles.heightField}>
                   <TextInput
-                    style={styles.healthInput}
+                    style={[styles.healthInput, { backgroundColor: t.inputBg, borderColor: t.inputBorder, color: t.text }]}
                     value={heightInches}
                     onChangeText={setHeightInches}
                     placeholder="Inches"
-                    placeholderTextColor="#6b7280"
+                    placeholderTextColor={t.placeholder}
                     keyboardType="numeric"
                   />
                 </View>
               </View>
 
-              <Text style={styles.groupTitle}>Activity Level</Text>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Activity Level</Text>
               <View style={styles.optionStack}>
                 {ACTIVITY_LEVELS.map((level) => (
                   <OptionCard
@@ -573,8 +631,8 @@ export default function OnboardingScreen() {
                 ))}
               </View>
 
-              <Text style={styles.groupTitle}>Health Conditions</Text>
-              <Text style={styles.groupSubtext}>
+              <Text style={[styles.groupTitle, { color: t.textSecondary }]}>Health Conditions</Text>
+              <Text style={[styles.groupSubtext, { color: t.textSecondary }]}>
                 Select any that apply. This helps personalize safety insights.
               </Text>
               <View style={styles.goalGrid}>
@@ -585,6 +643,7 @@ export default function OnboardingScreen() {
                       key={condition}
                       style={[
                         styles.goalChip,
+                        { borderColor: t.glassBorder, backgroundColor: t.glass },
                         selected && {
                           backgroundColor: 'rgba(59, 130, 246, 0.15)',
                           borderColor: 'rgba(59, 130, 246, 0.5)',
@@ -600,11 +659,12 @@ export default function OnboardingScreen() {
                             : 'medkit-outline'
                         }
                         size={18}
-                        color={selected ? '#3B82F6' : '#9ca3af'}
+                        color={selected ? '#3B82F6' : t.textSecondary}
                       />
                       <Text
                         style={[
                           styles.goalChipText,
+                          { color: t.textSecondary },
                           selected && { color: '#3B82F6' },
                         ]}
                       >
@@ -621,21 +681,134 @@ export default function OnboardingScreen() {
               style={styles.skipButton}
               activeOpacity={0.7}
             >
-              <Text style={styles.skipText}>Skip for now</Text>
+              <Text style={[styles.skipText, { color: t.textMuted }]}>Skip for now</Text>
             </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Step 6: Create Account */}
+        {step === 6 && (
+          <View style={styles.section}>
+            <GlassCard variant="glow" style={styles.card}>
+              <Text style={[styles.cardTitle, { color: t.text }]}>Create Your Account</Text>
+              <Text style={[styles.cardSubtitle, { color: t.textSecondary }]}>Your data stays private and encrypted on your device.</Text>
+
+              <TextInput
+                style={[styles.accountInput, { backgroundColor: t.inputBg, borderColor: t.inputBorder, color: t.text }]}
+                placeholder="Full name"
+                placeholderTextColor={t.placeholder}
+                value={accountName}
+                onChangeText={setAccountName}
+                autoCapitalize="words"
+              />
+              <TextInput
+                style={[styles.accountInput, { backgroundColor: t.inputBg, borderColor: t.inputBorder, color: t.text }]}
+                placeholder="Email address"
+                placeholderTextColor={t.placeholder}
+                value={accountEmail}
+                onChangeText={(txt) => { setAccountEmail(txt); setAccountError(''); }}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              <View style={styles.passwordRow}>
+                <TextInput
+                  style={[styles.accountInput, { flex: 1, marginBottom: 0, backgroundColor: t.inputBg, borderColor: t.inputBorder, color: t.text }]}
+                  placeholder="Password (min 6 characters)"
+                  placeholderTextColor={t.placeholder}
+                  value={accountPassword}
+                  onChangeText={setAccountPassword}
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity onPress={() => setShowPassword((v) => !v)} style={styles.eyeBtn}>
+                  <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#9ca3af" />
+                </TouchableOpacity>
+              </View>
+              {accountError ? <Text style={styles.errorText}>{accountError}</Text> : null}
+            </GlassCard>
+
+            <GlassCard style={{ marginTop: 12 }}>
+              <View style={styles.privacyRow}>
+                <Ionicons name="lock-closed" size={16} color="#3B82F6" />
+                <Text style={[styles.privacyText, { color: t.textMuted }]}>End-to-end encrypted · Never sold · Delete anytime</Text>
+              </View>
+            </GlassCard>
+
+            <TouchableOpacity
+              style={styles.loginLink}
+              onPress={() => {
+                completeOnboarding();
+                router.replace('/(tabs)');
+                setTimeout(() => router.push('/(tabs)/profile'), 100);
+              }}
+            >
+              <Ionicons name="log-in-outline" size={18} color="#3B82F6" />
+              <Text style={styles.loginLinkText}>Already have an account? Sign In</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Step 7: Choose Your Plan */}
+        {step === 7 && (
+          <View style={styles.section}>
+            <Text style={[styles.planIntro, { color: t.textSecondary }]}>Start free and upgrade anytime.</Text>
+
+            {([
+              { tier: 'free' as const, name: 'Free', price: '$0', color: '#6b7280', badge: '', features: ['Peptide library (55+ peptides)', 'Dosing & reconstitution calculators', 'Calorie & macro tracking', 'Dose logging & calendar', 'Journal & check-ins', 'Learn hub'] },
+              { tier: 'pepe' as const, name: 'Pepe', price: '$9.99/mo', color: '#3B82F6', badge: 'Most Popular', features: ['Everything in Free', 'Unlimited Pepe AI chat', 'Pepe dosing Q&A', 'Pepe health suggestions', 'No ads'] },
+              { tier: 'pepe_plus' as const, name: 'Pepe Plus', price: '$49.99/mo', color: '#8B5CF6', badge: 'Best Value', features: ["Everything in Pepe", "Jamie's workout programs", 'Meals by Pepe', 'Nutrition coaching', 'Pepe builds your weekly plan', 'Grocery lists from meal plans'] },
+              { tier: 'pepe_pro' as const, name: 'Pepe Pro', price: '$99.99/mo', color: '#F59E0B', badge: 'Ultimate', features: ['Everything in Pepe Plus', 'Health device sync (Apple Watch, etc.)', 'AI health planner', 'PDF health reports', 'Priority support'] },
+            ]).map((plan) => (
+              <TouchableOpacity
+                key={plan.tier}
+                onPress={() => setSelectedPlan(plan.tier)}
+                activeOpacity={0.8}
+                style={[styles.planCard, { borderColor: t.glassBorder }, selectedPlan === plan.tier && { borderColor: plan.color, borderWidth: 2 }]}
+              >
+                <LinearGradient
+                  colors={selectedPlan === plan.tier ? [`${plan.color}22`, 'transparent'] : ['transparent', 'transparent']}
+                  style={styles.planCardInner}
+                >
+                  <View style={styles.planHeader}>
+                    <View>
+                      <Text style={[styles.planName, { color: plan.color }]}>{plan.name}</Text>
+                      <Text style={[styles.planPrice, { color: t.textSecondary }]}>{plan.price}</Text>
+                    </View>
+                    <View style={styles.planRight}>
+                      {plan.badge && (
+                        <View style={[styles.planBadge, { backgroundColor: plan.color }]}>
+                          <Text style={styles.planBadgeText}>{plan.badge}</Text>
+                        </View>
+                      )}
+                      <View style={[styles.planRadio, { borderColor: t.glassBorder }, selectedPlan === plan.tier && { borderColor: plan.color, backgroundColor: plan.color }]}>
+                        {selectedPlan === plan.tier && <Ionicons name="checkmark" size={14} color="#fff" />}
+                      </View>
+                    </View>
+                  </View>
+                  {plan.features.map((f) => (
+                    <View key={f} style={styles.planFeatureRow}>
+                      <Ionicons name="checkmark-circle" size={14} color={plan.color} />
+                      <Text style={[styles.planFeatureText, { color: t.textSecondary }]}>{f}</Text>
+                    </View>
+                  ))}
+                </LinearGradient>
+              </TouchableOpacity>
+            ))}
+
+            <Text style={[styles.planFooter, { color: t.textMuted }]}>Cancel anytime. No commitment required.</Text>
           </View>
         )}
 
         <View style={styles.navRow}>
           <TouchableOpacity
-            style={[styles.navButton, styles.backButton]}
+            style={[styles.navButton, styles.backButton, { borderColor: t.glassBorder }]}
             onPress={handleBack}
             disabled={step === 0}
           >
-            <Text style={styles.backText}>Back</Text>
+            <Text style={[styles.backText, { color: t.textSecondary }]}>Back</Text>
           </TouchableOpacity>
           <GradientButton
-            label={step === 5 ? "Let's Go!" : 'Next'}
+            label={isEditMode && step === 5 ? 'Save Changes' : step === 6 ? 'Create Account' : step === 7 ? "Let's Go!" : 'Next'}
             onPress={handleNext}
             disabled={!canContinue}
             style={styles.navButton}
@@ -886,4 +1059,60 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline' as const,
   },
 
+  // Step 6 — Account creation
+  cardSubtitle: { fontSize: 13, color: '#9ca3af', marginBottom: 16 },
+  accountInput: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    paddingHorizontal: 14,
+    height: 48,
+    fontSize: 15,
+    color: '#f7f2ec',
+    marginBottom: 12,
+  },
+  passwordRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8, marginBottom: 12 },
+  eyeBtn: { padding: 8 },
+  errorText: { fontSize: 13, color: '#ef4444', marginTop: -6, marginBottom: 8 },
+  privacyRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 },
+  privacyText: { fontSize: 12, color: '#6b7280', flex: 1 },
+  loginLink: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: 8,
+    paddingVertical: 16,
+    marginTop: 8,
+  },
+  loginLinkText: {
+    fontSize: 15,
+    fontWeight: '600' as const,
+    color: '#3B82F6',
+  },
+
+  // Step 7 — Plan selection
+  planIntro: { fontSize: 14, color: '#9ca3af', textAlign: 'center' as const, marginBottom: 12 },
+  planCard: {
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    marginBottom: 10,
+    overflow: 'hidden' as const,
+  },
+  planCardInner: { padding: 16 },
+  planHeader: { flexDirection: 'row' as const, justifyContent: 'space-between' as const, alignItems: 'flex-start' as const, marginBottom: 10 },
+  planName: { fontSize: 18, fontWeight: '800' },
+  planPrice: { fontSize: 13, color: '#9ca3af', marginTop: 2 },
+  planRight: { alignItems: 'flex-end' as const, gap: 6 },
+  planBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
+  planBadgeText: { fontSize: 10, fontWeight: '700', color: '#fff', letterSpacing: 0.5 },
+  planRadio: {
+    width: 22, height: 22, borderRadius: 11,
+    borderWidth: 2, borderColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center' as const, justifyContent: 'center' as const,
+  },
+  planFeatureRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8, marginBottom: 4 },
+  planFeatureText: { fontSize: 13, color: '#d1d5db', flex: 1 },
+  planFooter: { fontSize: 12, color: '#6b7280', textAlign: 'center' as const, marginTop: 8 },
 });

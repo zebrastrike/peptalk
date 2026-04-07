@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { selectionTick } from '../../src/utils/haptics';
+import { useTheme } from '../../src/hooks/useTheme';
 
 type TabIconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -46,13 +47,17 @@ const TAB_CONFIG: TabConfig[] = [
 ];
 
 export default function TabsLayout() {
+  const t = useTheme();
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#14b8a6',
-        tabBarInactiveTintColor: '#6b7280',
-        tabBarStyle: styles.tabBar,
+        tabBarInactiveTintColor: t.textSecondary,
+        tabBarStyle: [styles.tabBar, {
+          backgroundColor: t.tabBar,
+          borderTopColor: t.glassBorder,
+        }],
         tabBarLabelStyle: styles.tabBarLabel,
       }}
     >

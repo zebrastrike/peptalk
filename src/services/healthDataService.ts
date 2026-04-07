@@ -16,7 +16,21 @@ import {
   fetchLatestHeartRate as hkHeartRate,
   fetchLastNightSleep as hkSleep,
   syncHealthDataToCheckIn as hkSync,
+  // Phase 2 — Apple Watch metrics
+  fetchLatestHRV as hkHRV,
+  fetchLatestVO2Max as hkVO2,
+  fetchLatestSpO2 as hkSpO2,
+  fetchLatestRespiratoryRate as hkRespRate,
+  fetchLatestRestingHeartRate as hkRestingHR,
+  fetchTodayActiveEnergy as hkActiveEnergy,
+  fetchSleepStages as hkSleepStages,
+  syncAllWatchData as hkSyncAll,
+  // Phase 3 — Background observers
+  enableBackgroundObservers as hkEnableObservers,
+  disableBackgroundObservers as hkDisableObservers,
 } from './healthKitService';
+
+import type { SleepStages, WatchHealthData } from './healthKitService';
 
 import {
   isHealthConnectAvailable,
@@ -29,8 +43,10 @@ import {
 } from './healthConnectService';
 
 // ---------------------------------------------------------------------------
-// Public types
+// Re-exported types
 // ---------------------------------------------------------------------------
+
+export type { SleepStages, WatchHealthData };
 
 export interface HealthCheckInData {
   steps?: number;
@@ -48,6 +64,15 @@ export interface HealthMetrics {
   fetchedAt: string;
 }
 
+export interface WatchMetrics extends HealthMetrics {
+  hrvMs: number | null;
+  vo2Max: number | null;
+  spo2: number | null;
+  respiratoryRate: number | null;
+  activeCalories: number | null;
+  sleepStages: SleepStages | null;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -58,18 +83,10 @@ const isIOS = Platform.OS === 'ios';
 // Availability
 // ---------------------------------------------------------------------------
 
-/**
- * Returns `true` if health data integration is available on the current
- * platform (HealthKit on iOS, Health Connect on Android).
- */
 export function isHealthDataAvailable(): boolean {
   return isIOS ? isHealthKitAvailable() : isHealthConnectAvailable();
 }
 
-/**
- * Returns a human-readable label for the health data source on the current
- * platform (e.g. "Apple Health" or "Health Connect").
- */
 export function getHealthSourceLabel(): string {
   return isIOS ? 'Apple Health' : 'Health Connect';
 }
@@ -78,11 +95,6 @@ export function getHealthSourceLabel(): string {
 // Permissions
 // ---------------------------------------------------------------------------
 
-/**
- * Request read permissions for the health metrics PepTalk uses.
- *
- * @returns `true` if permissions were granted.
- */
 export async function requestHealthPermissions(): Promise<boolean> {
   return isIOS
     ? requestHealthKitPermissions()
@@ -90,12 +102,9 @@ export async function requestHealthPermissions(): Promise<boolean> {
 }
 
 // ---------------------------------------------------------------------------
-// Data fetching
+// Data fetching — basic
 // ---------------------------------------------------------------------------
 
-/**
- * Fetch all available health metrics and return them in a unified shape.
- */
 export async function getHealthMetrics(): Promise<HealthMetrics> {
   const [steps, weightLbs, restingHeartRate, sleepHours] = await Promise.all([
     isIOS ? hkSteps() : hcSteps(),
@@ -114,13 +123,81 @@ export async function getHealthMetrics(): Promise<HealthMetrics> {
 }
 
 // ---------------------------------------------------------------------------
-// Check-in sync
+// Data fetching — extended Watch metrics
+// ---------------------------------------------------------------------------
+
+export async function getWatchMetrics(): Promise<WatchMetrics> {
+  if (!isIOS) {
+    // Android Health Connect doesn't support Watch-specific metrics yet
+    const basic = await getHealthMetrics();
+    return {
+      ...basic,
+      hrvMs: null,
+      vo2Max: null,
+      spo2: null,
+      respiratoryRate: null,
+      activeCalories: null,
+      sleepStages: null,
+    };
+  }
+
+  const [
+    steps, weightLbs, restingHeartRate, sleepHours,
+    hrvMs, vo2Max, spo2, respiratoryRate, restingHR, activeCalories, sleepStages,
+  ] = await Promise.all([
+    hkSteps(), hkWeight(), hkHeartRate(), hkSleep(),
+    hkHRV(), hkVO2(), hkSpO2(), hkRespRate(), hkRestingHR(), hkActiveEnergy(), hkSleepStages(),
+  ]);
+
+  return {
+    steps,
+    weightLbs,
+    restingHeartRate: restingHR ?? restingHeartRate,
+    sleepHours,
+    hrvMs,
+    vo2Max,
+    spo2,
+    respiratoryRate,
+    activeCalories,
+    sleepStages,
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Check-in sync — basic
+// ---------------------------------------------------------------------------
+
+export async function syncToCheckIn(): Promise<HealthCheckInData> {
+  return isIOS ? hkSync() : hcSync();
+}
+
+// ---------------------------------------------------------------------------
+// Check-in sync — full Watch data
+// ---------------------------------------------------------------------------
+
+export async function syncAllWatchToCheckIn(): Promise<WatchHealthData> {
+  if (!isIOS) {
+    // Fallback: return basic data on Android
+    return hcSync();
+  }
+  return hkSyncAll();
+}
+
+// ---------------------------------------------------------------------------
+// Background observers
 // ---------------------------------------------------------------------------
 
 /**
- * Fetch health metrics and return them in a shape compatible with the
- * check-in store's `saveCheckIn` payload.
+ * Enable background observers for HealthKit data changes.
+ * When the Apple Watch syncs new data, the callback fires.
+ * Returns an unsubscribe function.
  */
-export async function syncToCheckIn(): Promise<HealthCheckInData> {
-  return isIOS ? hkSync() : hcSync();
+export function enableHealthObservers(onUpdate: () => void): () => void {
+  if (!isIOS) return () => {};
+  return hkEnableObservers(onUpdate);
+}
+
+export function disableHealthObservers(): void {
+  if (isIOS) hkDisableObservers();
 }

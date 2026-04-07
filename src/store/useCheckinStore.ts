@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { CheckInEntry, CheckInRating, EmotionTag, PeptideEffect } from '../types';
+import { CheckInEntry, CheckInRating, EmotionTag, PeptideEffect, SleepStageData } from '../types';
 import { secureStorage } from '../services/secureStorage';
 
 const toDateKey = (date: Date) => {
@@ -27,6 +27,13 @@ interface CheckInInput {
   weightLbs?: number;
   restingHeartRate?: number;
   steps?: number;
+  // Apple Watch metrics
+  hrvMs?: number;
+  vo2Max?: number;
+  spo2?: number;
+  respiratoryRate?: number;
+  activeCalories?: number;
+  sleepStages?: SleepStageData;
   notes?: string;
   emotionTags?: EmotionTag[];
   overallFeeling?: string;
@@ -66,6 +73,12 @@ export const useCheckinStore = create<CheckinStore>()(
           weightLbs: entry.weightLbs,
           restingHeartRate: entry.restingHeartRate,
           steps: entry.steps,
+          hrvMs: entry.hrvMs,
+          vo2Max: entry.vo2Max,
+          spo2: entry.spo2,
+          respiratoryRate: entry.respiratoryRate,
+          activeCalories: entry.activeCalories,
+          sleepStages: entry.sleepStages,
           notes: entry.notes?.trim() || undefined,
           emotionTags: entry.emotionTags?.length ? entry.emotionTags : undefined,
           overallFeeling: entry.overallFeeling?.trim() || undefined,

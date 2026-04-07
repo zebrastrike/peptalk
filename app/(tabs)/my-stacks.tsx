@@ -15,6 +15,7 @@ import { getPeptideById } from '../../src/data/peptides';
 import { GlassCard } from '../../src/components/GlassCard';
 import { getCategoryColor } from '../../src/constants/categories';
 import { PeptideStack, PeptideCategory, GoalType } from '../../src/types';
+import { useTheme } from '../../src/hooks/useTheme';
 
 const GOAL_FILTERS: { id: GoalType; label: string; icon: string }[] = [
   { id: 'weight_loss', label: 'Weight Loss', icon: 'flame-outline' },
@@ -54,6 +55,7 @@ interface StackCardProps {
 }
 
 const StackCard: React.FC<StackCardProps> = ({ stack, onLoad, onDelete }) => {
+  const t = useTheme();
   const peptideNames = stack.peptideIds
     .map((id) => getPeptideById(id)?.name ?? id)
     .join(', ');
@@ -88,7 +90,7 @@ const StackCard: React.FC<StackCardProps> = ({ stack, onLoad, onDelete }) => {
     >
       <View style={styles.stackHeader}>
         <View style={styles.stackTitleRow}>
-          <Text style={styles.stackName}>{stack.name}</Text>
+          <Text style={[styles.stackName, { color: t.text }]}>{stack.name}</Text>
           {stack.isCurated && (
             <View style={styles.curatedBadge}>
               <Ionicons name="star" size={10} color="#e3a7a1" />
@@ -101,14 +103,14 @@ const StackCard: React.FC<StackCardProps> = ({ stack, onLoad, onDelete }) => {
             onPress={handleDelete}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="trash-outline" size={18} color="#9ca3af" />
+            <Ionicons name="trash-outline" size={18} color={t.textSecondary} />
           </TouchableOpacity>
         )}
       </View>
 
       {/* Meta row: peptide count + evidence level */}
       <View style={styles.metaRow}>
-        <Text style={styles.peptideCount}>
+        <Text style={[styles.peptideCount, { color: t.textSecondary }]}>
           {stack.peptideIds.length} peptides
         </Text>
         {evidence && (
@@ -121,15 +123,15 @@ const StackCard: React.FC<StackCardProps> = ({ stack, onLoad, onDelete }) => {
       </View>
 
       {stack.curatedBy && (
-        <Text style={styles.curatedBy}>By {stack.curatedBy}</Text>
+        <Text style={[styles.curatedBy, { color: t.textSecondary }]}>By {stack.curatedBy}</Text>
       )}
 
-      <Text style={styles.peptideList} numberOfLines={2}>
+      <Text style={[styles.peptideList, { color: t.tint }]} numberOfLines={2}>
         {peptideNames}
       </Text>
 
       {stack.description && (
-        <Text style={styles.stackDescription} numberOfLines={3}>
+        <Text style={[styles.stackDescription, { color: t.textSecondary }]} numberOfLines={3}>
           {stack.description}
         </Text>
       )}
@@ -139,7 +141,7 @@ const StackCard: React.FC<StackCardProps> = ({ stack, onLoad, onDelete }) => {
         <View style={styles.goalsRow}>
           {stack.targetGoals.map((goal) => (
             <View key={goal} style={styles.goalPill}>
-              <Text style={styles.goalPillText}>{getGoalLabel(goal)}</Text>
+              <Text style={[styles.goalPillText, { color: t.isDark ? '#b9cbb6' : '#3d6b35' }]}>{getGoalLabel(goal)}</Text>
             </View>
           ))}
         </View>
@@ -167,25 +169,26 @@ const StackCard: React.FC<StackCardProps> = ({ stack, onLoad, onDelete }) => {
             </View>
           ))}
           {categories.length > 4 && (
-            <Text style={styles.moreCats}>+{categories.length - 4}</Text>
+            <Text style={[styles.moreCats, { color: t.textSecondary }]}>+{categories.length - 4}</Text>
           )}
         </View>
       )}
 
       {/* Load Button */}
       <TouchableOpacity
-        style={styles.loadButton}
+        style={[styles.loadButton, { borderColor: t.isDark ? 'rgba(199, 215, 230, 0.25)' : 'rgba(75, 106, 138, 0.3)' }]}
         onPress={onLoad}
         activeOpacity={0.7}
       >
-        <Ionicons name="open-outline" size={16} color="#c7d7e6" />
-        <Text style={styles.loadButtonText}>Load in Stack Builder</Text>
+        <Ionicons name="open-outline" size={16} color={t.tint} />
+        <Text style={[styles.loadButtonText, { color: t.tint }]}>Load in Stack Builder</Text>
       </TouchableOpacity>
     </GlassCard>
   );
 };
 
 export default function MyStacksScreen() {
+  const t = useTheme();
   const router = useRouter();
   const { savedStacks, loadStack, deleteStack } = useStackStore();
   const [selectedGoal, setSelectedGoal] = useState<GoalType | null>(null);
@@ -209,7 +212,7 @@ export default function MyStacksScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -217,8 +220,8 @@ export default function MyStacksScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Explore Stacks</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: t.text }]}>Explore Stacks</Text>
+          <Text style={[styles.subtitle, { color: t.textSecondary }]}>
             Browse curated research stacks or load your saved combinations
           </Text>
         </View>
@@ -233,6 +236,7 @@ export default function MyStacksScreen() {
           <TouchableOpacity
             style={[
               styles.filterChip,
+              { backgroundColor: t.glass, borderColor: t.glassBorder },
               !selectedGoal && styles.filterChipActive,
             ]}
             onPress={() => setSelectedGoal(null)}
@@ -241,6 +245,7 @@ export default function MyStacksScreen() {
             <Text
               style={[
                 styles.filterChipText,
+                { color: t.textSecondary },
                 !selectedGoal && styles.filterChipTextActive,
               ]}
             >
@@ -252,6 +257,7 @@ export default function MyStacksScreen() {
               key={goal.id}
               style={[
                 styles.filterChip,
+                { backgroundColor: t.glass, borderColor: t.glassBorder },
                 selectedGoal === goal.id && styles.filterChipActive,
               ]}
               onPress={() =>
@@ -262,11 +268,12 @@ export default function MyStacksScreen() {
               <Ionicons
                 name={goal.icon as any}
                 size={14}
-                color={selectedGoal === goal.id ? '#e3a7a1' : '#9ca3af'}
+                color={selectedGoal === goal.id ? '#e3a7a1' : t.textSecondary}
               />
               <Text
                 style={[
                   styles.filterChipText,
+                  { color: t.textSecondary },
                   selectedGoal === goal.id && styles.filterChipTextActive,
                 ]}
               >
@@ -281,10 +288,10 @@ export default function MyStacksScreen() {
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Ionicons name="star-outline" size={18} color="#e3a7a1" />
-              <Text style={styles.sectionTitle}>
+              <Text style={[styles.sectionTitle, { color: t.text }]}>
                 {selectedGoal ? `${getGoalLabel(selectedGoal)} Stacks` : 'Featured Stacks'}
               </Text>
-              <Text style={styles.sectionCount}>{curatedStacks.length}</Text>
+              <Text style={[styles.sectionCount, { color: t.textSecondary, backgroundColor: t.glass }]}>{curatedStacks.length}</Text>
             </View>
             {curatedStacks.map((stack) => (
               <StackCard
@@ -299,10 +306,10 @@ export default function MyStacksScreen() {
         {selectedGoal && curatedStacks.length === 0 && (
           <GlassCard style={styles.noResultsCard}>
             <Ionicons name="search-outline" size={32} color="#4b5563" />
-            <Text style={styles.noResultsText}>
+            <Text style={[styles.noResultsText, { color: t.text }]}>
               No curated stacks for "{getGoalLabel(selectedGoal)}" yet
             </Text>
-            <Text style={styles.noResultsSub}>
+            <Text style={[styles.noResultsSub, { color: t.textSecondary }]}>
               Try a different filter or build your own in the Stack Builder
             </Text>
           </GlassCard>
@@ -311,8 +318,8 @@ export default function MyStacksScreen() {
         {/* User Stacks */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="bookmark-outline" size={18} color="#c7d7e6" />
-            <Text style={styles.sectionTitle}>Your Stacks</Text>
+            <Ionicons name="bookmark-outline" size={18} color={t.tint} />
+            <Text style={[styles.sectionTitle, { color: t.text }]}>Your Stacks</Text>
           </View>
           {userStacks.length > 0 ? (
             userStacks.map((stack) => (
@@ -326,8 +333,8 @@ export default function MyStacksScreen() {
           ) : (
             <GlassCard style={styles.emptyCard}>
               <Ionicons name="layers-outline" size={40} color="#4b5563" />
-              <Text style={styles.emptyTitle}>No saved stacks yet</Text>
-              <Text style={styles.emptySubtitle}>
+              <Text style={[styles.emptyTitle, { color: t.text }]}>No saved stacks yet</Text>
+              <Text style={[styles.emptySubtitle, { color: t.textSecondary }]}>
                 Build a stack in the Stack Builder tab and save it here for
                 future reference.
               </Text>
@@ -623,6 +630,6 @@ const styles = StyleSheet.create({
   goToBuilderText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0f1720',
+    color: '#1a1a1a',
   },
 });

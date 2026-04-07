@@ -8,7 +8,6 @@ interface AuthStore {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  hasHydrated: boolean;
 
   // ── Actions ────────────────────────────────────────────────────────────
   login: (email: string, password: string) => Promise<void>;
@@ -25,7 +24,6 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       isAuthenticated: false,
       isLoading: false,
-      hasHydrated: false,
 
       // ── Actions ──────────────────────────────────────────────────────────
 
@@ -36,34 +34,37 @@ export const useAuthStore = create<AuthStore>()(
           await new Promise((resolve) => setTimeout(resolve, 800));
 
           // Test credentials — auto-set subscription tier
-          const TEST_ACCOUNTS: Record<string, { name: string; pw: string; tier: 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro' }> = {
-            'test@peptalk.com':      { name: 'PepTalk Tester',  pw: 'Pt3st!xK9m2v', tier: 'free' },
-            'testpepe@peptalk.com':  { name: 'Pepe Tester',     pw: 'Pp7kL#nR4w8j', tier: 'pepe' },
-            'testplus@peptalk.com':  { name: 'Plus Tester',     pw: 'Px5qM$bT2y6h', tier: 'pepe_plus' },
-            'testpro@peptalk.com':   { name: 'Pro Tester',      pw: 'Pr9sN&dW3z1f', tier: 'pepe_pro' },
-            'jamie@peptalk.com':     { name: 'Jamie',           pw: 'Jm4vQ!cE8u7a', tier: 'pepe_pro' },
+          const TEST_ACCOUNTS: Record<string, { name: string; tier: 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro' }> = {
+            'free@test.com':      { name: 'Free Tester',     tier: 'free' },
+            'pepe@test.com':      { name: 'Pepe Tester',     tier: 'pepe' },
+            'plus@test.com':      { name: 'Plus Tester',     tier: 'pepe_plus' },
+            'pro@test.com':       { name: 'Pro Tester',      tier: 'pepe_pro' },
+            'jamie@test.com':     { name: 'Jamie',           tier: 'pepe_pro' },
+            // Demographic test accounts
+            'jake@test.com':      { name: 'Jake',            tier: 'pepe_pro' },
+            'sophia@test.com':    { name: 'Sophia',          tier: 'pepe_plus' },
+            'marcus@test.com':    { name: 'Marcus',          tier: 'pepe_pro' },
+            'sarah@test.com':     { name: 'Sarah',           tier: 'pepe_plus' },
+            'richard@test.com':   { name: 'Richard',         tier: 'pepe_pro' },
+            'diana@test.com':     { name: 'Diana',           tier: 'pepe_pro' },
+            'walter@test.com':    { name: 'Walter',          tier: 'free' },
+            'margaret@test.com':  { name: 'Margaret',        tier: 'free' },
           };
 
           const testMatch = TEST_ACCOUNTS[_email.toLowerCase()];
-
-          // For test accounts, validate password; for all others, accept anything (stub)
-          if (testMatch && _password !== testMatch.pw) {
-            set({ isLoading: false });
-            throw new Error('Invalid credentials');
-          }
-
           if (testMatch) {
             const { useSubscriptionStore } = require('./useSubscriptionStore');
             useSubscriptionStore.getState().setTier(testMatch.tier);
           }
 
+          const tier = testMatch?.tier ?? 'free';
           const dummyUser: User = {
             id: `user-${Date.now()}`,
             email: _email,
             name: testMatch?.name ?? _email.split('@')[0],
             savedStacks: [],
             favoritePeptides: [],
-            isPro: false,
+            isPro: tier === 'pepe_pro' || tier === 'pepe_plus',
             createdAt: new Date().toISOString(),
           };
 
@@ -71,7 +72,6 @@ export const useAuthStore = create<AuthStore>()(
         } catch (error) {
           console.error('[useAuthStore] Login failed:', error);
           set({ isLoading: false });
-          throw error;
         }
       },
 
@@ -79,7 +79,6 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true });
         try {
           await new Promise((resolve) => setTimeout(resolve, 800));
-
           const dummyUser: User = {
             id: `user-${Date.now()}`,
             email,
@@ -89,7 +88,6 @@ export const useAuthStore = create<AuthStore>()(
             isPro: false,
             createdAt: new Date().toISOString(),
           };
-
           set({ user: dummyUser, isAuthenticated: true, isLoading: false });
         } catch (error) {
           console.error('[useAuthStore] Signup failed:', error);
@@ -99,6 +97,16 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: () => {
+        // Clear all stores so next session starts fresh with onboarding
+        try {
+          const { useOnboardingStore } = require('./useOnboardingStore');
+          const { useHealthProfileStore } = require('./useHealthProfileStore');
+          const { useSubscriptionStore } = require('./useSubscriptionStore');
+          useHealthProfileStore.getState().resetProfile();
+          useSubscriptionStore.getState().setTier('free');
+          useOnboardingStore.getState().reset();
+        } catch {}
+
         set({
           user: null,
           isAuthenticated: false,
@@ -153,7 +161,6 @@ export const useAuthStore = create<AuthStore>()(
         useAuthStore.setState({
           isAuthenticated: Boolean(state.user),
           isLoading: false,
-          hasHydrated: true,
         });
       },
     }

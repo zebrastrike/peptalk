@@ -17,6 +17,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { GlassCard } from '../../src/components/GlassCard';
 import { GradientButton } from '../../src/components/GradientButton';
+import { useTheme } from '../../src/hooks/useTheme';
 import { Colors, Spacing, FontSizes, BorderRadius, Gradients } from '../../src/constants/theme';
 
 const VIAL_PRESETS = [2, 5, 10, 15, 30];
@@ -24,6 +25,7 @@ const WATER_PRESETS = [1, 2, 3, 5];
 
 export default function ReconstitutionCalculatorScreen() {
   const router = useRouter();
+  const t = useTheme();
 
   const [vialSize, setVialSize] = useState('');
   const [waterVolume, setWaterVolume] = useState('');
@@ -55,12 +57,12 @@ export default function ReconstitutionCalculatorScreen() {
   }, [canCalculate, showResults, volumeToInject]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={Colors.darkText} />
+          <Ionicons name="chevron-back" size={24} color={t.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Reconstitution</Text>
+        <Text style={[styles.headerTitle, { color: t.text }]}>Reconstitution</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -71,13 +73,13 @@ export default function ReconstitutionCalculatorScreen() {
       >
         {/* Vial Size */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Peptide Vial Size</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Peptide Vial Size</Text>
           <GlassCard>
             <View style={styles.row}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: t.inputBg, color: t.text }]}
                 placeholder="Vial size"
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.placeholder}
                 keyboardType="numeric"
                 value={vialSize}
                 onChangeText={(v) => {
@@ -85,7 +87,7 @@ export default function ReconstitutionCalculatorScreen() {
                   setShowResults(false);
                 }}
               />
-              <Text style={styles.unitLabel}>mg</Text>
+              <Text style={[styles.unitLabel, { color: t.textSecondary }]}>mg</Text>
             </View>
             <View style={styles.presetRow}>
               {VIAL_PRESETS.map((v) => (
@@ -93,6 +95,7 @@ export default function ReconstitutionCalculatorScreen() {
                   key={v}
                   style={[
                     styles.presetBtn,
+                    { backgroundColor: t.glass },
                     vialSize === String(v) && styles.presetBtnActive,
                   ]}
                   onPress={() => {
@@ -103,6 +106,7 @@ export default function ReconstitutionCalculatorScreen() {
                   <Text
                     style={[
                       styles.presetBtnText,
+                      { color: t.textSecondary },
                       vialSize === String(v) && styles.presetBtnTextActive,
                     ]}
                   >
@@ -116,13 +120,13 @@ export default function ReconstitutionCalculatorScreen() {
 
         {/* BAC Water Volume */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>BAC Water Volume</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>BAC Water Volume</Text>
           <GlassCard>
             <View style={styles.row}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: t.inputBg, color: t.text }]}
                 placeholder="Water volume"
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.placeholder}
                 keyboardType="numeric"
                 value={waterVolume}
                 onChangeText={(v) => {
@@ -130,7 +134,7 @@ export default function ReconstitutionCalculatorScreen() {
                   setShowResults(false);
                 }}
               />
-              <Text style={styles.unitLabel}>mL</Text>
+              <Text style={[styles.unitLabel, { color: t.textSecondary }]}>mL</Text>
             </View>
             <View style={styles.presetRow}>
               {WATER_PRESETS.map((v) => (
@@ -138,6 +142,7 @@ export default function ReconstitutionCalculatorScreen() {
                   key={v}
                   style={[
                     styles.presetBtn,
+                    { backgroundColor: t.glass },
                     waterVolume === String(v) && styles.presetBtnActive,
                   ]}
                   onPress={() => {
@@ -148,6 +153,7 @@ export default function ReconstitutionCalculatorScreen() {
                   <Text
                     style={[
                       styles.presetBtnText,
+                      { color: t.textSecondary },
                       waterVolume === String(v) && styles.presetBtnTextActive,
                     ]}
                   >
@@ -161,13 +167,13 @@ export default function ReconstitutionCalculatorScreen() {
 
         {/* Desired Dose */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Desired Dose Per Injection</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Desired Dose Per Injection</Text>
           <GlassCard>
             <View style={styles.row}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: t.inputBg, color: t.text }]}
                 placeholder="Desired dose"
-                placeholderTextColor={Colors.darkTextSecondary}
+                placeholderTextColor={t.placeholder}
                 keyboardType="numeric"
                 value={desiredDose}
                 onChangeText={(v) => {
@@ -175,7 +181,7 @@ export default function ReconstitutionCalculatorScreen() {
                   setShowResults(false);
                 }}
               />
-              <Text style={styles.unitLabel}>mcg</Text>
+              <Text style={[styles.unitLabel, { color: t.textSecondary }]}>mcg</Text>
             </View>
           </GlassCard>
         </View>
@@ -184,11 +190,11 @@ export default function ReconstitutionCalculatorScreen() {
         {vialMg > 0 && waterMl > 0 && (
           <View style={styles.section}>
             <GlassCard variant="gradient">
-              <Text style={styles.previewLabel}>Concentration</Text>
+              <Text style={[styles.previewLabel, { color: t.textSecondary }]}>Concentration</Text>
               <Text style={styles.previewValue}>
                 {concentrationPerTick.toFixed(1)} mcg per 0.1mL (tick)
               </Text>
-              <Text style={styles.previewSub}>
+              <Text style={[styles.previewSub, { color: t.textSecondary }]}>
                 {(vialMcg / waterMl).toFixed(0)} mcg per 1mL total
               </Text>
             </GlassCard>
@@ -208,7 +214,7 @@ export default function ReconstitutionCalculatorScreen() {
         {showResults && canCalculate && (
           <>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Results</Text>
+              <Text style={[styles.sectionTitle, { color: t.text }]}>Results</Text>
               <GlassCard variant="glow">
                 <ResultRow
                   label="Concentration"
@@ -236,11 +242,11 @@ export default function ReconstitutionCalculatorScreen() {
 
             {/* Syringe Diagram */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Syringe Diagram (1mL)</Text>
+              <Text style={[styles.sectionTitle, { color: t.text }]}>Syringe Diagram (1mL)</Text>
               <GlassCard>
                 <View style={styles.syringeContainer}>
                   {/* Syringe barrel */}
-                  <View style={styles.syringeBarrel}>
+                  <View style={[styles.syringeBarrel, { backgroundColor: t.isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', borderColor: t.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)' }]}>
                     {/* Tick marks */}
                     {Array.from({ length: 11 }, (_, i) => {
                       const pct = (i / 10) * 100;
@@ -279,7 +285,7 @@ export default function ReconstitutionCalculatorScreen() {
                     )}
                   </View>
                   {/* Needle tip */}
-                  <View style={styles.needleTip} />
+                  <View style={[styles.needleTip, { backgroundColor: t.isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }]} />
                 </View>
               </GlassCard>
             </View>
@@ -291,7 +297,7 @@ export default function ReconstitutionCalculatorScreen() {
                   <Ionicons name="snow-outline" size={22} color={Colors.rose} />
                   <View style={styles.storageContent}>
                     <Text style={styles.storageTitle}>Storage Reminder</Text>
-                    <Text style={styles.storageText}>
+                    <Text style={[styles.storageText, { color: t.textSecondary }]}>
                       Refrigerate reconstituted peptide at 2-8{'\u00B0'}C (36-46{'\u00B0'}F).
                       {'\n'}Use within 28-30 days of reconstitution.
                       {'\n'}Do not freeze reconstituted solution.
@@ -306,8 +312,8 @@ export default function ReconstitutionCalculatorScreen() {
 
         {/* Disclaimer */}
         <View style={styles.disclaimerBox}>
-          <Ionicons name="information-circle-outline" size={16} color={Colors.darkTextSecondary} />
-          <Text style={styles.disclaimerText}>
+          <Ionicons name="information-circle-outline" size={16} color={t.textSecondary} />
+          <Text style={[styles.disclaimerText, { color: t.textSecondary }]}>
             This calculator is for informational purposes only. Always follow your healthcare
             provider's reconstitution and dosing instructions.
           </Text>
@@ -326,10 +332,11 @@ function ResultRow({
   value: string;
   highlight?: boolean;
 }) {
+  const t = useTheme();
   return (
-    <View style={styles.resultRow}>
-      <Text style={styles.resultLabel}>{label}</Text>
-      <Text style={[styles.resultValue, highlight && styles.resultHighlight]}>{value}</Text>
+    <View style={[styles.resultRow, { borderBottomColor: t.glassBorder }]}>
+      <Text style={[styles.resultLabel, { color: t.textSecondary }]}>{label}</Text>
+      <Text style={[styles.resultValue, { color: t.text }, highlight && styles.resultHighlight]}>{value}</Text>
     </View>
   );
 }
