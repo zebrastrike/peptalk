@@ -1,5 +1,5 @@
 /**
- * Exercise Library — searchable list of 3006 exercises.
+ * Exercise Library — 289 exercises curated by Jamie Esposito.
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
@@ -20,7 +20,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../../src/constants/theme';
 import { EXERCISES, searchExercises } from '../../src/data/exercises';
 import { ExerciseVideo } from '../../src/components/ExerciseVideo';
-import { getExerciseDetail } from '../../src/data/exerciseDetails';
 import type { Exercise, MuscleGroup, Equipment } from '../../src/types/fitness';
 
 // ---------------------------------------------------------------------------
@@ -86,7 +85,7 @@ const EQUIPMENT_ICONS: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 function hasVideo(exercise: Exercise): boolean {
-  return !!exercise.videoSource && exercise.videoSource !== 'none';
+  return !!exercise.videoUrl;
 }
 
 function formatEquipment(equipment: Equipment): string {
@@ -171,7 +170,6 @@ function ExerciseDetailModal({
 }) {
   if (!exercise) return null;
 
-  const detail = getExerciseDetail(exercise.id);
   const equipStr = exercise.equipment
     .filter((e) => e !== 'none')
     .map(formatEquipment)
@@ -242,24 +240,21 @@ function ExerciseDetailModal({
               </View>
             </View>
 
-            {/* Description */}
-            {detail?.description ? (
+            {/* Instructions */}
+            {exercise.instructions ? (
               <View style={styles.modalSection}>
-                <Text style={styles.modalSectionTitle}>Description</Text>
-                <Text style={styles.modalDescription}>{detail.description}</Text>
+                <Text style={styles.modalSectionTitle}>Instructions</Text>
+                <Text style={styles.modalDescription}>{exercise.instructions}</Text>
               </View>
             ) : null}
 
-            {/* Video source badge */}
-            {exercise.videoSource && exercise.videoSource !== 'none' && (
-              <View style={styles.modalSection}>
-                <Text style={styles.modalSectionTitle}>Video Source</Text>
-                <Text style={styles.modalDescription}>
-                  {exercise.videoSource === 'youtube' ? 'YouTube' :
-                   exercise.videoSource === 'vimeo' ? 'Vimeo' : 'Custom Upload'}
-                </Text>
-              </View>
-            )}
+            {/* Priority & Location */}
+            <View style={styles.modalSection}>
+              <Text style={styles.modalSectionTitle}>Details</Text>
+              <Text style={styles.modalDescription}>
+                Priority: {exercise.priority} · Location: {exercise.location} · For: {exercise.gender}
+              </Text>
+            </View>
           </ScrollView>
         </View>
       </View>

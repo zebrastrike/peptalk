@@ -1,27 +1,29 @@
 /**
- * Master exercise library — 3,006 exercises from Jamie Esposito's Trainerize archive.
+ * Master exercise library — 289 exercises curated by Jamie Esposito.
  *
- * Backed by auto-generated exerciseIndex.ts (lightweight) and exerciseDetails.ts (lazy).
- * The original inference helpers are preserved for any runtime categorization needs.
+ * Taxonomy: Priority (P1-P4), Level, Location, Gender, Metrics.
+ * Equipment inferred from exercise name at build time.
  */
 
-import type { Exercise, MuscleGroup, Equipment, ExerciseDifficulty } from '../types/fitness';
-import { EXERCISE_INDEX, EXERCISE_INDEX_MAP, TRAINERIZE_ID_MAP } from './exerciseIndex';
-import type { ExerciseIndexEntry } from './exerciseIndex';
-
-// Re-export for convenience
-export { EXERCISE_INDEX, EXERCISE_INDEX_MAP, TRAINERIZE_ID_MAP };
-export type { ExerciseIndexEntry };
+import type {
+  Exercise,
+  MuscleGroup,
+  Equipment,
+  ExerciseDifficulty,
+  ExercisePriority,
+  ExerciseLocation,
+  ExerciseGender,
+  ExerciseMetric,
+  ExerciseTag,
+} from '../types/fitness';
+import rawExercises from './jamieExercises.json';
 
 // ---------------------------------------------------------------------------
-// Inference Helpers (kept for runtime use & new exercises)
+// Inference Helpers
 // ---------------------------------------------------------------------------
 
 const normalize = (name: string): string =>
   name.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
-
-const id = (name: string): string =>
-  normalize(name).replace(/ /g, '-');
 
 /** Infer equipment from exercise name */
 export function inferEquipment(name: string): Equipment[] {
@@ -33,7 +35,7 @@ export function inferEquipment(name: string): Equipment[] {
   if (/\bcable\b/.test(n)) eq.push('cable');
   if (/\bmachine\b|\bleg press\b|\bhack\b|\bpreacher curls machine\b/.test(n)) eq.push('machine');
   if (/\bband\b|\bbanded\b|\bresistance band\b/.test(n)) eq.push('band');
-  if (/\bstability ball\b|\bsb\b|\bball\b/.test(n)) eq.push('stability_ball');
+  if (/\bstability ball\b|\bsb\b/.test(n)) eq.push('stability_ball');
   if (/\bmedicine ball\b|\bmb\b/.test(n)) eq.push('medicine_ball');
   if (/\bbench\b/.test(n)) eq.push('bench');
   if (/\bsmith machine\b|\bsmith\b/.test(n)) eq.push('smith_machine');
@@ -46,67 +48,97 @@ export function inferEquipment(name: string): Equipment[] {
   return eq;
 }
 
-/** Infer primary muscle group from exercise name */
-export function inferMuscle(name: string): MuscleGroup {
-  const n = name.toLowerCase();
-  if (/\bplank\b|\bcrunch\b|\bdead bug\b|\bvaccum\b|\bpike\b|\bwindmill\b|\btable top\b|\bknee raise\b|\bleg raise\b|\bleg lift\b|\bshoulder tap\b|\boblique\b|\bwoodchop\b|\bpelvic\b|\bpallof\b|\bfolding chair\b|\bsuperman\b/.test(n)) return 'core';
-  if (/\bpelvic floor\b/.test(n)) return 'pelvic_floor';
-  if (/\bglute\b|\bhip thrust\b|\bkickback\b|\bfire hydrant\b|\bclam\b|\bdonkey\b|\babduction\b|\badduction\b|\brainbow\b|\bbridge\b/.test(n)) return 'glutes';
-  if (/\bsquat\b|\blunge\b|\bleg press\b|\bhack\b|\bstep up\b|\bpistol\b|\bleg extension\b|\bcalf\b|\bwall sit\b|\bleg curl\b|\bhamstring curl\b|\bjump\b|\bduck walk\b|\bcrab walk\b/.test(n)) return 'quads';
-  if (/\brdl\b|\bdeadlift\b|\bgood morning\b|\bhamstring\b|\brack pull\b/.test(n)) return 'hamstrings';
-  if (/\bchest press\b|\bchest fly\b|\bpush up\b|\bpush-up\b|\bflys?\b|\bnarrow.*press\b|\bincline.*press\b|\bflat.*press\b|\bdecline.*push\b/.test(n)) return 'chest';
-  if (/\brow\b|\bpull ?down\b|\bpullover\b|\blat\b|\bback extension\b|\bhyperextension\b|\bface ?pull\b|\breverse fly\b|\bchin up\b|\brenegade\b/.test(n)) return 'back';
-  if (/\bshoulder press\b|\barnold\b|\blateral raise\b|\bfrontal raise\b|\bupright row\b|\bshrug\b|\breverse deltoid\b|\bshoulder\b|\baround the world\b/.test(n)) return 'shoulders';
-  if (/\bbicep\b|\bcurl\b|\bhammer curl\b/.test(n)) return 'biceps';
-  if (/\btricep\b|\bskull ?crush\b|\bpushdown\b|\bkickback\b|\bdip\b|\boverhead.*extension\b/.test(n)) return 'triceps';
-  if (/\bjump rope\b|\bburpee\b|\bhop\b|\bshuffle\b|\bswing\b/.test(n)) return 'cardio';
-  return 'full_body';
-}
-
-/** Infer difficulty */
-export function inferDifficulty(name: string): ExerciseDifficulty {
-  const n = name.toLowerCase();
-  if (/\bsingle leg\b|\bunilateral\b|\bpistol\b|\bbulgarian\b|\bdeficit\b|\bdrop set\b|\bhanging\b/.test(n)) return 'advanced';
-  if (/\bbarbell\b|\bsmith\b|\bcable\b|\bmachine\b/.test(n)) return 'intermediate';
-  return 'beginner';
-}
-
 export function inferTimeBased(name: string): boolean {
   const n = name.toLowerCase();
   return /\bplank\b|\bvaccum\b|\bwall sit\b|\bisometric\b|\bhold\b/.test(n);
 }
 
 // ---------------------------------------------------------------------------
-// Convert index entry → full Exercise (for backward compatibility)
+// Map spreadsheet muscle names → MuscleGroup type
 // ---------------------------------------------------------------------------
 
-function indexToExercise(entry: ExerciseIndexEntry): Exercise {
-  return {
-    id: entry.id,
-    name: entry.name,
-    normalizedName: entry.normalizedName,
-    primaryMuscle: entry.primaryMuscle,
-    secondaryMuscles: [],
-    equipment: entry.equipment,
-    difficulty: entry.difficulty,
-    isTimeBased: entry.isTimeBased,
-    tags: [],
-    trainerizeId: entry.trainerizeId,
-    videoSource: entry.videoSource,
-    thumbnailUrl: entry.thumbnailUrl ?? undefined,
-  };
+const MUSCLE_MAP: Record<string, MuscleGroup> = {
+  'back': 'back',
+  'biceps': 'biceps',
+  'calves': 'calves',
+  'cardio': 'cardio',
+  'chest': 'chest',
+  'core abdominals': 'core',
+  'glutes': 'glutes',
+  'hamstrings': 'hamstrings',
+  'quadriceps': 'quads',
+  'shoulders': 'shoulders',
+  'trapezius': 'trapezius',
+  'triceps': 'triceps',
+};
+
+const TAG_MAP: Record<string, ExerciseTag> = {
+  'circuit cardio': 'circuit_cardio',
+  'circuit lower': 'circuit_lower',
+  'circuit pull': 'circuit_pull',
+  'circuit push': 'circuit_push',
+  'warm up lower': 'warm_up_lower',
+  'warm up upper': 'warm_up_upper',
+};
+
+function classifyMuscle(raw: string): { muscle: MuscleGroup | null; tag: ExerciseTag | null } {
+  const key = raw.toLowerCase().trim();
+  if (MUSCLE_MAP[key]) return { muscle: MUSCLE_MAP[key], tag: null };
+  if (TAG_MAP[key]) return { muscle: null, tag: TAG_MAP[key] };
+  return { muscle: null, tag: null };
 }
 
 // ---------------------------------------------------------------------------
-// Exported Exercise Library (backward-compatible API)
+// Build Exercise List from JSON
 // ---------------------------------------------------------------------------
 
-// Lazy-initialized — only built when first accessed, not at app startup
+interface RawExercise {
+  id: string;
+  name: string;
+  muscles: string[];
+  priority: string;
+  level: string;
+  location: string;
+  gender: string;
+  metrics: string[];
+}
+
+function buildExercise(raw: RawExercise): Exercise {
+  const muscles: MuscleGroup[] = [];
+  const tags: ExerciseTag[] = [];
+
+  for (const m of raw.muscles) {
+    const { muscle, tag } = classifyMuscle(m);
+    if (muscle) muscles.push(muscle);
+    if (tag) tags.push(tag);
+  }
+
+  const primaryMuscle: MuscleGroup = muscles[0] || 'full_body';
+  const secondaryMuscles = muscles.slice(1);
+
+  return {
+    id: raw.id,
+    name: raw.name,
+    normalizedName: normalize(raw.name),
+    primaryMuscle,
+    secondaryMuscles,
+    tags,
+    equipment: inferEquipment(raw.name),
+    difficulty: (raw.level as ExerciseDifficulty) || 'beginner',
+    isTimeBased: inferTimeBased(raw.name) || raw.metrics.includes('duration'),
+    priority: (raw.priority as ExercisePriority) || 'P2',
+    location: (raw.location as ExerciseLocation) || 'any',
+    gender: (raw.gender as ExerciseGender) || 'anyone',
+    metrics: raw.metrics.map((m) => m.toLowerCase().trim() as ExerciseMetric).filter(Boolean),
+  };
+}
+
+// Lazy-initialized
 let _exercises: Exercise[] | null = null;
 let _exerciseMap: Map<string, Exercise> | null = null;
 
 function getExerciseList(): Exercise[] {
-  if (!_exercises) _exercises = EXERCISE_INDEX.map(indexToExercise);
+  if (!_exercises) _exercises = (rawExercises as RawExercise[]).map(buildExercise);
   return _exercises;
 }
 
@@ -115,6 +147,7 @@ function getExerciseMap(): Map<string, Exercise> {
   return _exerciseMap;
 }
 
+/** Full exercise list (289 exercises) */
 export const EXERCISES: Exercise[] = new Proxy([] as Exercise[], {
   get(_, prop) {
     const list = getExerciseList();
@@ -130,12 +163,16 @@ export const EXERCISES: Exercise[] = new Proxy([] as Exercise[], {
   },
 });
 
+// ---------------------------------------------------------------------------
+// Query Helpers
+// ---------------------------------------------------------------------------
+
 /** Get exercise by ID */
 export function getExerciseById(exerciseId: string): Exercise | undefined {
   return getExerciseMap().get(exerciseId);
 }
 
-/** Search exercises by name fragment */
+/** Search exercises by name, muscle, or equipment */
 export function searchExercises(query: string): Exercise[] {
   const q = query.toLowerCase().trim();
   if (!q) return EXERCISES;
@@ -149,7 +186,9 @@ export function searchExercises(query: string): Exercise[] {
 
 /** Filter by muscle group */
 export function getExercisesByMuscle(muscle: MuscleGroup): Exercise[] {
-  return EXERCISES.filter((e) => e.primaryMuscle === muscle);
+  return EXERCISES.filter(
+    (e) => e.primaryMuscle === muscle || e.secondaryMuscles.includes(muscle),
+  );
 }
 
 /** Filter by equipment */
@@ -157,17 +196,53 @@ export function getExercisesByEquipment(equip: Equipment): Exercise[] {
   return EXERCISES.filter((e) => e.equipment.includes(equip));
 }
 
-/** Get exercises that have video content */
-export function getExercisesWithVideo(): Exercise[] {
-  return EXERCISES.filter((e) => e.videoSource && e.videoSource !== 'none');
+/** Filter by priority level */
+export function getExercisesByPriority(priority: ExercisePriority): Exercise[] {
+  return EXERCISES.filter((e) => e.priority === priority);
 }
 
-/** Get Jamie's custom exercises only */
-export function getCustomExercises(): Exercise[] {
-  const customIds = new Set(
-    EXERCISE_INDEX.filter((e) => e.exerciseType === 'custom').map((e) => e.id),
-  );
-  return EXERCISES.filter((e) => customIds.has(e.id));
+/** Filter by location */
+export function getExercisesByLocation(location: ExerciseLocation): Exercise[] {
+  if (location === 'any') return [...EXERCISES];
+  return EXERCISES.filter((e) => e.location === 'any' || e.location === location);
+}
+
+/** Filter by gender suitability */
+export function getExercisesByGender(gender: ExerciseGender): Exercise[] {
+  if (gender === 'anyone') return [...EXERCISES];
+  return EXERCISES.filter((e) => e.gender === 'anyone' || e.gender === gender);
+}
+
+/** Filter by difficulty */
+export function getExercisesByLevel(level: ExerciseDifficulty): Exercise[] {
+  return EXERCISES.filter((e) => e.difficulty === level);
+}
+
+/** Filter by tag (circuit/warm-up) */
+export function getExercisesByTag(tag: ExerciseTag): Exercise[] {
+  return EXERCISES.filter((e) => e.tags.includes(tag));
+}
+
+/** Composite filter for workout builder / Pepe AI */
+export function filterExercises(filters: {
+  muscle?: MuscleGroup;
+  priority?: ExercisePriority;
+  level?: ExerciseDifficulty;
+  location?: ExerciseLocation;
+  gender?: ExerciseGender;
+  tag?: ExerciseTag;
+  equipment?: Equipment;
+}): Exercise[] {
+  return EXERCISES.filter((e) => {
+    if (filters.muscle && e.primaryMuscle !== filters.muscle && !e.secondaryMuscles.includes(filters.muscle)) return false;
+    if (filters.priority && e.priority !== filters.priority) return false;
+    if (filters.level && e.difficulty !== filters.level) return false;
+    if (filters.location && filters.location !== 'any' && e.location !== 'any' && e.location !== filters.location) return false;
+    if (filters.gender && filters.gender !== 'anyone' && e.gender !== 'anyone' && e.gender !== filters.gender) return false;
+    if (filters.tag && !e.tags.includes(filters.tag)) return false;
+    if (filters.equipment && !e.equipment.includes(filters.equipment)) return false;
+    return true;
+  });
 }
 
 export default EXERCISES;

@@ -1,0 +1,4382 @@
+[
+  {
+    "id": "band-pallof-press",
+    "name": "Band Pallof Press",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-dumbbell-alternating-bicep-curl",
+    "name": "standing dumbbell alternating bicep curl",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bench-side-jumps",
+    "name": "bench side jumps",
+    "muscles": [
+      "Circuit Lower",
+      "Circuit Cardio"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "chest-supported-incline-row",
+    "name": "chest supported incline row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "mb-pelvic-floor-heel-taps",
+    "name": "MB pelvic floor heel taps",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "band-shuffle",
+    "name": "band shuffle",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "floor-dumbbell-skull-crusher",
+    "name": "floor dumbbell skull crusher",
+    "muscles": [
+      "Triceps",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "lower-leg-lifts-with-block-feet-holds",
+    "name": "lower leg lifts with block feet holds",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "stability-ball-dumbbell-bicep-curl",
+    "name": "stability ball dumbbell bicep curl",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "medicine-ball-dead-bugs",
+    "name": "medicine ball dead bugs",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "bench-glute-raises",
+    "name": "bench glute raises",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-dumbbell-alternating-hammer-curl",
+    "name": "standing dumbbell alternating hammer curl",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "stability-ball-knee-tucks",
+    "name": "stability ball knee tucks",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Cardio"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "banded-standing-glute-kicks",
+    "name": "banded standing glute kicks",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "stability-ball-dumbbell-bicep-curl",
+    "name": "stability ball dumbbell bicep curl",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "floor-dumbbell-chest-press",
+    "name": "floor dumbbell chest press",
+    "muscles": [
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "medicine-ball-crunch",
+    "name": "medicine ball crunch",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "half-burpee",
+    "name": "Half burpee",
+    "muscles": [
+      "Circuit Cardio"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "bench-hops",
+    "name": "Bench hops",
+    "muscles": [
+      "Circuit Cardio"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "incline-alternating-dumbbell-hammer-curl",
+    "name": "incline alternating dumbbell hammer curl",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "kneeling-banded-glute-abduction",
+    "name": "kneeling banded glute abduction",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "stability-ball-dumbbell-hammer-preacher-curl",
+    "name": "stability ball dumbbell hammer preacher curl",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "decline-knee-to-elbow",
+    "name": "decline knee to elbow",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Push",
+      "Circuit Cardio"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "push-up-burpees",
+    "name": "push up burpees",
+    "muscles": [
+      "Cardio",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "medicine-ball-burpees",
+    "name": "Medicine ball burpees",
+    "muscles": [
+      "Cardio",
+      "Circuit Lower",
+      "Circuit Cardio"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "banded-glute-kicks",
+    "name": "banded glute kicks",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "weighted-stability-ball-crunch",
+    "name": "weighted stability ball crunch",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "jump-rope",
+    "name": "jump rope",
+    "muscles": [
+      "Circuit Lower",
+      "Circuit Cardio"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "landmine-row",
+    "name": "landmine row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-fire-hydrants",
+    "name": "Banded fire hydrants",
+    "muscles": [
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "bulgarian-jumps",
+    "name": "Bulgarian jumps",
+    "muscles": [
+      "Quadriceps",
+      "Circuit Lower",
+      "Circuit Cardio"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "bench-decline-push-up",
+    "name": "Bench Decline Push up",
+    "muscles": [
+      "Chest",
+      "Circuit Push"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-rdl",
+    "name": "dumbbell RDL",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "medicine-ball-unilateral-push-up",
+    "name": "medicine ball unilateral push up",
+    "muscles": [
+      "Chest",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "decline-dumbbell-alternating-bicep-curl",
+    "name": "decline dumbbell alternating bicep curl",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bench-low-leg-lifts-with-glute-raise",
+    "name": "Bench low leg lifts with glute raise",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-single-leg-dumbbell-rdl",
+    "name": "standing single leg dumbbell RDL",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-low-to-high-woodchops",
+    "name": "cable low to high woodchops",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "alternating-knee-to-elbow-towel-slides",
+    "name": "Alternating knee to elbow towel slides",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Cardio",
+      "Warm Up Upper"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "table-top-alternating-towel-arm-slides",
+    "name": "table top alternating towel arm slides.",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "bench-supported-reverse-fly",
+    "name": "Bench supported reverse fly",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "power-squat-facing-in",
+    "name": "Power squat (facing in)",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-adduction-machine",
+    "name": "seated adduction machine",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "decline-leg-hack-press",
+    "name": "decline leg hack press",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-chest-press",
+    "name": "Barbell chest press",
+    "muscles": [
+      "Chest",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-narrow-stance-hip-thrust",
+    "name": "Barbell narrow stance hip thrust",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-rope-hammer-curls",
+    "name": "Cable rope hammer curls",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "kb-alternating-low-leg-raises",
+    "name": "KB alternating low leg raises",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "intermediate",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "dumbbell-lateral-raises-with-internal-frontal-raises",
+    "name": "dumbbell lateral raises with internal frontal raises",
+    "muscles": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "advanced",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-lateral-raises-with-internal-frontal-raises",
+    "name": "dumbbell lateral raises with internal frontal raises",
+    "muscles": [
+      "Shoulders",
+      "Circuit Push",
+      "Warm Up Upper"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "single-leg-side-leg-press",
+    "name": "Single leg side leg press",
+    "muscles": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "box-step-ups",
+    "name": "box step ups",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-cable-lat-pull-down",
+    "name": "seated cable lat pull down",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-rope-upright-row",
+    "name": "Cable rope upright row",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "hanging-decline-crunch",
+    "name": "Hanging decline crunch",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "advanced",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-plate-alternating-frontal-and-lateral-raises",
+    "name": "standing plate alternating frontal and lateral raises",
+    "muscles": [
+      "Shoulders",
+      "Circuit Push",
+      "Warm Up Upper"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bent-knee-raises-with-block-between-feet",
+    "name": "bent knee raises with block between feet",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Lower"
+    ],
+    "priority": "P4",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-rainbow-kicks",
+    "name": "banded rainbow kicks",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "shoulder-floor-push-up",
+    "name": "shoulder floor push up",
+    "muscles": [
+      "Shoulders",
+      "Circuit Push",
+      "Warm Up Upper"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "leg-press-narrow-high-stance-glute-focus",
+    "name": "leg press narrow high stance (glute focus)",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-plate-around-the-worlds",
+    "name": "standing plate around the worlds",
+    "muscles": [
+      "Shoulders",
+      "Circuit Pull",
+      "Warm Up Upper"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "incline-dumbbell-narrow-chest-press",
+    "name": "Incline dumbbell narrow chest press",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bent-over-cable-bar-row",
+    "name": "Bent over Cable bar row",
+    "muscles": [
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "duck-walks",
+    "name": "Duck walks",
+    "muscles": [
+      "Quadriceps",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "supinated-cable-bar-pull-down",
+    "name": "Supinated cable bar pull down",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-dumbbell-bicep-curls",
+    "name": "seated dumbbell bicep curls",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "wall-sit-with",
+    "name": "wall sit with +",
+    "muscles": [
+      "Quadriceps",
+      "Shoulders",
+      "Biceps",
+      "Circuit Pull",
+      "Warm Up Lower"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-bulgarian-rdl-into-body-weight-pistol-squat",
+    "name": "Dumbbell bulgarian RDL into body weight pistol squat",
+    "muscles": [
+      "Quadriceps",
+      "Glutes",
+      "Circuit Lower"
+    ],
+    "priority": "P1",
+    "level": "advanced",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-side-step-squats",
+    "name": "Banded side step squats",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "bent-over-cable-rope-row",
+    "name": "bent over cable rope row",
+    "muscles": [
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "kneeling-cable-overhead-tricep-extensions",
+    "name": "kneeling Cable overhead tricep extensions",
+    "muscles": [
+      "Core Abdominals",
+      "Triceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-cable-single-arm-row",
+    "name": "seated cable single arm row",
+    "muscles": [
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "tricep-rope-pulldown",
+    "name": "Tricep rope pulldown",
+    "muscles": [
+      "Triceps",
+      "Circuit Pull"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-good-mornings",
+    "name": "smith machine good mornings",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "hanging-alt-knee-raises",
+    "name": "Hanging Alt knee raises",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "tricep-band-single-arm-overhead-extension",
+    "name": "Tricep band single arm overhead extension",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "sb-folding-chairs",
+    "name": "SB folding chairs",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "single-arm-renegade-row",
+    "name": "single arm renegade row",
+    "muscles": [
+      "Core Abdominals",
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-dumbbell-lateral-raises",
+    "name": "seated dumbbell lateral raises",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "hanging-knee-raises-slow-eccentric",
+    "name": "Hanging Knee raises slow eccentric",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "advanced",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-squat",
+    "name": "Dumbbell squat",
+    "muscles": [
+      "Quadriceps",
+      "Glutes",
+      "Circuit Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "lower-leg-windmill",
+    "name": "Lower leg windmill",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "bodyweight-squat-heels-elevated",
+    "name": "bodyweight squat heels elevated",
+    "muscles": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "single-leg-hamstring-curl",
+    "name": "Single leg hamstring curl",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "push-up-with-arm-row",
+    "name": "Push up with arm row",
+    "muscles": [
+      "Back",
+      "Chest",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "decline-single-leg-press-quad-focused",
+    "name": "Decline single leg press (quad focused)",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-oblique-rotations",
+    "name": "cable oblique rotations",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Pull"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bent-over-single-arm-reverse-cable-fly",
+    "name": "bent over single arm reverse cable fly",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "wall-sit-with-parallel-isometric-arm-hold",
+    "name": "Wall sit with parallel isometric arm hold",
+    "muscles": [
+      "Quadriceps",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "cable-abduction-straight-leg",
+    "name": "Cable Abduction straight leg",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-bent-over-row-sup-grip",
+    "name": "Barbell bent over row sup grip",
+    "muscles": [
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-1-2-curl-full-curl-bicep-curls",
+    "name": "Barbell 1/2 curl full curl bicep curls",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-narrow-stance-rdl",
+    "name": "barbell narrow stance RDL",
+    "muscles": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "renegade-row",
+    "name": "Renegade row",
+    "muscles": [
+      "Core Abdominals",
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-kneeling-lateral-kicks",
+    "name": "banded kneeling lateral kicks",
+    "muscles": [
+      "Hamstrings",
+      "Glutes",
+      "Circuit Lower"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-bicep-curl-with-knee-adduction",
+    "name": "seated bicep curl with knee adduction",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-hammer-curl",
+    "name": "Seated hammer curl",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "squatting-cable-rope-hammer-curls",
+    "name": "squatting cable rope hammer curls",
+    "muscles": [
+      "Biceps",
+      "Circuit Pull"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-narrow-rdl",
+    "name": "smith machine narrow rdl",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "kb-pull-over-with-glute-bridge",
+    "name": "KB pull over with glute bridge",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Pull",
+      "Circuit Lower"
+    ],
+    "priority": "P4",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "kb-alternating-low-leg-raises",
+    "name": "KB alternating low leg raises",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Pull",
+      "Circuit Cardio"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "kneeling-cable-rope-pull",
+    "name": "kneeling cable rope pull",
+    "muscles": [
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "deficit-reverse-dumbbell-lunges",
+    "name": "deficit reverse dumbbell lunges",
+    "muscles": [
+      "Quadriceps",
+      "Glutes",
+      "Circuit Lower"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "crunch-with-adduction-pelvic-floor",
+    "name": "crunch with adduction (pelvic floor)",
+    "muscles": [
+      "Core Abdominals",
+      "Circuit Push",
+      "Circuit Pull"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "narrow-dumbbell-press",
+    "name": "Narrow dumbbell press",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-dumbbell-windmill",
+    "name": "Standing dumbbell windmill",
+    "muscles": [
+      "Core Abdominals",
+      "Shoulders",
+      "Circuit Push"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "glute-bridge-with-adduction",
+    "name": "glute bridge with adduction",
+    "muscles": [
+      "Core Abdominals",
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "supinated-single-arm-cable-tricep-pull-down",
+    "name": "Supinated single arm cable tricep pull down",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "power-squat-facing-in",
+    "name": "Power squat (facing in)",
+    "muscles": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "flat-lying-prone-row",
+    "name": "Flat lying prone row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-glute-bridge",
+    "name": "banded glute bridge",
+    "muscles": [
+      "Core Abdominals",
+      "Glutes",
+      "Circuit Lower",
+      "Warm Up Lower"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "bent-over-one-arm-tricep-kickbacks",
+    "name": "Bent over one arm tricep kickbacks",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-bar-bicep-curl",
+    "name": "Cable bar bicep curl",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "hanging-alternating-oblique-raises",
+    "name": "Hanging Alternating oblique raises",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "advanced",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "cable-single-arm-tricep-push-down",
+    "name": "Cable single arm Tricep push down",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-deficit-curtsy-lunge",
+    "name": "Dumbbell deficit curtsy lunge",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "lying-crunch-with-adduction",
+    "name": "lying crunch with adduction",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "pallof-cable-press",
+    "name": "Pallof cable press",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-b-stance-hip-thrust",
+    "name": "Barbell B stance hip thrust",
+    "muscles": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-plate-reverse-flies",
+    "name": "standing plate reverse flies",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "alternating-shoulder-taps",
+    "name": "alternating shoulder taps",
+    "muscles": [
+      "Core Abdominals",
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-stationary-lunge",
+    "name": "Smith machine stationary lunge",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "single-arm-dumbbell-bent-over-row",
+    "name": "single arm Dumbbell bent over row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "machine-single-leg-extension",
+    "name": "machine single leg extension",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-box-squat",
+    "name": "Barbell box squat",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-single-arm-lateral-raises",
+    "name": "cable single arm lateral raises",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-b-stance-rdl",
+    "name": "smith machine B stance rdl",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "underhand-lat-pulldown",
+    "name": "Underhand lat pulldown",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-single-arm-dumbbell-arnold-press",
+    "name": "seated Single arm dumbbell arnold press",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-standing-single-arm-reverse-fly",
+    "name": "cable standing single arm reverse fly",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "seated-single-arm-press-narrow-dumbbell",
+    "name": "seated Single arm press narrow dumbbell",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-isometric-squat-with-rope-pull",
+    "name": "Cable isometric squat with rope pull",
+    "muscles": [
+      "Glutes",
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-single-arm-tricep-pull-down",
+    "name": "Cable single arm Tricep pull down",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "facepull-reverse-grip",
+    "name": "Facepull reverse grip",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-reverse-lunge",
+    "name": "Barbell Reverse Lunge",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "incline-dumbbell-hammer-curls",
+    "name": "Incline Dumbbell hammer curls",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "flat-lying-prone-row",
+    "name": "Flat lying prone row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-dumbbell-curl-and-press",
+    "name": "standing Dumbbell curl and press",
+    "muscles": [
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-donkey-kicks",
+    "name": "banded donkey kicks",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-abduction-behind-straight-leg-kick",
+    "name": "Cable Abduction behind straight leg kick",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "kb-pull-over-with-glute-bridge",
+    "name": "KB pull over with glute bridge",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "decline-leg-single-leg-press-high-stance",
+    "name": "Decline leg single leg press high stance",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bench-supported-w",
+    "name": "Bench supported W",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "preacher-curls-single-arm",
+    "name": "Preacher curls single arm",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-shoulder-press",
+    "name": "smith machine shoulder press",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-cable-supinated-row",
+    "name": "seated cable supinated row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-curtsy-lunges",
+    "name": "smith machine Curtsy lunges",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "ball-single-leg-curl",
+    "name": "Ball single leg curl",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-skull-crusher",
+    "name": "dumbbell skull crusher",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "machine-seated-abduction",
+    "name": "machine seated abduction",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "alternating-dumbbell-bulgarian-split-squat-and-rdl",
+    "name": "alternating dumbbell bulgarian split squat and rdl",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "decline-leg-single-leg-press-high-stance",
+    "name": "Decline leg single leg press high stance",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "decline-sumo-leg-press",
+    "name": "Decline sumo leg press",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bent-knee-raise-with-yoga-block-adduction",
+    "name": "bent knee raise with yoga block adduction",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "hanging-leg-raises",
+    "name": "Hanging Leg raises",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "prone-bent-leg-hamstring-machine",
+    "name": "Prone bent leg hamstring machine",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P1",
+    "level": "advanced",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-walking-lunges",
+    "name": "Barbell walking lunges",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "machine-tricep-push-down",
+    "name": "Machine tricep push down",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-narrow-chest-press",
+    "name": "dumbbell narrow chest press",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bulgarian-split-squat-glute-focused",
+    "name": "Bulgarian split squat (glute focused)",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-single-arm-frontal-raises",
+    "name": "cable single arm frontal raises",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-single-leg-hip-thrust",
+    "name": "Dumbbell single leg hip thrust",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-donkey-kickback",
+    "name": "cable donkey kickback",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-kickback",
+    "name": "Cable kickback",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "machine-single-arm-chest-press",
+    "name": "machine single arm chest press",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "hanging-knee-raises",
+    "name": "Hanging Knee raises",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "bench-supported-y",
+    "name": "Bench supported Y",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "sb-stomach-vaccum",
+    "name": "SB stomach Vaccum",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "chest-fly-machine",
+    "name": "chest fly machine",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "duel-cable-lat-pulls",
+    "name": "Duel cable Lat pulls",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-single-arm-upright-row",
+    "name": "cable single arm upright row",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-bar-bicep-curl",
+    "name": "Cable bar bicep curl",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-opposite-lateral-and-frontal-raises",
+    "name": "dumbbell opposite lateral and frontal raises",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "prone-hamstring-machine",
+    "name": "Prone hamstring machine",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "leg-curl-machine-glute-emphasis",
+    "name": "leg curl machine glute emphasis",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "preacher-hammer-curl-single-arm",
+    "name": "Preacher hammer curl single arm",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "sb-plank",
+    "name": "SB plank",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "single-arm-kneeling-cable-row",
+    "name": "Single arm kneeling cable row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "lying-crunch-with-adduction",
+    "name": "lying crunch with adduction",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "deficit-reverse-dumbbell-lunges",
+    "name": "deficit reverse dumbbell lunges",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "single-arm-cable-over-head-lat-pulldown",
+    "name": "Single arm Cable over head lat pulldown",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "glute-bridge-w-adduction-slow-eccentric",
+    "name": "Glute bridge w/ adduction slow eccentric",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "leg-press-hack-stance",
+    "name": "Leg press hack stance",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "leg-press-sumo-stance",
+    "name": "Leg press sumo stance",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "single-arm-overhead-dumbbell-tricep-extentions",
+    "name": "single arm overhead dumbbell tricep extentions",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-sumo-squat",
+    "name": "Smith machine Sumo squat",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-overhead-tricep-extensions",
+    "name": "Barbell overhead tricep extensions",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "plank-with-kettlebell-unilateral-slide",
+    "name": "plank with kettlebell unilateral slide",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "advanced",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-squat-with-curl-and-press",
+    "name": "dumbbell squat with curl and press",
+    "muscles": [
+      "Circuit Lower"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-sumo-hip-thrust",
+    "name": "Barbell sumo hip thrust",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "table-top-knee-taps-with-block-adduction",
+    "name": "Table Top Knee Taps with Block Adduction",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "ball-straight-leg-bridge",
+    "name": "Ball straight leg bridge",
+    "muscles": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "advanced",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "sl-glute-bridge-w-leg-raise",
+    "name": "SL glute bridge w/ leg raise",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "advanced",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "kettlebell-swings",
+    "name": "kettlebell swings",
+    "muscles": [
+      "Glutes",
+      "Circuit Lower",
+      "Circuit Cardio"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "seated-dumbbell-shoulder-press-with-adduction",
+    "name": "Seated dumbbell shoulder press with adduction",
+    "muscles": [
+      "Core Abdominals",
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-bulgarian-split-squat-quad-focused",
+    "name": "Barbell bulgarian split squat (quad focused)",
+    "muscles": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-single-arm-dumbbell-curl-with-block-adduction",
+    "name": "seated single arm dumbbell curl with block adduction",
+    "muscles": [
+      "Core Abdominals",
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "tricep-pushdown-bar-grip-change",
+    "name": "Tricep pushdown bar grip change",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-overhead-tricep-extensions",
+    "name": "Cable overhead tricep extensions",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "towel-pike",
+    "name": "Towel Pike",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "advanced",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-glute-kickbacks",
+    "name": "banded glute kickbacks",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "power-hack-squat",
+    "name": "Power Hack squat",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-abduction-bent-knee",
+    "name": "Cable Abduction bent knee",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "table-top-alternating-towel-arm-slides",
+    "name": "Table Top alternating towel arm slides",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-rdl",
+    "name": "smith machine RDL",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "kettlebell-rdl",
+    "name": "Kettlebell RDL",
+    "muscles": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-clams-with-hip-raise",
+    "name": "banded clams with hip raise",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "kettlebell-sumo-rdl",
+    "name": "Kettlebell sumo RDL",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "standing-dumbbell-wide-bicep-curl",
+    "name": "standing Dumbbell wide bicep curl",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "low-leg-bent-knee-windmill",
+    "name": "Low leg bent knee windmill",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "isometric-glute-bridge-with-adduction",
+    "name": "Isometric glute bridge with adduction",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "supported-hip-dead-bug",
+    "name": "supported hip dead bug",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-narrow-squat",
+    "name": "Smith machine Narrow squat",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-dumbbell-reverse-fly",
+    "name": "Seated Dumbbell reverse fly",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "resistance-band-bicep-curls",
+    "name": "resistance band bicep curls",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "lower-leg-bent-knee-windmill-with-block",
+    "name": "Lower Leg bent knee windmill with block",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-hip-thrusts",
+    "name": "Barbell hip thrusts",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "wall-sit-with-parallel-isometric-arm-hold",
+    "name": "Wall sit with parallel isometric arm hold",
+    "muscles": [
+      "Quadriceps",
+      "Circuit Pull",
+      "Circuit Lower"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "standing-dumbbell-frontal-raises",
+    "name": "standing Dumbbell frontal raises",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "squat-jumps",
+    "name": "Squat jumps",
+    "muscles": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "cable-single-arm-lateral-raises",
+    "name": "cable single arm lateral raises",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-plate-lateral-raises",
+    "name": "standing plate lateral raises",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "machine-seated-abduction-forward-lean",
+    "name": "machine seated abduction forward lean",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-dumbbell-arnold-press",
+    "name": "Seated dumbbell arnold press",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "decline-leg-press",
+    "name": "decline Leg press",
+    "muscles": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "single-leg-dumbbell-rdl",
+    "name": "single Leg dumbbell RDL",
+    "muscles": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "smith-machine-sumo-rdl",
+    "name": "smith machine sumo RDL",
+    "muscles": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "table-top-isometric-hold-w-adduction",
+    "name": "Table Top isometric hold w/ adduction",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "women",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "machine-seated-hovering-abduction",
+    "name": "machine seated hovering abduction",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "advanced",
+    "location": "gym",
+    "gender": "women",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "alternating-rocking-lat-pulldown",
+    "name": "Alternating rocking Lat pulldown",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "alternating-rocking-lat-pulldown",
+    "name": "Alternating rocking Lat pulldown",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-incline-chest-press",
+    "name": "Barbell incline chest press",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "table-top-w-adduction-alt-foot-raise",
+    "name": "Table top w/ adduction alt foot raise",
+    "muscles": [
+      "Core Abdominals"
+    ],
+    "priority": "P4",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-pullover",
+    "name": "Dumbbell Pullover",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P3",
+    "level": "advanced",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-rdl",
+    "name": "Cable RDL",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "banded-side-step-squat",
+    "name": "Banded Side Step Squat",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-hipthrust",
+    "name": "Barbell Hipthrust",
+    "muscles": [
+      "Glutes"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "incline-dumbbell-bicep-curls",
+    "name": "Incline Dumbbell bicep curls",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "ball-leg-curl",
+    "name": "Ball Leg Curl",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "crab-walk",
+    "name": "Crab Walk",
+    "muscles": [
+      "Circuit Pull"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "barbell-bent-over-row",
+    "name": "Barbell Bent Over Row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-bicep-curl",
+    "name": "Barbell Bicep Curl",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-deadlift",
+    "name": "Barbell Deadlift",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P1",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-shoulder-press",
+    "name": "Barbell Shoulder Press",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-shrugs",
+    "name": "Barbell Shrugs",
+    "muscles": [
+      "Trapezius"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "men",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-skullcrushers",
+    "name": "Barbell Skullcrushers",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "barbell-squat",
+    "name": "Barbell Squat",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "bodyweight-squat",
+    "name": "Bodyweight Squat",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "cable-overhead-tricep-extension",
+    "name": "Cable Overhead Tricep Extension",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "chest-press-machine",
+    "name": "Chest Press Machine",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "chin-up",
+    "name": "Chin Up",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "dumbbell-fly",
+    "name": "Dumbbell Fly",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-incline-flys",
+    "name": "Dumbbell Incline Flys",
+    "muscles": [
+      "Chest"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-lateral-raise",
+    "name": "Dumbbell Lateral Raise",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "dumbbell-overhead-tricep-extensions",
+    "name": "Dumbbell Overhead Tricep Extensions",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "dumbbell-static-lunges",
+    "name": "Dumbbell Static Lunges",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "facepull",
+    "name": "Facepull",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "floor-back-extensions",
+    "name": "Floor Back Extensions",
+    "muscles": [
+      "Back",
+      "Circuit Pull"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "duration"
+    ]
+  },
+  {
+    "id": "goblet-squat-heels-elevated",
+    "name": "Goblet Squat Heels Elevated",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "hyperextensions",
+    "name": "Hyperextensions",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "leg-curl-machine",
+    "name": "Leg Curl Machine",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "leg-press",
+    "name": "Leg Press",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "narrow-grip-seated-cable-row",
+    "name": "Narrow Grip Seated Cable Row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "preacher-curls-machine",
+    "name": "Preacher curls machine",
+    "muscles": [
+      "Biceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "push-up",
+    "name": "Push Up",
+    "muscles": [
+      "Chest",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "rack-pull",
+    "name": "Rack Pull",
+    "muscles": [
+      "Glutes",
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "intermediate",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "reverse-deltoid-fly-machine",
+    "name": "Reverse Deltoid Fly Machine",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-calf-raise-machine",
+    "name": "Seated Calf Raise Machine",
+    "muscles": [
+      "Calves"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "seated-dumbbell-shoulder-press",
+    "name": "Seated Dumbbell Shoulder Press",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "shoulder-press-machine",
+    "name": "Shoulder Press Machine",
+    "muscles": [
+      "Shoulders"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "single-leg-leg-press-machine",
+    "name": "Single Leg Leg Press Machine",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "smith-machine-squats",
+    "name": "Smith Machine Squats",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-calf-raise-machine",
+    "name": "Standing Calf Raise Machine",
+    "muscles": [
+      "Calves"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "standing-single-leg-calf-raise",
+    "name": "Standing Single Leg Calf Raise",
+    "muscles": [
+      "Calves"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "static-barbell-lunge",
+    "name": "Static Barbell Lunge",
+    "muscles": [
+      "Quadriceps"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "step-up",
+    "name": "Step Up",
+    "muscles": [
+      "Quadriceps",
+      "Circuit Lower"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "straight-arm-pulldown",
+    "name": "Straight Arm Pulldown",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "sumo-deadlift",
+    "name": "Sumo Deadlift",
+    "muscles": [
+      "Hamstrings"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "superman",
+    "name": "Superman",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P3",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "tricep-dips-machine",
+    "name": "Tricep Dips (Machine)",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "tricep-dips-bench",
+    "name": "Tricep Dips Bench",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "tricep-rope-pulldown",
+    "name": "Tricep rope pulldown",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "reps",
+      "weight"
+    ]
+  },
+  {
+    "id": "tricep-push-up",
+    "name": "Tricep Push Up",
+    "muscles": [
+      "Triceps",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "tricep-pushdown-bar",
+    "name": "Tricep Pushdown (Bar)",
+    "muscles": [
+      "Triceps"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "up-and-down-plank",
+    "name": "Up And Down Plank",
+    "muscles": [
+      "Core Abdominals",
+      "Chest",
+      "Circuit Push"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "home",
+    "gender": "anyone",
+    "metrics": [
+      "reps"
+    ]
+  },
+  {
+    "id": "v-bar-pulldown",
+    "name": "V Bar Pulldown",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "wall-sit",
+    "name": "Wall Sit",
+    "muscles": [
+      "Quadriceps",
+      "Circuit Lower"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "any",
+    "gender": "anyone",
+    "metrics": [
+      "duration"
+    ]
+  },
+  {
+    "id": "wide-grip-lat-pulldown",
+    "name": "Wide Grip Lat Pulldown",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P1",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  },
+  {
+    "id": "wide-grip-seated-cable-row",
+    "name": "Wide Grip Seated Cable Row",
+    "muscles": [
+      "Back"
+    ],
+    "priority": "P2",
+    "level": "beginner",
+    "location": "gym",
+    "gender": "anyone",
+    "metrics": [
+      "weight",
+      "reps"
+    ]
+  }
+]

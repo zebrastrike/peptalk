@@ -9,6 +9,7 @@
 // Exercise & Workout Types
 // ---------------------------------------------------------------------------
 
+/** Muscle groups — matches Jamie's exercise spreadsheet taxonomy */
 export type MuscleGroup =
   | 'chest'
   | 'back'
@@ -20,11 +21,22 @@ export type MuscleGroup =
   | 'hamstrings'
   | 'glutes'
   | 'calves'
+  | 'trapezius'
   | 'forearms'
   | 'full_body'
   | 'pelvic_floor'
   | 'cardio';
 
+/** Circuit & warm-up tags for WOD / workout builder grouping */
+export type ExerciseTag =
+  | 'circuit_cardio'
+  | 'circuit_lower'
+  | 'circuit_pull'
+  | 'circuit_push'
+  | 'warm_up_lower'
+  | 'warm_up_upper';
+
+/** Equipment inferred from exercise name */
 export type Equipment =
   | 'none'
   | 'dumbbell'
@@ -45,7 +57,17 @@ export type Equipment =
 
 export type ExerciseDifficulty = 'beginner' | 'intermediate' | 'advanced';
 
-export type VideoSource = 'youtube' | 'vimeo' | 'awss3' | 'none';
+/** P1 = highest priority / most used, P4 = specialized */
+export type ExercisePriority = 'P1' | 'P2' | 'P3' | 'P4';
+
+/** Where the exercise can be performed */
+export type ExerciseLocation = 'any' | 'gym' | 'home' | 'outdoor';
+
+/** Gender suitability */
+export type ExerciseGender = 'anyone' | 'men' | 'women';
+
+/** What metrics apply to this exercise */
+export type ExerciseMetric = 'reps' | 'weight' | 'duration';
 
 export interface Exercise {
   id: string;
@@ -54,22 +76,30 @@ export interface Exercise {
   normalizedName: string;
   primaryMuscle: MuscleGroup;
   secondaryMuscles: MuscleGroup[];
+  /** Circuit/warm-up tags for workout builder grouping */
+  tags: ExerciseTag[];
   equipment: Equipment[];
   difficulty: ExerciseDifficulty;
   /** Whether the exercise is time-based (planks, holds) vs rep-based */
   isTimeBased: boolean;
-  /** Optional video/image reference */
-  mediaUrl?: string;
+
+  // ── Jamie's taxonomy ──────────────────────────────────────────────────
+  /** Priority class: P1 (core movements) → P4 (specialized) */
+  priority: ExercisePriority;
+  /** Where this can be done */
+  location: ExerciseLocation;
+  /** Gender suitability */
+  gender: ExerciseGender;
+  /** Applicable metrics (reps, weight, duration) */
+  metrics: ExerciseMetric[];
+
+  // ── Media (populated when videos are hosted) ──────────────────────────
+  /** Video URL (self-hosted CDN) */
+  videoUrl?: string;
+  /** Thumbnail image URL */
+  thumbnailUrl?: string;
   /** Brief cue or instruction */
   instructions?: string;
-  /** Tags for searchability */
-  tags: string[];
-  /** Trainerize exercise ID for cross-referencing scraped data */
-  trainerizeId?: number;
-  /** Where the video is hosted */
-  videoSource?: VideoSource;
-  /** HD thumbnail URL */
-  thumbnailUrl?: string;
 }
 
 export type SetType = 'normal' | 'super_set' | 'super_set_2' | 'drop_set' | 'giant_set';
@@ -181,8 +211,6 @@ export interface WorkoutLog {
   notes?: string;
   /** Optional workout name (used for free-form logs) */
   workoutName?: string;
-  /** YouTube video URL attached by the user */
-  youtubeUrl?: string;
   startedAt: string; // ISO
   completedAt?: string; // ISO
 }
