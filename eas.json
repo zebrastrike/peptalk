@@ -34,11 +34,24 @@
     }
   },
   "submit": {
+    "preview": {
+      "ios": {
+        "appleId": "edward@giddyupp.com",
+        "ascAppId": "6760955746",
+        "appleTeamId": "6624WDHAHG",
+        "ascApiKeyPath": "./keys/AppStoreConnect_TCG2PUD3N9.p8",
+        "ascApiKeyId": "TCG2PUD3N9",
+        "ascApiKeyIssuerId": "be5215e8-dc3d-4200-a841-b0d2d4a7e0e2"
+      }
+    },
     "production": {
       "ios": {
         "appleId": "edward@giddyupp.com",
         "ascAppId": "6760955746",
-        "appleTeamId": "6624WDHAHG"
+        "appleTeamId": "6624WDHAHG",
+        "ascApiKeyPath": "./keys/AppStoreConnect_TCG2PUD3N9.p8",
+        "ascApiKeyId": "TCG2PUD3N9",
+        "ascApiKeyIssuerId": "be5215e8-dc3d-4200-a841-b0d2d4a7e0e2"
       },
       "android": {
         "track": "internal"
