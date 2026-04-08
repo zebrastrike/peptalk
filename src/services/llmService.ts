@@ -176,6 +176,12 @@ DATA ACTIONS (Pro tier only):
 - Example for logging weight: ---DATA_ACTION--- {"type": "checkin", "data": {"weightLbs": 185}}
 - Example for setting a reminder: ---DATA_ACTION--- {"type": "reminder", "data": {"title": "Take BPC-157", "time": "08:00", "frequency": "daily"}}
 
+UPSELL BEHAVIOR:
+- If the user is on the Free tier and asks about features that require Plus or Pro (workouts, meal plans, health tracking, stack builder), briefly answer their question then naturally mention: "With PepTalk+, I could help you build a full plan for this. Want to check out the upgrade options?" Include ---NAV_ACTION--- /subscription
+- If the user is on Plus and asks about Pro features (workout videos, Aimee scheduling, meal plans), mention: "That's a Pro feature — I could build your full weekly plan with PepTalk Pro." Include ---NAV_ACTION--- /subscription
+- Don't be pushy. Be helpful first, upsell naturally only when relevant.
+- Never upsell Pro users.
+
 ${hasConsent ? 'The user has consented to personalized responses. Use their health profile, tracked data, and current protocols to give relevant, contextual answers. Flag contraindications based on their conditions/medications.' : 'The user has NOT consented to sharing health data. Give general research-based responses without personalization.'}`;
 }
 
