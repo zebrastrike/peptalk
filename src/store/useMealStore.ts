@@ -5,6 +5,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { secureStorage } from '../services/secureStorage';
+import { syncRecord, deleteRecord } from '../services/syncService';
 import type { MealEntry, MacroTargets, FoodItem } from '../types/fitness';
 
 // ---------------------------------------------------------------------------
@@ -230,17 +231,41 @@ export const useMealStore = create<MealState & MealActions>()(
       // Meals
       // -----------------------------------------------------------------------
 
-      addMeal: (meal) => set({ meals: [meal, ...get().meals] }),
+      addMeal: (meal) => {
+        set({ meals: [meal, ...get().meals] });
+        syncRecord('meal_entries', {
+          id: meal.id,
+          date: meal.date,
+          meal_type: meal.mealType,
+          foods: meal.foods,
+          quick_log: meal.quickLog ?? null,
+          notes: meal.notes ?? null,
+        });
+      },
 
-      updateMeal: (mealId, updates) =>
+      updateMeal: (mealId, updates) => {
         set({
           meals: get().meals.map((m) =>
             m.id === mealId ? { ...m, ...updates } : m,
           ),
-        }),
+        });
+        const updated = get().meals.find((m) => m.id === mealId);
+        if (updated) {
+          syncRecord('meal_entries', {
+            id: updated.id,
+            date: updated.date,
+            meal_type: updated.mealType,
+            foods: updated.foods,
+            quick_log: updated.quickLog ?? null,
+            notes: updated.notes ?? null,
+          });
+        }
+      },
 
-      removeMeal: (mealId) =>
-        set({ meals: get().meals.filter((m) => m.id !== mealId) }),
+      removeMeal: (mealId) => {
+        set({ meals: get().meals.filter((m) => m.id !== mealId) });
+        deleteRecord('meal_entries', mealId);
+      },
 
       getMealsByDate: (date) => get().meals.filter((m) => m.date === date),
 

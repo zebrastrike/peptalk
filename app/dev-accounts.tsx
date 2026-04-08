@@ -1,3 +1,8 @@
+/**
+ * Dev Accounts — Only available in development builds.
+ * Hidden in production via __DEV__ flag.
+ */
+
 import React from 'react';
 import {
   View,
@@ -199,8 +204,15 @@ const TEST_ACCOUNTS: TestAccount[] = [
 ];
 
 export default function DevAccountsScreen() {
-  const t = useTheme();
   const router = useRouter();
+
+  // Only available in dev builds
+  if (!__DEV__) {
+    router.replace('/');
+    return null;
+  }
+
+  const t = useTheme();
   const login = useAuthStore((s) => s.login);
   const setGender = useOnboardingStore((s) => s.setGender);
   const setAgeRange = useOnboardingStore((s) => s.setAgeRange);

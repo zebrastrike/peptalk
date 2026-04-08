@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { JournalCategory, JournalEntry } from '../types';
 import { secureStorage } from '../services/secureStorage';
+import { syncRecord, deleteRecord } from '../services/syncService';
 import { useSubscriptionStore } from './useSubscriptionStore';
 
 const uid = () =>
@@ -84,6 +85,14 @@ export const useJournalStore = create<JournalStore>()(
           entries: [entry, ...state.entries],
         }));
 
+        syncRecord('journal_entries', {
+          id: entry.id,
+          date: entry.date,
+          title: entry.title,
+          content: entry.content,
+          tags: entry.tags,
+        });
+
         return entry;
       },
 
@@ -109,6 +118,7 @@ export const useJournalStore = create<JournalStore>()(
         set((state) => ({
           entries: state.entries.filter((e) => e.id !== id),
         }));
+        deleteRecord('journal_entries', id);
       },
 
       getEntriesByDate: (date) => {

@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { PeptideStack, StackAnalysis } from '../types';
 import { analyzeStack } from '../services/analysisEngine';
 import { secureStorage } from '../services/secureStorage';
+import { syncRecord, deleteRecord } from '../services/syncService';
 import { CURATED_STACKS } from '../data/curatedStacks';
 
 const MAX_STACK_SIZE = 5;
@@ -115,6 +116,13 @@ export const useStackStore = create<StackStore>()(
         };
 
         set({ savedStacks: [...savedStacks, newStack] });
+
+        syncRecord('saved_stacks', {
+          id: newStack.id,
+          name: newStack.name,
+          peptides: newStack.peptideIds.map((pid) => ({ peptideId: pid })),
+          notes: null,
+        });
       },
 
       deleteStack: (stackId: string) => {
@@ -123,6 +131,7 @@ export const useStackStore = create<StackStore>()(
             (stack) => stack.id !== stackId || stack.isCurated
           ),
         }));
+        deleteRecord('saved_stacks', stackId);
       },
 
       loadStack: (stack: PeptideStack) => {

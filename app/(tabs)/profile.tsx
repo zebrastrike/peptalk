@@ -248,7 +248,7 @@ function LoginForm() {
 // User Profile
 // ---------------------------------------------------------------------------
 function UserProfile() {
-  const { user, logout, togglePro } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const { tier } = useSubscriptionStore();
   const t = useTheme();
   const themeMode = useThemeStore((s) => s.mode);
@@ -340,7 +340,7 @@ function UserProfile() {
             </View>
             <Switch
               value={user.isPro}
-              onValueChange={togglePro}
+              onValueChange={() => {}}
               trackColor={{
                 false: 'rgba(255,255,255,0.12)',
                 true: 'rgba(227, 167, 161, 0.4)',

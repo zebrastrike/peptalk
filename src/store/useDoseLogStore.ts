@@ -10,6 +10,7 @@ import {
   AlertLevel,
 } from '../types';
 import { secureStorage } from '../services/secureStorage';
+import { syncRecord, deleteRecord } from '../services/syncService';
 import { getPeptideById } from '../data/peptides';
 
 // ---------------------------------------------------------------------------
@@ -198,6 +199,18 @@ export const useDoseLogStore = create<DoseLogStore>()(
         set((state) => ({
           doses: [entry, ...state.doses],
         }));
+
+        // Sync to Supabase
+        syncRecord('dose_logs', {
+          id: entry.id,
+          peptide_id: entry.peptideId,
+          peptide_name: entry.peptideId,
+          dose_mcg: entry.amount,
+          route: entry.route,
+          date: entry.date,
+          time: entry.time,
+          notes: entry.notes ?? null,
+        });
 
         // Refresh alerts after logging
         setTimeout(() => get().refreshAlerts(), 100);

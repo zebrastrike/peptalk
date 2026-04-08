@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { CheckInEntry, CheckInRating, EmotionTag, PeptideEffect, SleepStageData } from '../types';
 import { secureStorage } from '../services/secureStorage';
+import { syncRecord, deleteRecord } from '../services/syncService';
 
 const toDateKey = (date: Date) => {
   const year = date.getFullYear();
@@ -95,6 +96,27 @@ export const useCheckinStore = create<CheckinStore>()(
           };
         });
 
+        // Sync to Supabase
+        syncRecord('check_ins', {
+          id: nextEntry.id,
+          date: nextEntry.date,
+          mood: nextEntry.mood,
+          energy: nextEntry.energy,
+          stress: nextEntry.stress,
+          sleep_quality: nextEntry.sleepQuality,
+          recovery: nextEntry.recovery,
+          appetite: nextEntry.appetite,
+          weight_lbs: nextEntry.weightLbs ?? null,
+          resting_heart_rate: nextEntry.restingHeartRate ?? null,
+          steps: nextEntry.steps ?? null,
+          hrv_ms: nextEntry.hrvMs ?? null,
+          vo2_max: nextEntry.vo2Max ?? null,
+          spo2: nextEntry.spo2 ?? null,
+          notes: nextEntry.notes ?? null,
+          emotion_tags: nextEntry.emotionTags ?? [],
+          side_effect_tags: nextEntry.sideEffectTags ?? [],
+        });
+
         return nextEntry;
       },
 
@@ -102,6 +124,7 @@ export const useCheckinStore = create<CheckinStore>()(
         set((state) => ({
           entries: state.entries.filter((entry) => entry.id !== id),
         }));
+        deleteRecord('check_ins', id);
       },
 
       getCheckInByDate: (date) => {
