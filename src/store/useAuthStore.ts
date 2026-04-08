@@ -34,19 +34,18 @@ export const useAuthStore = create<AuthStore>()(
           await new Promise((resolve) => setTimeout(resolve, 800));
 
           // Test credentials — auto-set subscription tier
-          const TEST_ACCOUNTS: Record<string, { name: string; tier: 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro' }> = {
+          const TEST_ACCOUNTS: Record<string, { name: string; tier: 'free' | 'plus' | 'pro' }> = {
             'free@test.com':      { name: 'Free Tester',     tier: 'free' },
-            'pepe@test.com':      { name: 'Pepe Tester',     tier: 'pepe' },
-            'plus@test.com':      { name: 'Plus Tester',     tier: 'pepe_plus' },
-            'pro@test.com':       { name: 'Pro Tester',      tier: 'pepe_pro' },
-            'jamie@test.com':     { name: 'Jamie',           tier: 'pepe_pro' },
+            'plus@test.com':      { name: 'Plus Tester',     tier: 'plus' },
+            'pro@test.com':       { name: 'Pro Tester',      tier: 'pro' },
+            'jamie@test.com':     { name: 'Jamie',           tier: 'pro' },
             // Demographic test accounts
-            'jake@test.com':      { name: 'Jake',            tier: 'pepe_pro' },
-            'sophia@test.com':    { name: 'Sophia',          tier: 'pepe_plus' },
-            'marcus@test.com':    { name: 'Marcus',          tier: 'pepe_pro' },
-            'sarah@test.com':     { name: 'Sarah',           tier: 'pepe_plus' },
-            'richard@test.com':   { name: 'Richard',         tier: 'pepe_pro' },
-            'diana@test.com':     { name: 'Diana',           tier: 'pepe_pro' },
+            'jake@test.com':      { name: 'Jake',            tier: 'pro' },
+            'sophia@test.com':    { name: 'Sophia',          tier: 'plus' },
+            'marcus@test.com':    { name: 'Marcus',          tier: 'pro' },
+            'sarah@test.com':     { name: 'Sarah',           tier: 'plus' },
+            'richard@test.com':   { name: 'Richard',         tier: 'pro' },
+            'diana@test.com':     { name: 'Diana',           tier: 'pro' },
             'walter@test.com':    { name: 'Walter',          tier: 'free' },
             'margaret@test.com':  { name: 'Margaret',        tier: 'free' },
           };
@@ -64,7 +63,7 @@ export const useAuthStore = create<AuthStore>()(
             name: testMatch?.name ?? _email.split('@')[0],
             savedStacks: [],
             favoritePeptides: [],
-            isPro: tier === 'pepe_pro' || tier === 'pepe_plus',
+            isPro: tier === 'pro',
             createdAt: new Date().toISOString(),
           };
 

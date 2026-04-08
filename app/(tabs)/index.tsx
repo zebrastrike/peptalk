@@ -72,15 +72,15 @@ const QUICK_ACTIONS = [
   { id: 'dose', icon: 'flask-outline' as const, label: 'Log Dose', route: '/(tabs)/calendar', colors: ['#14b8a6', '#0d9488'] as [string, string] },
   { id: 'workout', icon: 'barbell-outline' as const, label: 'Workout', route: '/workouts', colors: ['#3b82f6', '#2563eb'] as [string, string] },
   { id: 'nutrition', icon: 'nutrition-outline' as const, label: 'Nutrition', route: '/nutrition', colors: ['#f59e0b', '#d97706'] as [string, string] },
-  { id: 'peptalk', icon: 'chatbubble-outline' as const, label: 'Ask Pepe', route: '/(tabs)/peptalk', colors: ['#8b5cf6', '#7c3aed'] as [string, string] },
+  { id: 'peptalk', icon: 'chatbubble-outline' as const, label: 'Ask Aimee', route: '/(tabs)/peptalk', colors: ['#8b5cf6', '#7c3aed'] as [string, string] },
   { id: 'journal', icon: 'book-outline' as const, label: 'Journal', route: '/journal', colors: ['#06b6d4', '#0891b2'] as [string, string] },
   { id: 'bodymap', icon: 'body-outline' as const, label: 'Body Map', route: '/body-map', colors: ['#22c55e', '#16a34a'] as [string, string] },
 ];
 
 const HERO_BACKGROUND_IMAGES: Record<string, string> = {
-  default: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80',
-  fitness: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80',
-  science: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80',
+  default: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80',
+  fitness: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
+  science: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80',
 };
 
 function getHeroBackgroundUri(segmentLabel?: string): string {
@@ -434,7 +434,7 @@ export default function DashboardScreen() {
     return {
       message: 'Amazing day! You are crushing it',
       route: '/(tabs)/peptalk' as const,
-      actionLabel: 'Ask Pepe',
+      actionLabel: 'Ask Aimee',
       icon: 'chatbubble-outline' as const,
     };
   }, [entries, workoutLogs, meals]);
@@ -1411,7 +1411,7 @@ export default function DashboardScreen() {
           entering={FadeInDown.delay(400).duration(500)}
           style={styles.section}
         >
-          <Text style={[styles.sectionTitle, { color: t.text }]}>Ask Pepe</Text>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Ask Aimee</Text>
 
           {/* Prompt chips */}
           <ScrollView

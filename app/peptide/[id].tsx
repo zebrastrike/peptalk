@@ -734,7 +734,7 @@ export default function PeptideDetailScreen() {
             activeOpacity={0.8}
           >
             <Ionicons name="chatbubble-outline" size={18} color="#8b5cf6" />
-            <Text style={styles.quickActionText}>Ask Pepe</Text>
+            <Text style={styles.quickActionText}>Ask Aimee</Text>
           </TouchableOpacity>
         </View>
 

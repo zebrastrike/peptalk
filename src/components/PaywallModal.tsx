@@ -70,82 +70,96 @@ const FEATURE_META: Record<string, { name: string; description: string }> = {
     description: 'Build and manage your peptide stacks.',
   },
 
-  // Pepe tier features
-  pepe_ai_unlimited: {
-    name: 'Unlimited Pepe AI',
-    description: 'Chat with Pepe AI without any message limits.',
+  // Plus tier features
+  aimee_ai_limited: {
+    name: 'Aimee AI Assistant',
+    description: 'Chat with Aimee for peptide, nutrition, and workout guidance.',
   },
-  pepe_dosing_qa: {
-    name: 'Pepe Dosing Q&A',
-    description: 'Ask Pepe AI detailed questions about peptide dosing.',
+  health_calendar: {
+    name: 'Health Calendar',
+    description: 'Track doses, meals, workouts, and check-ins on a timeline.',
   },
-  pepe_health_suggestions: {
-    name: 'Pepe Health Suggestions',
-    description: 'Get personalized health suggestions from Pepe AI.',
+  manual_tracking: {
+    name: 'Manual Tracking',
+    description: 'Log meals, weight, and health data manually.',
+  },
+  health_integrations: {
+    name: 'Health Integrations',
+    description: 'Connect Apple Watch, Fitbit, and other health devices.',
+  },
+  watch_sync: {
+    name: 'Watch Sync',
+    description: 'Auto-sync heart rate, steps, and sleep from your watch.',
+  },
+  biomarker_tracking: {
+    name: 'Biomarker Tracking',
+    description: 'Track blood work and biomarker results over time.',
+  },
+  calendar_timeline: {
+    name: 'Calendar Timeline',
+    description: 'See all health data on a unified timeline view.',
   },
 
-  // Pepe Plus tier features
+  // Pro tier features
+  aimee_ai_unlimited: {
+    name: 'Unlimited Aimee',
+    description: 'Unlimited AI conversations with no message limits.',
+  },
+  aimee_meal_plans: {
+    name: 'Aimee Meal Plans',
+    description: 'Aimee creates personalized weekly meal plans for your goals.',
+  },
+  aimee_workout_plans: {
+    name: 'Aimee Workout Plans',
+    description: 'Aimee builds custom workout programs based on your level and equipment.',
+  },
+  aimee_health_scheduler: {
+    name: 'Aimee Health Scheduler',
+    description: 'Aimee schedules your workouts, meals, and protocols automatically.',
+  },
   workout_programs: {
     name: 'Workout Programs',
     description: 'Follow structured multi-week workout programs.',
   },
+  workout_videos: {
+    name: 'Workout Videos',
+    description: 'Exercise demo videos for every movement.',
+  },
   ai_meal_plans: {
     name: 'AI Meal Plans',
-    description: 'Get AI-generated weekly meal plans tailored to your goals.',
+    description: 'AI-generated weekly meal plans tailored to your macros.',
   },
   nutrition_planning: {
     name: 'Nutrition Planning',
     description: 'Advanced nutrition planning with macro optimization.',
-  },
-  pepe_weekly_programs: {
-    name: 'Pepe Weekly Programs',
-    description: 'AI-generated weekly workout and nutrition programs.',
-  },
-  pepe_full_tracking: {
-    name: 'Full Progress Tracking',
-    description: 'Comprehensive tracking of workouts, nutrition, and health.',
   },
   grocery_from_plans: {
     name: 'Grocery Lists',
     description: 'Auto-generated shopping lists from your meal plans.',
   },
   recipe_generator: {
-    name: 'Meals by Pepe',
-    description: 'Get personalized meal ideas from Pepe based on your macros and preferences.',
-  },
-
-  // Pepe Pro tier features
-  health_device_sync: {
-    name: 'Health Device Sync',
-    description: 'Sync data from Apple Watch, Fitbit, and Google Health.',
-  },
-  ai_health_planner: {
-    name: 'AI Health Planner',
-    description: 'AI-powered comprehensive health optimization plans.',
+    name: 'AI Recipes',
+    description: 'Get personalized recipes based on your macros and preferences.',
   },
   health_reports: {
     name: 'Health Reports',
-    description: 'Comprehensive health reports with actionable recommendations.',
+    description: 'Comprehensive health reports with actionable insights.',
   },
   pdf_export: {
     name: 'PDF Export',
     description: 'Export health reports and data as professional PDFs.',
   },
-  nutritionist_consult: {
-    name: 'Nutritionist Consult',
-    description: 'Schedule a consultation with a certified nutritionist.',
-  },
   data_export: {
     name: 'Data Export',
-    description: 'Export all your data in JSON format for your records.',
-  },
-  priority_support: {
-    name: 'Priority Support',
-    description: 'Get faster responses from our support team.',
+    description: 'Export all your data for your records.',
   },
   ad_free: {
-    name: 'Ad-Free Experience',
+    name: 'Ad-Free',
     description: 'Remove all banner ads from the app.',
+  },
+  consult_booking: {
+    name: 'Book a Consult',
+    description: 'Schedule a 1-on-1 consultation with nutritionist Jamie Esposito ($500/session).',
   },
 };
 
@@ -155,26 +169,23 @@ const FEATURE_META: Record<string, { name: string; description: string }> = {
 
 /** Determine the minimum tier that unlocks a feature. */
 function getRequiredTier(feature: string): SubscriptionTier {
-  const tiers: SubscriptionTier[] = ['pepe_pro', 'pepe_plus', 'pepe', 'free'];
+  const tiers: SubscriptionTier[] = ['pro', 'plus', 'free'];
   for (const tier of tiers) {
-    const directFeatures = TIER_FEATURES[tier].filter((f) => !f.startsWith('all_'));
-    if (directFeatures.includes(feature)) return tier;
+    if (TIER_FEATURES[tier].includes(feature)) return tier;
   }
   return 'free';
 }
 
 const TIER_LABELS: Record<SubscriptionTier, string> = {
   free: 'Free',
-  pepe: 'Pepe',
-  pepe_plus: 'Pepe Plus',
-  pepe_pro: 'Pepe Pro',
+  plus: 'PepTalk+',
+  pro: 'PepTalk Pro',
 };
 
 const TIER_PRICES: Record<SubscriptionTier, string> = {
   free: '$0',
-  pepe: '$9.99/mo',
-  pepe_plus: '$49.99/mo',
-  pepe_pro: '$99.99/mo',
+  plus: '$9.99/mo',
+  pro: '$49.99/mo',
 };
 
 // ---------------------------------------------------------------------------

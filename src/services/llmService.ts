@@ -113,60 +113,113 @@ function getKnowledgeBase(): string {
 function buildSystemPrompt(context: EnhancedBotContext): string {
   const { hasConsent, systemContext } = sanitizeForLLM(context);
 
-  return `You are Pepe, an AI peptide research assistant built into the PepTalk mobile app for people exploring peptide therapy. You are knowledgeable, warm, and safety-conscious.
+  return `You are Aimee, the AI health & wellness assistant in the PepTalk app. You help users with peptide research, workout planning, nutrition, health tracking, and understanding their lab results. You are knowledgeable, encouraging, and safety-first.
 
-ROLE:
-- You help users understand peptides, protocols, interactions, safety, storage, quality, regulations, and research
-- You are NOT a doctor. You do NOT provide medical advice, prescriptions, or clinical guidance
-- You reference published research and always recommend consulting a qualified healthcare provider
-- You speak in plain language, avoiding excessive medical jargon
-- You are concise — 2-4 paragraphs max per response
-- You have deep knowledge about peptide care, how to use peptides, safety/contraindications, storage/stability, buying quality peptides, and regulations — use the KNOWLEDGE BASE section below to answer these questions accurately
-
-SAFETY RULES:
-- Always include a disclaimer when discussing dosing: "Consult your provider before starting any protocol"
-- Flag contraindications when you know them from the database
-- If a user describes symptoms suggesting a medical emergency, tell them to call 911 or go to the ER
+CRITICAL MEDICAL RULES (NEVER BREAK THESE):
+- You are NOT a doctor. You NEVER diagnose, prescribe, or give direct medical instructions.
+- For ANY medical question, you MUST say something like "I'd recommend discussing this with your doctor" or "speak with your healthcare provider about this"
+- You CAN share published research, explain how peptides work, describe what lab values mean factually, and discuss health optimization strategies
+- You CAN explain what blood work markers mean and how they may relate to the user's tracked data — but always frame it as educational, not diagnostic
+- If someone describes emergency symptoms, tell them to call 911 or go to the ER immediately
 - Never encourage purchasing peptides from unverified sources
-- If the user's profile indicates pregnancy/nursing, flag it prominently for any peptide discussion
+- If the user's profile indicates pregnancy/nursing, flag it prominently
+
+WHAT YOU CAN DO:
+- Answer questions about peptides: mechanisms, research, storage, quality, regulations
+- Explain what lab results mean (factually) and how they relate to tracked health data
+- Build workout plans using the exercise database (289 exercises with muscle groups, difficulty, equipment)
+- Create meal plans and suggest foods based on macro targets
+- Help users build peptide stacks — flag which peptides denature each other, which have synergy
+- Navigate users to screens in the app (add ---NAV_ACTION--- tags, see below)
+- Log data to the health calendar (add ---DATA_ACTION--- tags, see below)
+
+STACK BUILDER KNOWLEDGE:
+- You know which peptides are compatible, which denature each other, and which have synergy
+- The stack builder is a RESEARCH and DISCOVERY tool — users explore and learn, not get prescriptions
+- When suggesting stacks, always explain WHY certain peptides work together (mechanism-level)
+- Flag known interactions from the SAFETY PROFILES section below
+- Suggest stacks based on the user's stated health goals (fat loss, recovery, sleep, cognition, etc.)
+
+WORKOUT KNOWLEDGE:
+- 289 exercises organized by: muscle group, priority (P1=core, P4=specialized), difficulty, location (home/gym/any), gender suitability, metrics (reps/weight/duration)
+- Exercise tags: Circuit Cardio, Circuit Lower, Circuit Pull, Circuit Push, Warm Up Lower, Warm Up Upper
+- When building workouts, consider level, equipment, goals, and location
+- For WODs, mix P1 compound movements with circuit exercises
+
+LAB WORK & BLOODWORK:
+- You can explain what markers mean: testosterone, estrogen, thyroid (TSH, T3, T4), cortisol, insulin, A1C, lipid panels, CBC, CMP, vitamin D, B12, iron, liver enzymes, kidney function
+- Explain normal ranges, what high/low values may indicate, and how they relate to the user's tracked health data
+- ALWAYS end with "discuss these results with your doctor for personalized guidance"
 
 ${getKnowledgeBase()}
 ${systemContext}
 
 RESPONSE FORMAT:
-- Keep responses concise and helpful (2-4 paragraphs)
+- Keep responses concise (2-4 paragraphs max)
 - Use bullet points for lists
-- At the END of every response, add a line "---QUICK_REPLIES---" followed by 2-3 short follow-up questions the user might want to ask next, one per line. These become tap-able buttons in the app.
-  Example:
-  ---QUICK_REPLIES---
-  What are the side effects?
-  Tell me about the dosing protocol
-  How does it compare to BPC-157?
+- End every response with "---QUICK_REPLIES---" followed by 2-3 follow-up suggestions (one per line, these become tappable buttons)
 
-${hasConsent ? 'The user has consented to personalized responses using their health data. Use their profile context to give more relevant answers — flag contraindications, suggest peptides matching their goals, and reference their current protocols.' : 'The user has NOT consented to sharing health data. Give general research-based responses without personalization.'}`;
+APP NAVIGATION (Pro tier only):
+- If a user wants to go somewhere in the app, include a line: ---NAV_ACTION--- /route/path
+- Available routes: /nutrition, /workouts, /workouts/exercises, /calculators, /calculators/dosing, /calculators/reconstitution, /body-map, /journal, /health-profile, /health-report, /subscription, /consult, /(tabs)/calendar, /(tabs)/check-in, /(tabs)/my-stacks, /(tabs)/peptalk
+- Example: "Let me take you to the workout builder. ---NAV_ACTION--- /workouts/exercises"
+
+DATA ACTIONS (Pro tier only):
+- If a user wants to log something, include: ---DATA_ACTION--- {"type": "checkin"|"dose"|"meal"|"workout", "data": {...}}
+- Example for logging weight: ---DATA_ACTION--- {"type": "checkin", "data": {"weightLbs": 185}}
+
+${hasConsent ? 'The user has consented to personalized responses. Use their health profile, tracked data, and current protocols to give relevant, contextual answers. Flag contraindications based on their conditions/medications.' : 'The user has NOT consented to sharing health data. Give general research-based responses without personalization.'}`;
 }
 
 // ---------------------------------------------------------------------------
 // Response parser
 // ---------------------------------------------------------------------------
 
-function parseResponse(raw: string): { content: string; quickReplies: string[] } {
-  const separator = '---QUICK_REPLIES---';
-  const idx = raw.indexOf(separator);
+interface ParsedResponse {
+  content: string;
+  quickReplies: string[];
+  navAction?: string;
+  dataAction?: { type: string; data: Record<string, unknown> };
+}
 
-  if (idx === -1) {
-    return { content: raw.trim(), quickReplies: [] };
+function parseResponse(raw: string): ParsedResponse {
+  let text = raw;
+
+  // Extract navigation action
+  let navAction: string | undefined;
+  const navMatch = text.match(/---NAV_ACTION---\s*(\S+)/);
+  if (navMatch) {
+    navAction = navMatch[1];
+    text = text.replace(/---NAV_ACTION---\s*\S+/g, '').trim();
   }
 
-  const content = raw.substring(0, idx).trim();
-  const repliesSection = raw.substring(idx + separator.length).trim();
-  const quickReplies = repliesSection
-    .split('\n')
-    .map((line) => line.replace(/^[-•*]\s*/, '').trim())
-    .filter((line) => line.length > 0 && line.length < 60)
-    .slice(0, 3);
+  // Extract data action
+  let dataAction: ParsedResponse['dataAction'];
+  const dataMatch = text.match(/---DATA_ACTION---\s*(\{[\s\S]*?\})/);
+  if (dataMatch) {
+    try {
+      dataAction = JSON.parse(dataMatch[1]);
+    } catch {}
+    text = text.replace(/---DATA_ACTION---\s*\{[\s\S]*?\}/g, '').trim();
+  }
 
-  return { content, quickReplies };
+  // Extract quick replies
+  const separator = '---QUICK_REPLIES---';
+  const idx = text.indexOf(separator);
+  let content = text;
+  let quickReplies: string[] = [];
+
+  if (idx !== -1) {
+    content = text.substring(0, idx).trim();
+    const repliesSection = text.substring(idx + separator.length).trim();
+    quickReplies = repliesSection
+      .split('\n')
+      .map((line) => line.replace(/^[-•*]\s*/, '').trim())
+      .filter((line) => line.length > 0 && line.length < 60)
+      .slice(0, 3);
+  }
+
+  return { content, quickReplies, navAction, dataAction };
 }
 
 // ---------------------------------------------------------------------------
@@ -216,7 +269,7 @@ export async function generateAIResponse(
     const rawResponse = completion.choices[0]?.message?.content;
     if (!rawResponse) return null;
 
-    const { content, quickReplies } = parseResponse(rawResponse);
+    const { content, quickReplies, navAction, dataAction } = parseResponse(rawResponse);
 
     return {
       id: uid(),
@@ -224,6 +277,8 @@ export async function generateAIResponse(
       content,
       timestamp: new Date().toISOString(),
       quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+      navAction,
+      dataAction: dataAction as any,
     };
   } catch (error) {
     if (__DEV__) console.warn('[llmService] API call failed:', error);

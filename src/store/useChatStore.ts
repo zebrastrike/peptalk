@@ -58,7 +58,7 @@ export const useChatStore = create<ChatStore>()(
 
       canSendMessage: () => {
         const tier = useSubscriptionStore.getState().tier;
-        if (tier === 'pepe' || tier === 'pepe_plus' || tier === 'pepe_pro') return true;
+        if (tier === 'plus' || tier === 'pro') return true;
 
         const today = todayKey();
         const { lastMessageDate, dailyMessageCount } = get();

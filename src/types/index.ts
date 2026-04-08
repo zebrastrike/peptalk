@@ -252,6 +252,10 @@ export interface ChatMessage {
   quickReplies?: string[];
   /** Tappable action buttons for navigation from bot responses */
   actions?: BotAction[];
+  /** Aimee can navigate user to a screen in the app */
+  navAction?: string;
+  /** Aimee can log data to health calendar (Pro tier) */
+  dataAction?: { type: 'checkin' | 'dose' | 'meal' | 'workout'; data: Record<string, unknown> };
   /** Auto-generated journal entry from conversational logging */
   journalEntry?: {
     category: JournalCategory;

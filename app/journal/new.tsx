@@ -118,7 +118,7 @@ export default function NewJournalEntryScreen() {
     Alert.alert('Entry Saved', 'Your journal entry has been logged.', [
       { text: 'Done', onPress: () => router.back() },
       { text: 'Check In', onPress: () => router.replace('/(tabs)/check-in' as any) },
-      { text: 'Ask Pepe', onPress: () => router.replace('/(tabs)/peptalk' as any) },
+      { text: 'Ask Aimee', onPress: () => router.replace('/(tabs)/peptalk' as any) },
     ]);
   };
 

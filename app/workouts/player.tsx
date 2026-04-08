@@ -680,7 +680,7 @@ export default function WorkoutPlayerScreen() {
           onPress: () => { timer.pause(); finishWorkout(undefined, undefined, ytId ? youtubeUrl : undefined); advanceDay(); router.replace('/(tabs)/check-in'); },
         },
         {
-          text: 'Ask Pepe',
+          text: 'Ask Aimee',
           onPress: () => { timer.pause(); finishWorkout(undefined, undefined, ytId ? youtubeUrl : undefined); advanceDay(); router.replace('/(tabs)/peptalk'); },
         },
       ],

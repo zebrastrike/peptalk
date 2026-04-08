@@ -426,12 +426,12 @@ export default function LearnHubScreen() {
             <View style={styles.askBannerText}>
               <Text style={styles.askBannerTitle}>Got a question?</Text>
               <Text style={styles.askBannerSubtitle}>
-                Ask Pepe anything — the AI knows all this and more.
+                Ask Aimee anything — the AI knows all this and more.
               </Text>
             </View>
           </View>
           <GradientButton
-            label="Ask Pepe"
+            label="Ask Aimee"
             onPress={() => router.push('/(tabs)/peptalk')}
             colors={[Colors.pepBlue, Colors.pepTeal]}
           />

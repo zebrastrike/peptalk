@@ -1893,7 +1893,7 @@ function getActions(intent: BotIntent, peptides: Peptide[], context: BotContext)
       return [
         ...(p ? [{ label: 'Log Dose', route: '/(tabs)/calendar', icon: 'add-circle-outline' } as BotAction] : []),
         ...(p ? [{ label: `View ${p.name}`, route: `/peptide/${p.id}`, icon: 'document-text-outline' } as BotAction] : []),
-        { label: 'Ask Pepe More', route: '/(tabs)/peptalk', icon: 'chatbubble-outline' },
+        { label: 'Ask Aimee More', route: '/(tabs)/peptalk', icon: 'chatbubble-outline' },
       ].slice(0, 3);
     case 'interaction_check':
       return [

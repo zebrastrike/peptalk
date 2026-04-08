@@ -342,11 +342,11 @@ export interface BodyMeasurement {
 // Subscription / Paywall
 // ---------------------------------------------------------------------------
 
-export type SubscriptionTier = 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro';
+export type SubscriptionTier = 'free' | 'plus' | 'pro';
 
 export interface SubscriptionState {
   tier: SubscriptionTier;
-  /** RevenueCat or App Store product ID */
+  /** App Store / Google Play product ID */
   productId?: string;
   expiresAt?: string; // ISO
   isActive: boolean;
@@ -360,39 +360,67 @@ export const TIER_FEATURES: Record<SubscriptionTier, string[]> = {
     'dosing_calculator',
     'reconstitution_calculator',
     'calorie_counter',
+    'food_nutrition_info',
+    'learn_hub',
+  ],
+  plus: [
+    // All free features
+    'peptide_library',
+    'peptide_info',
+    'dosing_calculator',
+    'reconstitution_calculator',
+    'calorie_counter',
+    'food_nutrition_info',
+    'learn_hub',
+    // Plus features
+    'aimee_ai_limited',
+    'stack_builder',
+    'health_calendar',
+    'manual_tracking',
     'health_checkins',
     'dose_logging',
-    'calendar',
     'journal',
+    'health_integrations',
+    'watch_sync',
+    'biomarker_tracking',
+    'calendar_timeline',
+  ],
+  pro: [
+    // All plus features
+    'peptide_library',
+    'peptide_info',
+    'dosing_calculator',
+    'reconstitution_calculator',
+    'calorie_counter',
+    'food_nutrition_info',
     'learn_hub',
+    'aimee_ai_limited',
     'stack_builder',
-  ],
-  pepe: [
-    'all_free_features',
-    'pepe_ai_unlimited',
-    'pepe_dosing_qa',
-    'pepe_health_suggestions',
-  ],
-  pepe_plus: [
-    'all_pepe_features',
+    'health_calendar',
+    'manual_tracking',
+    'health_checkins',
+    'dose_logging',
+    'journal',
+    'health_integrations',
+    'watch_sync',
+    'biomarker_tracking',
+    'calendar_timeline',
+    // Pro features
+    'aimee_ai_unlimited',
+    'aimee_meal_plans',
+    'aimee_workout_plans',
+    'aimee_health_scheduler',
     'workout_programs',
+    'workout_videos',
     'ai_meal_plans',
     'nutrition_planning',
-    'pepe_weekly_programs',
-    'pepe_full_tracking',
     'grocery_from_plans',
     'recipe_generator',
-  ],
-  pepe_pro: [
-    'all_pepe_plus_features',
-    'health_device_sync',
-    'ai_health_planner',
     'health_reports',
     'pdf_export',
-    'nutritionist_consult',
     'data_export',
-    'priority_support',
     'ad_free',
+    'consult_booking',
   ],
 };
 

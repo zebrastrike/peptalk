@@ -398,7 +398,7 @@ export default function CalendarScreen() {
         });
       }
       buttons.push({
-        text: 'Ask Pepe',
+        text: 'Ask Aimee',
         onPress: () => router.push('/(tabs)/peptalk'),
       });
       Alert.alert('Dose Logged', timingTip, buttons);
@@ -413,7 +413,7 @@ export default function CalendarScreen() {
         });
       }
       buttons.push({
-        text: 'Ask Pepe',
+        text: 'Ask Aimee',
         onPress: () => router.push('/(tabs)/peptalk'),
       });
       Alert.alert(

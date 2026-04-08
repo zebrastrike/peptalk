@@ -45,7 +45,7 @@ interface TestAccount {
   ageRange: AgeRange;
   goals: GoalType[];
   interests: PeptideCategory[];
-  tier: 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro';
+  tier: 'free' | 'plus' | 'pro';
   health: HealthData;
 }
 
@@ -57,7 +57,7 @@ const TEST_ACCOUNTS: TestAccount[] = [
     ageRange: '18-29',
     goals: ['muscle_gain', 'body_recomp', 'recovery'],
     interests: ['Growth Hormone', 'Recovery', 'Metabolic'],
-    tier: 'pepe_pro',
+    tier: 'pro',
     health: {
       sex: 'male', dob: '1999-03-15', weightLbs: 185, heightInches: 71,
       bodyFatPercent: 14, goalWeightLbs: 195, activityLevel: 'very_active',
@@ -74,7 +74,7 @@ const TEST_ACCOUNTS: TestAccount[] = [
     ageRange: '18-29',
     goals: ['body_recomp', 'skin_hair', 'energy'],
     interests: ['Cosmetic', 'Metabolic', 'Longevity'],
-    tier: 'pepe_plus',
+    tier: 'plus',
     health: {
       sex: 'female', dob: '1998-07-22', weightLbs: 135, heightInches: 65,
       bodyFatPercent: 22, goalWeightLbs: 128, activityLevel: 'active',
@@ -91,7 +91,7 @@ const TEST_ACCOUNTS: TestAccount[] = [
     ageRange: '30-44',
     goals: ['cognitive', 'energy', 'longevity'],
     interests: ['Nootropic', 'Longevity', 'Recovery'],
-    tier: 'pepe_pro',
+    tier: 'pro',
     health: {
       sex: 'male', dob: '1986-11-08', weightLbs: 195, heightInches: 73,
       bodyFatPercent: 18, activityLevel: 'moderate',
@@ -110,7 +110,7 @@ const TEST_ACCOUNTS: TestAccount[] = [
     ageRange: '30-44',
     goals: ['hormonal', 'energy', 'skin_hair'],
     interests: ['Cosmetic', 'Immune', 'Sleep'],
-    tier: 'pepe_plus',
+    tier: 'plus',
     health: {
       sex: 'female', dob: '1988-04-12', weightLbs: 148, heightInches: 64,
       activityLevel: 'light',
@@ -129,7 +129,7 @@ const TEST_ACCOUNTS: TestAccount[] = [
     ageRange: '45-60',
     goals: ['longevity', 'hormonal', 'cognitive'],
     interests: ['Longevity', 'Sexual Health', 'Growth Hormone'],
-    tier: 'pepe_pro',
+    tier: 'pro',
     health: {
       sex: 'male', dob: '1972-09-03', weightLbs: 210, heightInches: 70,
       bodyFatPercent: 24, goalWeightLbs: 190, activityLevel: 'moderate',
@@ -148,7 +148,7 @@ const TEST_ACCOUNTS: TestAccount[] = [
     ageRange: '45-60',
     goals: ['hormonal', 'skin_hair', 'longevity'],
     interests: ['Cosmetic', 'Longevity', 'Immune'],
-    tier: 'pepe_pro',
+    tier: 'pro',
     health: {
       sex: 'female', dob: '1975-01-20', weightLbs: 155, heightInches: 66,
       activityLevel: 'active',
@@ -319,7 +319,7 @@ export default function DevAccountsScreen() {
                 <Text style={[styles.name, { color: palette?.primary ?? Colors.pepTeal }]}>
                   {account.name}
                 </Text>
-                <View style={[styles.tierBadge, account.tier === 'pepe_pro' ? styles.proBadge : account.tier === 'pepe_plus' ? styles.plusBadge : account.tier === 'pepe' ? styles.plusBadge : [styles.freeBadge, { backgroundColor: t.isDark ? '#333' : '#9ca3af' }]]}>
+                <View style={[styles.tierBadge, account.tier === 'pro' ? styles.proBadge : account.tier === 'plus' ? styles.plusBadge : [styles.freeBadge, { backgroundColor: t.isDark ? '#333' : '#9ca3af' }]]}>
                   <Text style={[styles.tierText, { color: t.text }]}>{account.tier.toUpperCase().replace(/_/g, ' ')}</Text>
                 </View>
               </View>

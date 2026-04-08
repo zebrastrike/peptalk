@@ -223,7 +223,7 @@ export function getExercisesByTag(tag: ExerciseTag): Exercise[] {
   return EXERCISES.filter((e) => e.tags.includes(tag));
 }
 
-/** Composite filter for workout builder / Pepe AI */
+/** Composite filter for workout builder / Aimee AI */
 export function filterExercises(filters: {
   muscle?: MuscleGroup;
   priority?: ExercisePriority;

@@ -110,7 +110,7 @@ export default function OnboardingScreen() {
   const [accountError, setAccountError] = useState('');
 
   // Plan selection state (Step 7)
-  const [selectedPlan, setSelectedPlan] = useState<'free' | 'pepe' | 'pepe_plus' | 'pepe_pro'>('free');
+  const [selectedPlan, setSelectedPlan] = useState<'free' | 'plus' | 'pro'>('free');
 
   const login = useAuthStore((s) => s.login);
   const setTier = useSubscriptionStore((s) => s.setTier);
@@ -755,9 +755,8 @@ export default function OnboardingScreen() {
 
             {([
               { tier: 'free' as const, name: 'Free', price: '$0', color: '#6b7280', badge: '', features: ['Peptide library (55+ peptides)', 'Dosing & reconstitution calculators', 'Calorie & macro tracking', 'Dose logging & calendar', 'Journal & check-ins', 'Learn hub'] },
-              { tier: 'pepe' as const, name: 'Pepe', price: '$9.99/mo', color: '#3B82F6', badge: 'Most Popular', features: ['Everything in Free', 'Unlimited Pepe AI chat', 'Pepe dosing Q&A', 'Pepe health suggestions', 'No ads'] },
-              { tier: 'pepe_plus' as const, name: 'Pepe Plus', price: '$49.99/mo', color: '#8B5CF6', badge: 'Best Value', features: ["Everything in Pepe", "Jamie's workout programs", 'Meals by Pepe', 'Nutrition coaching', 'Pepe builds your weekly plan', 'Grocery lists from meal plans'] },
-              { tier: 'pepe_pro' as const, name: 'Pepe Pro', price: '$99.99/mo', color: '#F59E0B', badge: 'Ultimate', features: ['Everything in Pepe Plus', 'Health device sync (Apple Watch, etc.)', 'AI health planner', 'PDF health reports', 'Priority support'] },
+              { tier: 'plus' as const, name: 'PepTalk+', price: '$9.99/mo', color: '#3B82F6', badge: 'Most Popular', features: ['Everything in Free', 'Aimee AI assistant', 'Stack builder', 'Health calendar & tracking', 'Watch & device integrations'] },
+              { tier: 'pro' as const, name: 'PepTalk Pro', price: '$49.99/mo', color: '#F59E0B', badge: 'All Access', features: ['Everything in Plus', 'Workout programs & videos', 'Aimee meal & workout plans', 'Full nutrition tools', 'Health reports & exports'] },
             ]).map((plan) => (
               <TouchableOpacity
                 key={plan.tier}

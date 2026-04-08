@@ -27,7 +27,7 @@ import { Colors, FontSizes, Spacing, BorderRadius } from '../src/constants/theme
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
 type Mode = 'login' | 'signup';
-type Tier = 'free' | 'pepe' | 'pepe_plus' | 'pepe_pro';
+type Tier = 'free' | 'plus' | 'pro';
 
 const PLANS: { tier: Tier; name: string; price: string; badge: string; features: string[] }[] = [
   {
@@ -35,28 +35,21 @@ const PLANS: { tier: Tier; name: string; price: string; badge: string; features:
     name: 'Free',
     price: '$0',
     badge: '',
-    features: ['Peptide library', 'Dosing calculators', 'Log your own workouts', 'Basic meal tracking'],
+    features: ['Peptide dosing calculators', 'Reconstitution & weight-based calc', 'Macro & calorie counter', 'Food nutritional info'],
   },
   {
-    tier: 'pepe',
-    name: 'Pepe',
+    tier: 'plus',
+    name: 'PepTalk+',
     price: '$9.99/mo',
-    badge: '',
-    features: ['Everything in Free', 'Pepe AI assistant', 'Journal & check-ins', 'Health reports'],
-  },
-  {
-    tier: 'pepe_plus',
-    name: 'Pepe Plus',
-    price: '$49.99/mo',
     badge: 'POPULAR',
-    features: ['Everything in Pepe', 'Meals by Pepe', 'Programs by Jamie', 'Calendar sync'],
+    features: ['Everything in Free', 'Aimee AI assistant', 'Stack builder', 'Health calendar & tracking', 'Health device integrations'],
   },
   {
-    tier: 'pepe_pro',
-    name: 'Pepe Pro',
-    price: '$99.99/mo',
+    tier: 'pro',
+    name: 'PepTalk Pro',
+    price: '$49.99/mo',
     badge: 'ALL ACCESS',
-    features: ['Everything in Plus', 'Health device sync', 'Priority support', 'Telemedicine (coming soon)'],
+    features: ['Everything in Plus', 'Workout programs & videos', 'Aimee meal & workout plans', 'Full nutrition tools', 'Consult booking ($500/session)'],
   },
 ];
 
