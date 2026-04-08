@@ -40,7 +40,20 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#14b8a6"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "PepTalk needs camera access to scan your meals for automatic nutrition tracking."
+        }
+      ]
     ],
     "extra": {
       "router": {},

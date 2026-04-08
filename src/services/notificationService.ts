@@ -17,17 +17,13 @@ import { Platform } from 'react-native';
 let Notifications: any = null;
 let Device: any = null;
 
-// NOTE: expo-notifications and expo-device are NOT installed yet.
-// Metro resolves require() at bundle time even inside try/catch.
-// Install both packages and uncomment below for push notifications.
-//
-// try {
-//   Notifications = require('expo-notifications');
-// } catch {}
-//
-// try {
-//   Device = require('expo-device');
-// } catch {}
+try {
+  Notifications = require('expo-notifications');
+} catch {}
+
+try {
+  Device = require('expo-device');
+} catch {}
 
 // ---------------------------------------------------------------------------
 // Availability check
@@ -400,7 +396,154 @@ function reminderBody(type: string): string {
       return 'Time to take your scheduled dose.';
     case 'weekly-report':
       return 'Your weekly summary is ready. See how you did!';
+    case 'motivation':
+      return getRandomMotivation();
     default:
       return 'You have a PepTalk reminder.';
+  }
+}
+
+// ─── Motivational Messages ──────────────────────────────────────────────────
+
+const MOTIVATIONAL_MESSAGES = [
+  "You're showing up for yourself today. That's the hardest part, and you've already done it.",
+  "Progress isn't always visible. Trust the process — your body is rebuilding right now.",
+  "Small daily choices compound into massive results. Keep going.",
+  "Your consistency is your superpower. Every check-in, every meal, every workout matters.",
+  "Recovery is productive. Rest days are growth days.",
+  "You're not just tracking data — you're building a healthier future.",
+  "The best investment you'll ever make is in your own health. Keep investing.",
+  "Drink your water. Move your body. Feed it well. You've got this.",
+  "Every rep, every meal, every good night's sleep brings you closer to your goals.",
+  "Your body is a reflection of what you consistently do. Stay the course.",
+  "You don't need to be perfect. You just need to keep showing up.",
+  "Think about where you were 30 days ago. Now imagine 30 days from now. Keep going.",
+  "The fact that you're using this app means you care about your health. That already puts you ahead.",
+  "Today is a new opportunity to move toward the person you want to become.",
+  "Health isn't a destination — it's how you travel. Enjoy the journey.",
+];
+
+function getRandomMotivation(): string {
+  return MOTIVATIONAL_MESSAGES[Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length)];
+}
+
+// ─── Schedule Daily Check-In Reminder ──────────────────────────────────────
+
+export async function scheduleCheckInReminder(time: string = '20:00'): Promise<string> {
+  if (!isAvailable()) return '';
+
+  const [hours, minutes] = time.split(':').map(Number);
+
+  const identifier = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Daily Check-In',
+      body: 'How are you feeling today? Take 30 seconds to log your mood, energy, and recovery.',
+      sound: 'default',
+      data: { type: 'check-in', route: '/(tabs)/check-in' },
+      ...(Platform.OS === 'android' && { channelId: 'reminders' }),
+    },
+    trigger: {
+      type: Notifications?.SchedulableTriggerInputTypes?.DAILY ?? 'daily',
+      hour: hours,
+      minute: minutes,
+      ...(Platform.OS === 'android' && { channelId: 'reminders' }),
+    },
+    identifier: `checkin-daily-${Date.now()}`,
+  });
+
+  return identifier;
+}
+
+// ─── Schedule Daily Motivation ─────────────────────────────────────────────
+
+export async function scheduleDailyMotivation(time: string = '08:00'): Promise<string> {
+  if (!isAvailable()) return '';
+
+  const [hours, minutes] = time.split(':').map(Number);
+
+  const identifier = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'PepTalk',
+      body: getRandomMotivation(),
+      sound: 'default',
+      data: { type: 'motivation' },
+      ...(Platform.OS === 'android' && { channelId: 'motivation' }),
+    },
+    trigger: {
+      type: Notifications?.SchedulableTriggerInputTypes?.DAILY ?? 'daily',
+      hour: hours,
+      minute: minutes,
+      ...(Platform.OS === 'android' && { channelId: 'motivation' }),
+    },
+    identifier: `motivation-daily-${Date.now()}`,
+  });
+
+  return identifier;
+}
+
+// ─── Schedule Health Goal Reminder ─────────────────────────────────────────
+
+export async function scheduleGoalReminder(
+  goalName: string,
+  message: string,
+  time: string,
+  frequency: 'daily' | 'weekly' = 'daily',
+  dayOfWeek?: number,
+): Promise<string> {
+  if (!isAvailable()) return '';
+
+  const [hours, minutes] = time.split(':').map(Number);
+  const trigger = frequency === 'weekly' && dayOfWeek != null
+    ? {
+        type: Notifications?.SchedulableTriggerInputTypes?.WEEKLY ?? 'weekly',
+        weekday: dayOfWeek,
+        hour: hours,
+        minute: minutes,
+        ...(Platform.OS === 'android' && { channelId: 'reminders' }),
+      }
+    : {
+        type: Notifications?.SchedulableTriggerInputTypes?.DAILY ?? 'daily',
+        hour: hours,
+        minute: minutes,
+        ...(Platform.OS === 'android' && { channelId: 'reminders' }),
+      };
+
+  const identifier = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: goalName,
+      body: message,
+      sound: 'default',
+      data: { type: 'goal', goalName },
+      ...(Platform.OS === 'android' && { channelId: 'reminders' }),
+    },
+    trigger,
+    identifier: `goal-${goalName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
+  });
+
+  return identifier;
+}
+
+// ─── Get All Scheduled Reminders ───────────────────────────────────────────
+
+export async function getScheduledReminders(): Promise<Array<{
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  trigger: any;
+}>> {
+  if (!isAvailable()) return [];
+
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    return scheduled.map((n: any) => ({
+      id: n.identifier,
+      type: n.content?.data?.type ?? 'unknown',
+      title: n.content?.title ?? '',
+      body: n.content?.body ?? '',
+      trigger: n.trigger,
+    }));
+  } catch {
+    return [];
   }
 }

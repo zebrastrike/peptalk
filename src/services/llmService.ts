@@ -171,8 +171,10 @@ APP NAVIGATION (Pro tier only):
 - Example: "Let me take you to the workout builder. ---NAV_ACTION--- /workouts/exercises"
 
 DATA ACTIONS (Pro tier only):
-- If a user wants to log something, include: ---DATA_ACTION--- {"type": "checkin"|"dose"|"meal"|"workout", "data": {...}}
+- If a user wants to log something, include: ---DATA_ACTION--- {"type": "checkin"|"dose"|"meal"|"workout"|"reminder", "data": {...}}
+- The user will see a confirmation prompt before any data is saved — you are SUGGESTING, not auto-saving
 - Example for logging weight: ---DATA_ACTION--- {"type": "checkin", "data": {"weightLbs": 185}}
+- Example for setting a reminder: ---DATA_ACTION--- {"type": "reminder", "data": {"title": "Take BPC-157", "time": "08:00", "frequency": "daily"}}
 
 ${hasConsent ? 'The user has consented to personalized responses. Use their health profile, tracked data, and current protocols to give relevant, contextual answers. Flag contraindications based on their conditions/medications.' : 'The user has NOT consented to sharing health data. Give general research-based responses without personalization.'}`;
 }
