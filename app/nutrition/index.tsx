@@ -727,6 +727,20 @@ export default function NutritionScreen() {
             <View style={styles.mealHeaderActions}>
               <TouchableOpacity
                 style={styles.addFoodBtn}
+                onPress={() => router.push('/nutrition/food-scanner' as any)}
+              >
+                <LinearGradient
+                  colors={['#f59e0b', '#ef4444']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.addFoodBtnGradient}
+                >
+                  <Ionicons name="camera" size={14} color="#fff" />
+                  <Text style={styles.addFoodBtnText}>Scan</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.addFoodBtn}
                 onPress={() => router.push('/nutrition/food-search' as any)}
               >
                 <LinearGradient
@@ -736,7 +750,7 @@ export default function NutritionScreen() {
                   style={styles.addFoodBtnGradient}
                 >
                   <Ionicons name="search" size={14} color="#fff" />
-                  <Text style={styles.addFoodBtnText}>Food Search</Text>
+                  <Text style={styles.addFoodBtnText}>Search</Text>
                 </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setShowLog(true)}>
