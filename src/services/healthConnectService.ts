@@ -277,3 +277,70 @@ export async function syncHealthDataToCheckIn(): Promise<HealthCheckInData> {
 
   return data;
 }
+
+// ---------------------------------------------------------------------------
+// Women's Health / Cycle Tracking (Health Connect - Android)
+// ---------------------------------------------------------------------------
+
+export interface CycleData {
+  currentFlow: 'none' | 'light' | 'medium' | 'heavy' | null;
+  lastPeriodStart: string | null;
+  cycleDay: number | null;
+  phase: 'menstrual' | 'follicular' | 'ovulatory' | 'luteal' | null;
+  contraceptiveType: string | null;
+}
+
+export async function fetchCycleData(): Promise<CycleData | null> {
+  if (!HCModule) return null;
+
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    let currentFlow: CycleData['currentFlow'] = null;
+    let lastPeriodStart: string | null = null;
+
+    // Read menstruation flow records
+    try {
+      const records = await HCModule.readRecords('MenstruationFlow', {
+        timeRangeFilter: { operator: 'between', startTime: thirtyDaysAgo.toISOString(), endTime: new Date().toISOString() },
+      });
+      if (records?.length > 0) {
+        const latest = records[records.length - 1];
+        const flowMap: Record<number, CycleData['currentFlow']> = {
+          0: 'none', 1: 'light', 2: 'medium', 3: 'heavy',
+        };
+        currentFlow = flowMap[latest.flow] ?? null;
+      }
+    } catch {}
+
+    // Read menstruation period records for last period start
+    try {
+      const periods = await HCModule.readRecords('MenstruationPeriod', {
+        timeRangeFilter: { operator: 'between', startTime: thirtyDaysAgo.toISOString(), endTime: new Date().toISOString() },
+      });
+      if (periods?.length > 0) {
+        const latest = periods[periods.length - 1];
+        lastPeriodStart = new Date(latest.startTime).toISOString().slice(0, 10);
+      }
+    } catch {}
+
+    let cycleDay: number | null = null;
+    let phase: CycleData['phase'] = null;
+    if (lastPeriodStart) {
+      const daysSince = Math.floor(
+        (Date.now() - new Date(lastPeriodStart).getTime()) / (1000 * 60 * 60 * 24)
+      );
+      cycleDay = daysSince;
+      if (daysSince <= 5) phase = 'menstrual';
+      else if (daysSince <= 13) phase = 'follicular';
+      else if (daysSince <= 16) phase = 'ovulatory';
+      else phase = 'luteal';
+    }
+
+    return { currentFlow, lastPeriodStart, cycleDay, phase, contraceptiveType: null };
+  } catch (error) {
+    console.warn('[HealthConnect] Failed to fetch cycle data:', error);
+    return null;
+  }
+}

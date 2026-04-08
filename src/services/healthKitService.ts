@@ -81,6 +81,13 @@ export async function requestHealthKitPermissions(): Promise<boolean> {
         HKQuantityTypeIdentifier.oxygenSaturation,
         HKQuantityTypeIdentifier.respiratoryRate,
         HKQuantityTypeIdentifier.restingHeartRate,
+
+        // Phase 3 — Women's health / cycle tracking
+        HKCategoryTypeIdentifier.menstrualFlow,
+        HKCategoryTypeIdentifier.cervicalMucusQuality,
+        HKCategoryTypeIdentifier.ovulationTestResult,
+        HKCategoryTypeIdentifier.contraceptive,
+        HKCategoryTypeIdentifier.intermenstrualBleeding,
       ],
       [] // no write permissions
     );
@@ -579,4 +586,110 @@ export async function syncAllWatchData(): Promise<WatchHealthData> {
   if (sleepStages !== null) data.sleepStages = sleepStages;
 
   return data;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 3 — Women's Health / Cycle Tracking
+// ---------------------------------------------------------------------------
+
+export interface CycleData {
+  currentFlow: 'none' | 'light' | 'medium' | 'heavy' | null;
+  lastPeriodStart: string | null;
+  cycleDay: number | null;
+  phase: 'menstrual' | 'follicular' | 'ovulatory' | 'luteal' | null;
+  contraceptiveType: string | null;
+  cervicalMucus: string | null;
+  ovulationResult: 'positive' | 'negative' | 'indeterminate' | null;
+}
+
+export async function fetchCycleData(): Promise<CycleData | null> {
+  if (!HKModule) return null;
+
+  try {
+    const { HKCategoryTypeIdentifier } = HKModule;
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    let currentFlow: CycleData['currentFlow'] = null;
+    let lastPeriodStart: string | null = null;
+    try {
+      const flowSamples = await HKModule.queryCategorySamples(
+        HKCategoryTypeIdentifier.menstrualFlow,
+        { from: thirtyDaysAgo, to: new Date(), limit: 30, ascending: false }
+      );
+      if (flowSamples?.length > 0) {
+        const flowMap: Record<number, CycleData['currentFlow']> = {
+          1: 'light', 2: 'medium', 3: 'heavy', 4: 'none',
+        };
+        currentFlow = flowMap[flowSamples[0].value] ?? null;
+        for (let i = 0; i < flowSamples.length; i++) {
+          if (flowSamples[i].value >= 1 && flowSamples[i].value <= 3) {
+            lastPeriodStart = new Date(flowSamples[i].startDate).toISOString().slice(0, 10);
+            break;
+          }
+        }
+      }
+    } catch {}
+
+    let cycleDay: number | null = null;
+    let phase: CycleData['phase'] = null;
+    if (lastPeriodStart) {
+      const daysSince = Math.floor(
+        (Date.now() - new Date(lastPeriodStart).getTime()) / (1000 * 60 * 60 * 24)
+      );
+      cycleDay = daysSince;
+      if (daysSince <= 5) phase = 'menstrual';
+      else if (daysSince <= 13) phase = 'follicular';
+      else if (daysSince <= 16) phase = 'ovulatory';
+      else phase = 'luteal';
+    }
+
+    let contraceptiveType: string | null = null;
+    try {
+      const samples = await HKModule.queryCategorySamples(
+        HKCategoryTypeIdentifier.contraceptive,
+        { limit: 1, ascending: false }
+      );
+      if (samples?.length > 0) {
+        const typeMap: Record<number, string> = {
+          1: 'Unspecified', 2: 'Implant', 3: 'Injection',
+          4: 'IUD', 5: 'Ring', 6: 'Oral Pill', 7: 'Patch',
+        };
+        contraceptiveType = typeMap[samples[0].value] ?? 'Unknown';
+      }
+    } catch {}
+
+    let cervicalMucus: string | null = null;
+    try {
+      const samples = await HKModule.queryCategorySamples(
+        HKCategoryTypeIdentifier.cervicalMucusQuality,
+        { limit: 1, ascending: false }
+      );
+      if (samples?.length > 0) {
+        const mucusMap: Record<number, string> = {
+          1: 'Dry', 2: 'Sticky', 3: 'Creamy', 4: 'Watery', 5: 'Egg White',
+        };
+        cervicalMucus = mucusMap[samples[0].value] ?? null;
+      }
+    } catch {}
+
+    let ovulationResult: CycleData['ovulationResult'] = null;
+    try {
+      const samples = await HKModule.queryCategorySamples(
+        HKCategoryTypeIdentifier.ovulationTestResult,
+        { limit: 1, ascending: false }
+      );
+      if (samples?.length > 0) {
+        const ovMap: Record<number, CycleData['ovulationResult']> = {
+          1: 'negative', 2: 'indeterminate', 3: 'positive',
+        };
+        ovulationResult = ovMap[samples[0].value] ?? null;
+      }
+    } catch {}
+
+    return { currentFlow, lastPeriodStart, cycleDay, phase, contraceptiveType, cervicalMucus, ovulationResult };
+  } catch (error) {
+    console.warn('[HealthKit] Failed to fetch cycle data:', error);
+    return null;
+  }
 }
