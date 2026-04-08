@@ -1,13 +1,15 @@
 /**
- * LLM Service — Grok AI (xAI) integration for PepTalk.
+ * LLM Service — Aimee AI for PepTalk.
  *
- * Uses the xAI Chat Completions API (OpenAI-compatible format) with
- * grok-4-1-fast-reasoning for cost-effective, high-quality responses.
+ * Two modes:
+ *   1. Server-side (recommended): Calls Supabase Edge Function which proxies
+ *      to OpenAI/Grok. API key stays server-side, rate limiting enforced.
+ *   2. Client-side fallback: Direct API call if Edge Function unavailable
+ *      (dev/testing only, requires EXPO_PUBLIC_XAI_API_KEY in .env).
  *
- * HIPAA considerations:
+ * Privacy:
  * - Only sends health data if user has consented (aiDataConsent)
  * - Never sends user identifiers (name, email, user ID)
- * - xAI business data (prompts/responses) is NOT used for training
  * - System prompt is built fresh per request from local stores
  */
 
@@ -18,20 +20,24 @@ import { PROTOCOL_TEMPLATES } from '../data/protocols';
 import { KNOWLEDGE_TOPICS } from '../data/knowledgeTopics';
 import { SAFETY_PROFILES } from '../data/safetyProfiles';
 import { sanitizeForLLM } from './privacyGuard';
+import { supabase } from './supabase';
 
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
 
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+
+// Fallback: direct API call (dev/testing only)
 const XAI_API_KEY = process.env.EXPO_PUBLIC_XAI_API_KEY ?? '';
 const MODEL = 'grok-4-1-fast-reasoning';
 const TIMEOUT_MS = 30_000;
 
 const client = new OpenAI({
-  apiKey: XAI_API_KEY,
+  apiKey: XAI_API_KEY || 'dummy',
   baseURL: 'https://api.x.ai/v1',
   timeout: TIMEOUT_MS,
-  dangerouslyAllowBrowser: true, // Required for React Native
+  dangerouslyAllowBrowser: true,
 });
 
 // ---------------------------------------------------------------------------
@@ -230,60 +236,91 @@ const uid = () =>
   `bot-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
 /**
- * Generate an AI response using the Grok API.
- * Returns null if the API call fails (caller should fall back to local bot).
+ * Generate an AI response.
+ * Tries Supabase Edge Function first (secure, rate-limited).
+ * Falls back to direct API call in dev if edge function unavailable.
  */
 export async function generateAIResponse(
   userMessage: string,
   context: EnhancedBotContext
 ): Promise<ChatMessage | null> {
-  if (!XAI_API_KEY) {
-    if (__DEV__) console.warn('[llmService] No API key configured');
-    return null;
+  // Build conversation messages (last 10 for context)
+  const conversationMessages = context.conversationHistory.slice(-10).map((msg) => ({
+    role: msg.role === 'bot' ? 'assistant' as const : 'user' as const,
+    content: msg.content,
+  }));
+  conversationMessages.push({ role: 'user' as const, content: userMessage });
+
+  const systemPrompt = buildSystemPrompt(context);
+  let rawResponse: string | null = null;
+
+  // ── Try Supabase Edge Function first ──
+  if (SUPABASE_URL) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/aimee-chat`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+            'apikey': process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
+          },
+          body: JSON.stringify({ messages: conversationMessages, systemPrompt }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          rawResponse = data.content;
+        } else if (res.status === 403 || res.status === 429) {
+          // Tier or rate limit — return the error message as bot response
+          const data = await res.json();
+          return {
+            id: uid(),
+            role: 'bot',
+            content: data.error ?? 'Please upgrade to use Aimee AI.',
+            timestamp: new Date().toISOString(),
+            quickReplies: data.upgrade ? ['View subscription plans'] : undefined,
+            navAction: data.upgrade ? '/subscription' : undefined,
+          };
+        }
+      }
+    } catch (e) {
+      if (__DEV__) console.warn('[llmService] Edge function failed, trying direct:', e);
+    }
   }
 
-  try {
-    // Build conversation messages (last 10 for context)
-    const conversationMessages: OpenAI.ChatCompletionMessageParam[] =
-      context.conversationHistory.slice(-10).map((msg) => ({
-        role: msg.role === 'bot' ? 'assistant' as const : 'user' as const,
-        content: msg.content,
-      }));
-
-    // Add current user message
-    conversationMessages.push({
-      role: 'user',
-      content: userMessage,
-    });
-
-    const completion = await client.chat.completions.create({
-      model: MODEL,
-      messages: [
-        { role: 'system', content: buildSystemPrompt(context) },
-        ...conversationMessages,
-      ],
-      max_tokens: 1024,
-      temperature: 0.7,
-    });
-
-    const rawResponse = completion.choices[0]?.message?.content;
-    if (!rawResponse) return null;
-
-    const { content, quickReplies, navAction, dataAction } = parseResponse(rawResponse);
-
-    return {
-      id: uid(),
-      role: 'bot',
-      content,
-      timestamp: new Date().toISOString(),
-      quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
-      navAction,
-      dataAction: dataAction as any,
-    };
-  } catch (error) {
-    if (__DEV__) console.warn('[llmService] API call failed:', error);
-    return null;
+  // ── Fallback: Direct API call (dev/testing) ──
+  if (!rawResponse && XAI_API_KEY) {
+    try {
+      const completion = await client.chat.completions.create({
+        model: MODEL,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...conversationMessages as OpenAI.ChatCompletionMessageParam[],
+        ],
+        max_tokens: 1024,
+        temperature: 0.7,
+      });
+      rawResponse = completion.choices[0]?.message?.content ?? null;
+    } catch (error) {
+      if (__DEV__) console.warn('[llmService] Direct API call failed:', error);
+    }
   }
+
+  if (!rawResponse) return null;
+
+  const { content, quickReplies, navAction, dataAction } = parseResponse(rawResponse);
+
+  return {
+    id: uid(),
+    role: 'bot',
+    content,
+    timestamp: new Date().toISOString(),
+    quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+    navAction,
+    dataAction: dataAction as any,
+  };
 }
 
 /**
@@ -395,5 +432,5 @@ Include: weekly workout schedule, meal plan framework, and any protocol/suppleme
  * Check if the AI service is available (has API key configured).
  */
 export function isAIAvailable(): boolean {
-  return XAI_API_KEY.length > 0;
+  return SUPABASE_URL.length > 0 || XAI_API_KEY.length > 0;
 }
