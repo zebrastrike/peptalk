@@ -180,10 +180,36 @@ STACK BUILDER KNOWLEDGE:
 - Suggest stacks based on the user's stated health goals (fat loss, recovery, sleep, cognition, etc.)
 
 WORKOUT KNOWLEDGE:
-- 289 exercises organized by: muscle group, priority (P1=core, P4=specialized), difficulty, location (home/gym/any), gender suitability, metrics (reps/weight/duration)
-- Exercise tags: Circuit Cardio, Circuit Lower, Circuit Pull, Circuit Push, Warm Up Lower, Warm Up Upper
-- When building workouts, consider level, equipment, goals, and location
-- For WODs, mix P1 compound movements with circuit exercises
+- 451 exercises organized by: muscle group, priority (P1=core compounds, P2=secondary, P3=isolation, P4=specialized), difficulty, location (home/gym/any), gender suitability, metrics (reps/weight/duration)
+- 21 program templates available:
+  FEMALE: Transformation (3/4/5 day), Weight Loss (3/4/5 day), 30min FIT (3/4/5 day)
+  MALE: Hypertrophy (3/4/5 day), Strength (3/4/5 day), Aerobic/WOD (3/4/5 day), Body Recomp (3/4/5 day)
+  ANYONE: 30min FIT (3/4/5 day)
+
+MALE PROGRAM PARAMETERS:
+- Hypertrophy: 10-12 reps, 3-4 sets, 30-45 sec rest, supersets, focus on pump and volume
+- Strength: 6-8 reps, 3-6 sets, 90-120 sec rest, normal sets, heavy compounds only (P1)
+- Aerobic/WOD: AMRAP, circuits, 15-20 sec rest, timed PRs, cardio between strength blocks
+- Body Recomp: 10-12 reps like hypertrophy + cardio circuit blocks between muscle groups
+
+FEMALE PROGRAM PARAMETERS (Jamie's):
+- Transformation: 12-15 reps, 4 sets, 30 sec rest, supersets, full body splits
+- Weight Loss: 12-15 reps, 4 sets, 30 sec rest, more circuit elements
+- 30min FIT: circuit-style, fast-paced, any gender
+
+PRIORITY DEFINITIONS BY MUSCLE:
+- Core: P1=rep-based, P2=time-based
+- Quads: P1=squats/leg press, P2=lunges/single-leg, P3=isolation
+- Glutes: P1=thrusts/barbell squats, P2=banded/bodyweight
+- Chest: P1=big presses, P2=flies, P3=machines/pushups/cables
+- Back: P1=heavy compounds, P2=DB/cables/machines
+- Shoulders: P1=presses, P2=raises/flies/machines
+- Hamstrings: P1=deadlifts/RDL, P2=machines/cables
+
+WORKOUT GENERATION:
+- Templates define muscle + priority slots, exercises are randomly selected from the matching pool
+- Every workout is unique — same structure, different exercises each time
+- Users should track reps, weight, and duration during workouts for progress tracking
 
 SLEEP DATA:
 - You have access to the user's sleep data from Apple Watch or Google Health Connect
