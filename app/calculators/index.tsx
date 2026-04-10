@@ -30,10 +30,35 @@ export default function CalculatorsHubScreen() {
         contentContainerStyle={styles.scroll}
       >
         <Text style={[styles.subtitle, { color: t.textSecondary }]}>
-          Tools to help you calculate dosing and reconstitution for your peptide protocols.
+          Pick your peptide — we'll handle the math.
         </Text>
 
-        {/* Dosing Calculator Card */}
+        {/* Quick Dose Guide — Primary CTA */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => router.push('/calculators/quick-dose')}
+        >
+          <LinearGradient
+            colors={['#3B82F6', '#06B6D4']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={[styles.card, styles.primaryCard]}
+          >
+            <View style={[styles.cardIcon, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
+              <Ionicons name="flash" size={32} color="#fff" />
+            </View>
+            <View style={styles.cardContent}>
+              <Text style={[styles.cardTitle, { color: '#fff' }]}>Quick Dose Guide</Text>
+              <Text style={[styles.cardDesc, { color: 'rgba(255,255,255,0.8)' }]}>
+                Pick a peptide → get dosing, reconstitution, injection instructions, and cycling — all in one place.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="rgba(255,255,255,0.7)" />
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Advanced: Dosing Calculator Card */}
+        <Text style={[styles.advancedLabel, { color: t.textSecondary }]}>ADVANCED TOOLS</Text>
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => router.push('/calculators/dosing')}
@@ -133,6 +158,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: Spacing.md,
+  },
+  primaryCard: {
+    borderWidth: 0,
+    marginBottom: Spacing.lg,
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  advancedLabel: {
+    fontSize: FontSizes.xs,
+    fontWeight: '600' as const,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 1,
+    marginBottom: Spacing.sm,
   },
   cardIcon: {
     width: 56,
