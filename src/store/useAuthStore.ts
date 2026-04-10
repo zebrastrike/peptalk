@@ -38,11 +38,51 @@ export const useAuthStore = create<AuthStore>()(
       login: async (email: string, password: string) => {
         set({ isLoading: true });
 
+        // ── Dev fallback: test accounts work without Supabase ──
+        const DEV_ACCOUNTS: Record<string, { name: string; tier: 'free' | 'plus' | 'pro' }> = {
+          'free@test.com':     { name: 'Free Tester',  tier: 'free' },
+          'plus@test.com':     { name: 'Plus Tester',  tier: 'plus' },
+          'pro@test.com':      { name: 'Pro Tester',   tier: 'pro' },
+          'jamie@test.com':    { name: 'Jamie',        tier: 'pro' },
+          'jake@test.com':     { name: 'Jake',         tier: 'pro' },
+          'sophia@test.com':   { name: 'Sophia',       tier: 'plus' },
+          'marcus@test.com':   { name: 'Marcus',       tier: 'pro' },
+          'sarah@test.com':    { name: 'Sarah',        tier: 'plus' },
+          'richard@test.com':  { name: 'Richard',      tier: 'pro' },
+          'diana@test.com':    { name: 'Diana',        tier: 'pro' },
+          'walter@test.com':   { name: 'Walter',       tier: 'free' },
+          'margaret@test.com': { name: 'Margaret',     tier: 'free' },
+        };
+
+        const devMatch = DEV_ACCOUNTS[email.toLowerCase()];
+
         try {
+          // Try real Supabase auth first
           const { data, error } = await db.auth.signInWithPassword({
             email,
             password,
           });
+
+          if (error && devMatch) {
+            // Supabase failed but it's a dev account — use fallback
+            await new Promise((r) => setTimeout(r, 500));
+            const { useSubscriptionStore } = require('./useSubscriptionStore');
+            useSubscriptionStore.getState().setTier(devMatch.tier);
+            set({
+              user: {
+                id: `dev-${Date.now()}`,
+                email,
+                name: devMatch.name,
+                savedStacks: [],
+                favoritePeptides: [],
+                isPro: devMatch.tier === 'pro',
+                createdAt: new Date().toISOString(),
+              },
+              isAuthenticated: true,
+              isLoading: false,
+            });
+            return;
+          }
 
           if (error) {
             set({ isLoading: false });
