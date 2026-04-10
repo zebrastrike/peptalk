@@ -748,6 +748,29 @@ export default function CalendarScreen() {
                     ) : null}
                   </View>
                 )}
+                {/* Sleep data */}
+                {selectedDayCheckin.sleepStages && (
+                  <View style={styles.checkinBadgeRow}>
+                    <LinearGradient colors={['rgba(99,102,241,0.15)', 'rgba(99,102,241,0.05)']} style={styles.checkinBadge}>
+                      <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Sleep</Text>
+                      <Text style={[styles.checkinBadgeValue, { color: '#6366f1' }]}>{selectedDayCheckin.sleepStages.total}h</Text>
+                    </LinearGradient>
+                    <LinearGradient colors={['rgba(30,64,175,0.15)', 'rgba(30,64,175,0.05)']} style={styles.checkinBadge}>
+                      <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Deep</Text>
+                      <Text style={[styles.checkinBadgeValue, { color: '#1e40af' }]}>{selectedDayCheckin.sleepStages.deep}h</Text>
+                    </LinearGradient>
+                    <LinearGradient colors={['rgba(124,58,237,0.15)', 'rgba(124,58,237,0.05)']} style={styles.checkinBadge}>
+                      <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>REM</Text>
+                      <Text style={[styles.checkinBadgeValue, { color: '#7c3aed' }]}>{selectedDayCheckin.sleepStages.rem}h</Text>
+                    </LinearGradient>
+                    {selectedDayCheckin.sleepStages.qualityScore != null && (
+                      <LinearGradient colors={['rgba(6,182,212,0.15)', 'rgba(6,182,212,0.05)']} style={styles.checkinBadge}>
+                        <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Quality</Text>
+                        <Text style={[styles.checkinBadgeValue, { color: Colors.pepTeal }]}>{selectedDayCheckin.sleepStages.qualityScore}%</Text>
+                      </LinearGradient>
+                    )}
+                  </View>
+                )}
                 {selectedDayCheckin.overallFeeling ? (
                   <Text style={[styles.checkinFeeling, { color: t.textSecondary }]}>
                     "{selectedDayCheckin.overallFeeling}"

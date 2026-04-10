@@ -223,6 +223,14 @@ export interface SleepStages {
   deep: number;
   rem: number;
   total: number;
+  /** Time user fell asleep (ISO string) */
+  bedtime?: string;
+  /** Time user woke up (ISO string) */
+  wakeTime?: string;
+  /** Sleep efficiency: time asleep / time in bed (0-100%) */
+  efficiency?: number;
+  /** Sleep quality score: weighted composite (0-100) */
+  qualityScore?: number;
 }
 
 /**
@@ -269,12 +277,37 @@ export async function fetchSleepStages(): Promise<SleepStages | null> {
     const total = coreMinutes + deepMinutes + remMinutes;
     if (total === 0) return null;
 
+    // Detect bedtime and wake time from first/last sleep samples
+    const sleepSamples = samples
+      .filter((s: any) => s.value >= 1 && s.value <= 5)
+      .sort((a: any, b: any) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+
+    const bedtime = sleepSamples.length > 0 ? sleepSamples[0].startDate : undefined;
+    const wakeTime = sleepSamples.length > 0 ? sleepSamples[sleepSamples.length - 1].endDate : undefined;
+
+    // Sleep efficiency: time asleep / total time in bed
+    const timeInBed = total + awakeMinutes;
+    const efficiency = timeInBed > 0 ? Math.round((total / timeInBed) * 100) : undefined;
+
+    // Quality score (0-100): weighted by deep (40%), REM (30%), efficiency (20%), duration (10%)
+    const deepScore = Math.min((deepMinutes / 90) * 100, 100); // 90 min deep = perfect
+    const remScore = Math.min((remMinutes / 120) * 100, 100);  // 120 min REM = perfect
+    const durationScore = Math.min((total / 480) * 100, 100);  // 8 hours = perfect
+    const effScore = efficiency ?? 85;
+    const qualityScore = Math.round(
+      deepScore * 0.4 + remScore * 0.3 + effScore * 0.2 + durationScore * 0.1
+    );
+
     return {
       awake: Math.round((awakeMinutes / 60) * 10) / 10,
       core: Math.round((coreMinutes / 60) * 10) / 10,
       deep: Math.round((deepMinutes / 60) * 10) / 10,
       rem: Math.round((remMinutes / 60) * 10) / 10,
       total: Math.round((total / 60) * 10) / 10,
+      bedtime,
+      wakeTime,
+      efficiency,
+      qualityScore,
     };
   } catch (error) {
     console.warn('[HealthKit] Failed to fetch sleep stages:', error);
