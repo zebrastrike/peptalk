@@ -719,6 +719,58 @@ export default function CalendarScreen() {
                     ))}
                   </View>
                 )}
+                {/* Health metrics from check-in or watch */}
+                {(selectedDayCheckin.weightLbs || selectedDayCheckin.restingHeartRate || selectedDayCheckin.steps || selectedDayCheckin.hrvMs) && (
+                  <View style={styles.checkinBadgeRow}>
+                    {selectedDayCheckin.weightLbs ? (
+                      <LinearGradient colors={['rgba(245,158,11,0.15)', 'rgba(245,158,11,0.05)']} style={styles.checkinBadge}>
+                        <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Weight</Text>
+                        <Text style={[styles.checkinBadgeValue, { color: '#f59e0b' }]}>{selectedDayCheckin.weightLbs} lbs</Text>
+                      </LinearGradient>
+                    ) : null}
+                    {selectedDayCheckin.restingHeartRate ? (
+                      <LinearGradient colors={['rgba(239,68,68,0.15)', 'rgba(239,68,68,0.05)']} style={styles.checkinBadge}>
+                        <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>HR</Text>
+                        <Text style={[styles.checkinBadgeValue, { color: '#ef4444' }]}>{selectedDayCheckin.restingHeartRate} bpm</Text>
+                      </LinearGradient>
+                    ) : null}
+                    {selectedDayCheckin.steps ? (
+                      <LinearGradient colors={['rgba(34,197,94,0.15)', 'rgba(34,197,94,0.05)']} style={styles.checkinBadge}>
+                        <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Steps</Text>
+                        <Text style={[styles.checkinBadgeValue, { color: '#22c55e' }]}>{selectedDayCheckin.steps.toLocaleString()}</Text>
+                      </LinearGradient>
+                    ) : null}
+                    {selectedDayCheckin.hrvMs ? (
+                      <LinearGradient colors={['rgba(139,92,246,0.15)', 'rgba(139,92,246,0.05)']} style={styles.checkinBadge}>
+                        <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>HRV</Text>
+                        <Text style={[styles.checkinBadgeValue, { color: '#8b5cf6' }]}>{Math.round(selectedDayCheckin.hrvMs)} ms</Text>
+                      </LinearGradient>
+                    ) : null}
+                  </View>
+                )}
+                {/* Sleep data */}
+                {selectedDayCheckin.sleepStages && (
+                  <View style={styles.checkinBadgeRow}>
+                    <LinearGradient colors={['rgba(99,102,241,0.15)', 'rgba(99,102,241,0.05)']} style={styles.checkinBadge}>
+                      <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Sleep</Text>
+                      <Text style={[styles.checkinBadgeValue, { color: '#6366f1' }]}>{selectedDayCheckin.sleepStages.total}h</Text>
+                    </LinearGradient>
+                    <LinearGradient colors={['rgba(30,64,175,0.15)', 'rgba(30,64,175,0.05)']} style={styles.checkinBadge}>
+                      <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Deep</Text>
+                      <Text style={[styles.checkinBadgeValue, { color: '#1e40af' }]}>{selectedDayCheckin.sleepStages.deep}h</Text>
+                    </LinearGradient>
+                    <LinearGradient colors={['rgba(124,58,237,0.15)', 'rgba(124,58,237,0.05)']} style={styles.checkinBadge}>
+                      <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>REM</Text>
+                      <Text style={[styles.checkinBadgeValue, { color: '#7c3aed' }]}>{selectedDayCheckin.sleepStages.rem}h</Text>
+                    </LinearGradient>
+                    {selectedDayCheckin.sleepStages.qualityScore != null && (
+                      <LinearGradient colors={['rgba(6,182,212,0.15)', 'rgba(6,182,212,0.05)']} style={styles.checkinBadge}>
+                        <Text style={[styles.checkinBadgeLabel, { color: t.textSecondary }]}>Quality</Text>
+                        <Text style={[styles.checkinBadgeValue, { color: Colors.pepTeal }]}>{selectedDayCheckin.sleepStages.qualityScore}%</Text>
+                      </LinearGradient>
+                    )}
+                  </View>
+                )}
                 {selectedDayCheckin.overallFeeling ? (
                   <Text style={[styles.checkinFeeling, { color: t.textSecondary }]}>
                     "{selectedDayCheckin.overallFeeling}"

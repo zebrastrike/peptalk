@@ -26,6 +26,9 @@ import { useTheme } from '../src/hooks/useTheme';
 import { CATEGORIES } from '../src/constants/categories';
 import { GOAL_OPTIONS } from '../src/constants/goals';
 import { trackOnboardingComplete } from '../src/services/analyticsEvents';
+import { calculateMacros } from '../src/utils/macroCalculator';
+import { useMealStore } from '../src/store/useMealStore';
+import { useProgressGoalsStore } from '../src/store/useProgressGoalsStore';
 import { AgeRange, Ethnicity, Gender, MaritalStatus, ReferralSource, ActivityLevel } from '../src/types';
 
 const GENDER_OPTIONS: Gender[] = ['Male', 'Female'];
@@ -114,6 +117,8 @@ export default function OnboardingScreen() {
 
   const login = useAuthStore((s) => s.login);
   const setTier = useSubscriptionStore((s) => s.setTier);
+  const setMealTargets = useMealStore((s) => s.setTargets);
+  const setGoalValue = useProgressGoalsStore((s) => s.setGoalValue);
 
   const {
     profile,
@@ -203,9 +208,35 @@ export default function OnboardingScreen() {
       return;
     }
 
-    // Step 7: final — apply plan and go to dashboard
+    // Step 7: final — apply plan, auto-calculate macros, go to dashboard
     if (step === 7) {
       setTier(selectedPlan);
+
+      // Auto-calculate personalized macro targets from user's stats
+      const bodyMetrics = useHealthProfileStore.getState().profile.bodyMetrics;
+      const lifestyle = useHealthProfileStore.getState().profile.lifestyle;
+      const macros = calculateMacros({
+        weightLbs: bodyMetrics.weightLbs,
+        heightInches: bodyMetrics.heightInches,
+        gender: profile.gender,
+        ageRange: profile.ageRange,
+        activityLevel: lifestyle.activityLevel,
+        goals: profile.healthGoals,
+      });
+      if (macros) {
+        setMealTargets({
+          calories: macros.calories, proteinGrams: macros.proteinGrams,
+          carbsGrams: macros.carbsGrams, fatGrams: macros.fatGrams,
+          fiberGrams: macros.fiberGrams, waterOz: macros.waterOz,
+        });
+        setGoalValue('cal', macros.calories);
+        setGoalValue('pro', macros.proteinGrams);
+        setGoalValue('carb', macros.carbsGrams);
+        setGoalValue('fat', macros.fatGrams);
+        setGoalValue('fiber', macros.fiberGrams);
+        setGoalValue('water', macros.waterOz);
+      }
+
       completeOnboarding();
       trackOnboardingComplete(profile.interestCategories.length);
       router.replace('/(tabs)');
@@ -297,11 +328,7 @@ export default function OnboardingScreen() {
 
             <TouchableOpacity
               style={styles.loginLink}
-              onPress={() => {
-                completeOnboarding();
-                router.replace('/(tabs)');
-                setTimeout(() => router.push('/(tabs)/profile'), 100);
-              }}
+              onPress={() => router.push('/auth')}
             >
               <Ionicons name="log-in-outline" size={18} color="#3B82F6" />
               <Text style={styles.loginLinkText}>Already have an account? Sign In</Text>
@@ -736,11 +763,7 @@ export default function OnboardingScreen() {
 
             <TouchableOpacity
               style={styles.loginLink}
-              onPress={() => {
-                completeOnboarding();
-                router.replace('/(tabs)');
-                setTimeout(() => router.push('/(tabs)/profile'), 100);
-              }}
+              onPress={() => router.push('/auth')}
             >
               <Ionicons name="log-in-outline" size={18} color="#3B82F6" />
               <Text style={styles.loginLinkText}>Already have an account? Sign In</Text>

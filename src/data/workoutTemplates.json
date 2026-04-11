@@ -1,0 +1,4128 @@
+[
+  {
+    "id": "transformation-3d-60m-female",
+    "goal": "transformation",
+    "daysPerWeek": 3,
+    "durationMinutes": 60,
+    "gender": "female",
+    "label": "Transformation 3-Day",
+    "days": [
+      {
+        "name": "New Transformation 3D/60/D1",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "normal",
+            "tempo": "2121",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "tempo": "2121",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 3D/60/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1/1",
+            "setType": "super_set_4",
+            "timeSeconds": 45
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15/15/15/15",
+            "setType": "super_set_4",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 3D/60/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15/15/15/15",
+            "setType": "super_set_4"
+          },
+          {
+            "muscle": "core",
+            "priority": "P3",
+            "reps": "12/12/12/12",
+            "setType": "super_set_4",
+            "rest": "30 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "transformation-4d-60m-female",
+    "goal": "transformation",
+    "daysPerWeek": 4,
+    "durationMinutes": 60,
+    "gender": "female",
+    "label": "Transformation 4-Day",
+    "days": [
+      {
+        "name": "New Transformation 4D/60/D1",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 4D/60/D2",
+        "slots": [
+          {
+            "muscle": "barbell hip thrusts",
+            "priority": "P1",
+            "reps": "10/10/10/10",
+            "setType": "normal",
+            "tempo": "2121",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 4D/60/D3",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10/10/10/10",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "1/1/1/1",
+            "setType": "super_set_3",
+            "timeSeconds": 30,
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 4D/60/D4",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "15/15/15/15/",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "15/15/15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "41255",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P2",
+            "reps": "41255",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "41255",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15/15/15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P2",
+            "reps": "15/15/15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "transformation-5d-60m-female",
+    "goal": "transformation",
+    "daysPerWeek": 5,
+    "durationMinutes": 60,
+    "gender": "female",
+    "label": "Transformation 5-Day",
+    "days": [
+      {
+        "name": "New Transformation 5D/60/D1",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "normal",
+            "tempo": "2121",
+            "rest": " 30 seconds "
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 5D/60/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_4"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_4",
+            "rest": "10 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 5D/60/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "12/12/12/12",
+            "setType": "normal",
+            "rest": "30 seconds "
+          },
+          {
+            "muscle": "quads",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "12-15/12-15/12-15/12-15",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "1/1/1/1",
+            "setType": "super_set_4",
+            "timeSeconds": 30
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "1/1/1/1",
+            "setType": "super_set_4",
+            "timeSeconds": 30,
+            "rest": "10 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 5D/60/D4",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "12/12/12/12",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10/10/10/10",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "41255",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "41255",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "41255",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "41255",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P2",
+            "reps": "41255",
+            "setType": "super_set"
+          }
+        ]
+      },
+      {
+        "name": "New Transformation 5D/60/D5",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "20",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "1/1/1/1",
+            "setType": "normal",
+            "timeSeconds": 1
+          },
+          {
+            "muscle": "circuit_lower",
+            "priority": "P2",
+            "reps": "15/15/15/15",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_pull",
+            "priority": "P2",
+            "reps": "15/15/15/15",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1/1",
+            "setType": "normal",
+            "timeSeconds": 45
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15/15/15/15",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P3",
+            "reps": "15/15/15/15",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15/15/15/15",
+            "setType": "normal",
+            "rest": "1 minute"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weight_loss-3d-60m-female",
+    "goal": "weight_loss",
+    "daysPerWeek": 3,
+    "durationMinutes": 60,
+    "gender": "female",
+    "label": "Weight Loss 3-Day",
+    "days": [
+      {
+        "name": "New Fat Loss 3D/60/D1",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "normal"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "normal"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_3"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 3D/60/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "normal"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "normal"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_3"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 3D/60/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "normal"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1/1",
+            "setType": "normal",
+            "timeSeconds": 1
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P3",
+            "reps": "15-20/15-12/15-20/15-20",
+            "setType": "normal"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weight_loss-4d-60m-female",
+    "goal": "weight_loss",
+    "daysPerWeek": 4,
+    "durationMinutes": 60,
+    "gender": "female",
+    "label": "Weight Loss 4-Day",
+    "days": [
+      {
+        "name": "New Fat Loss 4D/60/D1",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1/1",
+            "setType": "super_set_4",
+            "timeSeconds": 1
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4",
+            "rest": "15 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 4D/60/D2",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 4D/60/D3",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P3",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4",
+            "rest": "10 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 4D/60/D4",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weight_loss-5d-60m-female",
+    "goal": "weight_loss",
+    "daysPerWeek": 5,
+    "durationMinutes": 60,
+    "gender": "female",
+    "label": "Weight Loss 5-Day",
+    "days": [
+      {
+        "name": "New Fat Loss 5D/60/D1",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1/1",
+            "setType": "super_set_4"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 5D/60/D2",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1/1",
+            "setType": "super_set_4",
+            "timeSeconds": 30
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 5D/60/D3",
+        "slots": [
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "timeSeconds": 1,
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 5D/60/D4",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P3",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_4",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Fat Loss 5D/60/D5",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "normal",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P2",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_2",
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "1/1/1/1",
+            "setType": "normal",
+            "timeSeconds": 1,
+            "rest": "30 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "15-20/15-20/15-20/15-20",
+            "setType": "super_set_3",
+            "rest": "30 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "circuit-3d-30m-anyone",
+    "goal": "circuit",
+    "daysPerWeek": 3,
+    "durationMinutes": 30,
+    "gender": "anyone",
+    "label": "Circuit 3-Day",
+    "days": [
+      {
+        "name": "New Circuit 3D/30/D1",
+        "slots": [
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_lower",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_lower",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 3D/30/D2",
+        "slots": [
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_push",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_pull",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1",
+            "setType": "super_set",
+            "timeSeconds": 1
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 3D/30/D3",
+        "slots": [
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_lower",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_push",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "circuit_pull",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "super_set"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "1/1/1",
+            "setType": "super_set",
+            "timeSeconds": 1
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "1/1/1",
+            "setType": "super_set",
+            "timeSeconds": 1,
+            "rest": "30 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "circuit-4d-30m-anyone",
+    "goal": "circuit",
+    "daysPerWeek": 4,
+    "durationMinutes": 30,
+    "gender": "anyone",
+    "label": "Circuit 4-Day",
+    "days": [
+      {
+        "name": "New Circuit 4D/30/D1",
+        "slots": [
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_lower",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 4D/30/D2",
+        "slots": [
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_pull",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_push",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "1/1/1",
+            "setType": "normal",
+            "timeSeconds": 1
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 4D/30/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "10/10/10",
+            "setType": "normal",
+            "rest": "30 seconds"
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 4D/30/D4",
+        "slots": [
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "1/1/1",
+            "setType": "normal",
+            "timeSeconds": 1
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal",
+            "rest": "30 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "circuit-5d-30m-anyone",
+    "goal": "circuit",
+    "daysPerWeek": 5,
+    "durationMinutes": 30,
+    "gender": "anyone",
+    "label": "Circuit 5-Day",
+    "days": [
+      {
+        "name": "New Circuit 5D/30/D1",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P3",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P2",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "timeSeconds": 1
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 5D/30/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal",
+            "timeSeconds": 1
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 5D/30/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_push",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "1/1/1",
+            "setType": "normal",
+            "timeSeconds": 1
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 5D/30/D4",
+        "slots": [
+          {
+            "muscle": "circuit_pull",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P3",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal",
+            "timeSeconds": 1
+          }
+        ]
+      },
+      {
+        "name": "New Circuit 5D/30/D5",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "circuit_lower",
+            "priority": "P2",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P3",
+            "reps": "10/10/10",
+            "setType": "normal"
+          },
+          {
+            "muscle": "core",
+            "priority": "P4",
+            "reps": "1/1/1",
+            "setType": "normal",
+            "timeSeconds": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hypertrophy-3d-60m-male",
+    "goal": "hypertrophy",
+    "daysPerWeek": 3,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Hypertrophy 3-Day",
+    "days": [
+      {
+        "name": "Hypertrophy 3D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 3D/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 3D/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hypertrophy-4d-60m-male",
+    "goal": "hypertrophy",
+    "daysPerWeek": 4,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Hypertrophy 4-Day",
+    "days": [
+      {
+        "name": "Hypertrophy 4D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 4D/D2",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 4D/D3",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 4D/D4",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hypertrophy-5d-60m-male",
+    "goal": "hypertrophy",
+    "daysPerWeek": 5,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Hypertrophy 5-Day",
+    "days": [
+      {
+        "name": "Hypertrophy 5D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 5D/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 5D/D3",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "trapezius",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 5D/D4",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Hypertrophy 5D/D5",
+        "slots": [
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "strength-3d-60m-male",
+    "goal": "strength",
+    "daysPerWeek": 3,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Strength 3-Day",
+    "days": [
+      {
+        "name": "Strength 3D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 3D/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 3D/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "strength-4d-60m-male",
+    "goal": "strength",
+    "daysPerWeek": 4,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Strength 4-Day",
+    "days": [
+      {
+        "name": "Strength 4D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 4D/D2",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 4D/D3",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 4D/D4",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "trapezius",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "strength-5d-60m-male",
+    "goal": "strength",
+    "daysPerWeek": 5,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Strength 5-Day",
+    "days": [
+      {
+        "name": "Strength 5D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 5D/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 5D/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 5D/D4",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "trapezius",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "12/12/12",
+            "setType": "normal",
+            "rest": "90-120 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Strength 5D/D5",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "6-8/6-8/6-8/6-8/6-8",
+            "setType": "normal",
+            "tempo": "3010",
+            "rest": "90-120 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "aerobic-3d-60m-male",
+    "goal": "aerobic",
+    "daysPerWeek": 3,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Aerobic Performance 3-Day",
+    "days": [
+      {
+        "name": "Aerobic Performance 3D/D1",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_3",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 3D/D2",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_3",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 3D/D3",
+        "slots": [
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_3",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "aerobic-4d-60m-male",
+    "goal": "aerobic",
+    "daysPerWeek": 4,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Aerobic Performance 4-Day",
+    "days": [
+      {
+        "name": "Aerobic Performance 4D/D1",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 4D/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 4D/D3",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 4D/D4",
+        "slots": [
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "aerobic-5d-60m-male",
+    "goal": "aerobic",
+    "daysPerWeek": 5,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Aerobic Performance 5-Day",
+    "days": [
+      {
+        "name": "Aerobic Performance 5D/D1",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 5D/D2",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 5D/D3",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 5D/D4",
+        "slots": [
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "30sec/30sec/30sec",
+            "setType": "normal",
+            "rest": "15-20 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Aerobic Performance 5D/D5",
+        "slots": [
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "AMRAP/AMRAP/AMRAP",
+            "setType": "super_set_2",
+            "rest": "15-20 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "body_recomp-3d-60m-male",
+    "goal": "body_recomp",
+    "daysPerWeek": 3,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Body Recomp 3-Day",
+    "days": [
+      {
+        "name": "Body Recomp 3D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 3D/D2",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 3D/D3",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "body_recomp-4d-60m-male",
+    "goal": "body_recomp",
+    "daysPerWeek": 4,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Body Recomp 4-Day",
+    "days": [
+      {
+        "name": "Body Recomp 4D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 4D/D2",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 4D/D3",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 4D/D4",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "body_recomp-5d-60m-male",
+    "goal": "body_recomp",
+    "daysPerWeek": 5,
+    "durationMinutes": 60,
+    "gender": "male",
+    "label": "Body Recomp 5-Day",
+    "days": [
+      {
+        "name": "Body Recomp 5D/D1",
+        "slots": [
+          {
+            "muscle": "chest",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "chest",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 5D/D2",
+        "slots": [
+          {
+            "muscle": "back",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "back",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 5D/D3",
+        "slots": [
+          {
+            "muscle": "quads",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "glutes",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "hamstrings",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 5D/D4",
+        "slots": [
+          {
+            "muscle": "shoulders",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "shoulders",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "trapezius",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "core",
+            "priority": "P1",
+            "reps": "15/15/15",
+            "setType": "normal",
+            "rest": "30-45 seconds"
+          }
+        ]
+      },
+      {
+        "name": "Body Recomp 5D/D5",
+        "slots": [
+          {
+            "muscle": "glutes",
+            "priority": "P2",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "calves",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "biceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "triceps",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "super_set_2",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          },
+          {
+            "muscle": "circuit_cardio",
+            "priority": "P1",
+            "reps": "10-12/10-12/10-12/10-12",
+            "setType": "normal",
+            "tempo": "2010",
+            "rest": "30-45 seconds"
+          }
+        ]
+      }
+    ]
+  }
+]

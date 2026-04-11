@@ -1256,61 +1256,138 @@ const deleteStyles = StyleSheet.create({
 // ---------------------------------------------------------------------------
 // Main Screen
 // ---------------------------------------------------------------------------
+
+const profileStyles = StyleSheet.create({
+  container: { flex: 1 },
+  scroll: { paddingHorizontal: Spacing.lg, paddingBottom: 40 },
+  pageTitle: { fontSize: 28, fontWeight: '900', marginTop: 12, marginBottom: 20 },
+  section: { marginBottom: 20 },
+  sectionTitle: { fontSize: 12, fontWeight: '700', letterSpacing: 1, marginBottom: 8, marginLeft: 4 },
+  card: { borderRadius: 12, borderWidth: 1, overflow: 'hidden' },
+  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 16, gap: 12 },
+  rowLabel: { flex: 1, fontSize: 15, fontWeight: '500' },
+  divider: { height: 1, marginLeft: 48 },
+  settingRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 16, gap: 12 },
+  settingLabel: { flex: 1, fontSize: 15, fontWeight: '500' },
+  signOutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, marginTop: 8 },
+  signOutText: { fontSize: 15, fontWeight: '600', color: '#ef4444' },
+  version: { fontSize: 12, textAlign: 'center', marginTop: 16 },
+});
+
+// Simple row component for profile menu items
+function ProfileRow({ icon, label, onPress, color }: { icon: string; label: string; onPress: () => void; color: string }) {
+  return (
+    <TouchableOpacity style={profileStyles.row} onPress={onPress} activeOpacity={0.6}>
+      <Ionicons name={icon as any} size={20} color={color} />
+      <Text style={[profileStyles.rowLabel, { color }]}>{label}</Text>
+      <Ionicons name="chevron-forward" size={16} color="#6b7280" />
+    </TouchableOpacity>
+  );
+}
+
 export default function ProfileScreen() {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, logout } = useAuthStore();
   const t = useTheme();
+  const router = useRouter();
+  const themeMode = useThemeStore((s) => s.mode);
+  const setThemeMode = useThemeStore((s) => s.setMode);
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete My Data',
+      'This will permanently remove all health data, dose logs, check-ins, and chat history from this device. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete Everything',
+          style: 'destructive',
+          onPress: () => {
+            // Clear all stores
+            useOnboardingStore.getState().reset();
+            useHealthProfileStore.getState().resetProfile();
+            Alert.alert('Done', 'All data has been deleted.');
+          },
+        },
+      ],
+    );
+  };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
+    <SafeAreaView style={[profileStyles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={profileStyles.scroll}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerRow}>
-            <Text style={[styles.title, { color: t.text }]}>Profile</Text>
-            <View style={styles.headerIconWrap}>
-              <Ionicons name="person" size={20} color={Colors.rose} />
+        {/* ── Header ── */}
+        <Text style={[profileStyles.pageTitle, { color: t.text }]}>Profile</Text>
+
+        {/* ── Auth: Login or User Card ── */}
+        {isAuthenticated ? <UserProfile /> : <LoginForm />}
+
+        {/* ── Account Section ── */}
+        {isAuthenticated && (
+          <View style={profileStyles.section}>
+            <Text style={[profileStyles.sectionTitle, { color: t.textSecondary }]}>ACCOUNT</Text>
+            <View style={[profileStyles.card, { backgroundColor: t.card, borderColor: t.cardBorder }]}>
+              <ProfileRow icon="person-outline" label="Edit Profile" onPress={() => router.push('/onboarding?edit=true' as any)} color={t.text} />
+              <View style={[profileStyles.divider, { backgroundColor: t.cardBorder }]} />
+              <ProfileRow icon="body-outline" label="Health Profile" onPress={() => router.push('/health-profile')} color={t.text} />
+              <View style={[profileStyles.divider, { backgroundColor: t.cardBorder }]} />
+              <ProfileRow icon="diamond-outline" label="Subscription" onPress={() => router.push('/subscription')} color={t.text} />
+              <View style={[profileStyles.divider, { backgroundColor: t.cardBorder }]} />
+              <ProfileRow icon="document-text-outline" label="Health Report" onPress={() => router.push('/health-report' as any)} color={t.text} />
             </View>
+          </View>
+        )}
+
+        {/* ── Settings Section ── */}
+        <View style={profileStyles.section}>
+          <Text style={[profileStyles.sectionTitle, { color: t.textSecondary }]}>SETTINGS</Text>
+          <View style={[profileStyles.card, { backgroundColor: t.card, borderColor: t.cardBorder }]}>
+            <View style={profileStyles.settingRow}>
+              <Ionicons name="moon-outline" size={20} color={t.text} />
+              <Text style={[profileStyles.settingLabel, { color: t.text }]}>Dark Mode</Text>
+              <Switch
+                value={themeMode === 'dark'}
+                onValueChange={(val) => setThemeMode(val ? 'dark' : 'light')}
+                trackColor={{ false: 'rgba(255,255,255,0.1)', true: Colors.pepTeal + '55' }}
+                thumbColor={themeMode === 'dark' ? Colors.pepTeal : '#ccc'}
+              />
+            </View>
+            <View style={[profileStyles.divider, { backgroundColor: t.cardBorder }]} />
+            <ProfileRow icon="notifications-outline" label="Notifications" onPress={() => router.push('/notification-settings' as any)} color={t.text} />
           </View>
         </View>
 
-        {/* Content */}
-        {isAuthenticated ? <UserProfile /> : <LoginForm />}
-
-        <ResearchProfileCard />
-
-        <HealthProfileCard />
-
-        <QuickLinksSection />
-
-        <NotificationSettings />
-
-        {/* Delete My Data */}
-        <DeleteDataSection />
-
-        <LegalLinks />
-
-        {/* Disclaimer and Branding */}
-        <View style={styles.footerBranding}>
-          <GlassCard style={styles.brandFooterCard}>
-            <LinearGradient
-              colors={[Colors.rose, Colors.roseDark]}
-              style={styles.brandFooterIcon}
-            >
-              <Ionicons name="flask" size={18} color="#fff" />
-            </LinearGradient>
-            <Text style={[styles.brandFooterName, { color: t.text }]}>PepTalk</Text>
-            <Text style={[styles.brandFooterTagline, { color: t.textSecondary }]}>
-              Evidence-driven peptide research tools
-            </Text>
-          </GlassCard>
+        {/* ── Data Section ── */}
+        <View style={profileStyles.section}>
+          <Text style={[profileStyles.sectionTitle, { color: t.textSecondary }]}>DATA</Text>
+          <View style={[profileStyles.card, { backgroundColor: t.card, borderColor: t.cardBorder }]}>
+            <ProfileRow icon="download-outline" label="Export My Data" onPress={() => router.push('/health-report' as any)} color={t.text} />
+            <View style={[profileStyles.divider, { backgroundColor: t.cardBorder }]} />
+            <ProfileRow icon="trash-outline" label="Delete My Data" onPress={handleDelete} color="#ef4444" />
+          </View>
         </View>
 
-        <Disclaimer />
+        {/* ── Legal ── */}
+        <View style={profileStyles.section}>
+          <View style={[profileStyles.card, { backgroundColor: t.card, borderColor: t.cardBorder }]}>
+            <ProfileRow icon="shield-outline" label="Privacy Policy" onPress={() => router.push('/privacy')} color={t.text} />
+            <View style={[profileStyles.divider, { backgroundColor: t.cardBorder }]} />
+            <ProfileRow icon="document-outline" label="Terms of Service" onPress={() => router.push('/terms')} color={t.text} />
+          </View>
+        </View>
+
+        {/* ── Sign Out ── */}
+        {isAuthenticated && (
+          <TouchableOpacity style={profileStyles.signOutBtn} onPress={logout} activeOpacity={0.7}>
+            <Ionicons name="log-out-outline" size={18} color="#ef4444" />
+            <Text style={profileStyles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
+        )}
+
+        <Text style={[profileStyles.version, { color: t.textSecondary }]}>PepTalk v1.0.0</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -1815,3 +1892,5 @@ const notifStyles = StyleSheet.create({
     textAlign: 'right',
   },
 });
+
+

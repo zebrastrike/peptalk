@@ -191,6 +191,10 @@ export interface SleepStageData {
   deep: number;    // hours
   rem: number;     // hours
   total: number;   // hours
+  bedtime?: string;      // ISO timestamp
+  wakeTime?: string;     // ISO timestamp
+  efficiency?: number;   // 0-100%
+  qualityScore?: number; // 0-100 weighted composite
 }
 
 export interface CheckInEntry {

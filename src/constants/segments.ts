@@ -270,3 +270,73 @@ export const getSegmentByProfile = (
     DASHBOARD_SEGMENTS.find((segment) => segment.id === id) ?? fallback
   );
 };
+
+// ── Two UI Layouts: Male / Female ───────────────────────────────────────────
+
+export interface DashboardLayout {
+  id: 'male' | 'female';
+  label: string;
+  tagline: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  palette: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    card: string;
+  };
+  focusAreas: string[];
+}
+
+export const DASHBOARD_LAYOUTS: Record<string, DashboardLayout> = {
+  male: {
+    id: 'male',
+    label: 'Performance',
+    tagline: 'Optimize your body and mind.',
+    heroTitle: 'Your Health Dashboard',
+    heroSubtitle: 'Train hard. Recover smart. Track everything.',
+    palette: {
+      primary: '#3B82F6',
+      secondary: '#1a2535',
+      accent: '#06B6D4',
+      background: '#0f1720',
+      card: '#1a2535',
+    },
+    focusAreas: [
+      'Strength & performance',
+      'Body composition',
+      'Recovery & sleep',
+      'Hormone optimization',
+    ],
+  },
+  female: {
+    id: 'female',
+    label: 'Vitality',
+    tagline: 'Balance, strength, and wellness.',
+    heroTitle: 'Your Wellness Dashboard',
+    heroSubtitle: 'Strong body. Clear mind. Balanced life.',
+    palette: {
+      primary: '#e3a7a1',
+      secondary: '#1a2535',
+      accent: '#b9cbb6',
+      background: '#0f1720',
+      card: '#1a2535',
+    },
+    focusAreas: [
+      'Hormonal balance & cycle health',
+      'Strength & body composition',
+      'Skin, hair & vitality',
+      'Sleep & stress management',
+    ],
+  },
+};
+
+/**
+ * Get the UI layout based on gender only (2 layouts, not 8).
+ * Age-specific content still comes from getSegmentByProfile() for messaging.
+ */
+export const getLayoutByGender = (gender: Gender | null): DashboardLayout => {
+  if (!gender) return DASHBOARD_LAYOUTS.male;
+  return gender === 'Female' ? DASHBOARD_LAYOUTS.female : DASHBOARD_LAYOUTS.male;
+};

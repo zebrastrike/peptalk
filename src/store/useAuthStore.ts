@@ -38,6 +38,45 @@ export const useAuthStore = create<AuthStore>()(
       login: async (email: string, password: string) => {
         set({ isLoading: true });
 
+        // Dev account bypass — skip Supabase for test/dev emails
+        const DEV_EMAILS: Record<string, { name: string; tier: string }> = {
+          'burnsnoho@gmail.com': { name: 'Burns', tier: 'pro' },
+          'free@test.com': { name: 'Free Tester', tier: 'free' },
+          'plus@test.com': { name: 'Plus Tester', tier: 'plus' },
+          'pro@test.com': { name: 'Pro Tester', tier: 'pro' },
+          'jamie@test.com': { name: 'Jamie', tier: 'pro' },
+          'jake@test.com': { name: 'Jake', tier: 'pro' },
+          'sophia@test.com': { name: 'Sophia', tier: 'plus' },
+          'marcus@test.com': { name: 'Marcus', tier: 'pro' },
+          'sarah@test.com': { name: 'Sarah', tier: 'plus' },
+          'richard@test.com': { name: 'Richard', tier: 'pro' },
+          'diana@test.com': { name: 'Diana', tier: 'pro' },
+          'walter@test.com': { name: 'Walter', tier: 'free' },
+          'margaret@test.com': { name: 'Margaret', tier: 'free' },
+        };
+
+        const _email = email.toLowerCase().trim();
+        const devAccount = DEV_EMAILS[_email];
+
+        if (devAccount) {
+          const { useSubscriptionStore } = require('./useSubscriptionStore');
+          useSubscriptionStore.getState().setTier(devAccount.tier as any);
+
+          const appUser: User = {
+            id: `dev-${Date.now()}`,
+            email: _email,
+            name: devAccount.name,
+            savedStacks: [],
+            favoritePeptides: [],
+            isPro: devAccount.tier === 'pro',
+            createdAt: new Date().toISOString(),
+          };
+
+          set({ user: appUser, isAuthenticated: true, isLoading: false });
+          return;
+        }
+
+        // Real Supabase auth for non-dev emails
         try {
           const { data, error } = await db.auth.signInWithPassword({
             email,

@@ -20,8 +20,10 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { useAuthStore } from '../src/store/useAuthStore';
 import { useSubscriptionStore } from '../src/store/useSubscriptionStore';
+import { useOnboardingStore } from '../src/store/useOnboardingStore';
 import { Colors, FontSizes, Spacing, BorderRadius } from '../src/constants/theme';
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
@@ -70,10 +72,12 @@ export default function AuthScreen() {
   // Signup step: 1 = account info, 2 = choose plan
   const [signupStep, setSignupStep] = useState(1);
 
+  const router = useRouter();
   const login = useAuthStore((s) => s.login);
   const signup = useAuthStore((s) => s.signup);
   const isLoading = useAuthStore((s) => s.isLoading);
   const setTier = useSubscriptionStore((s) => s.setTier);
+  const completeOnboarding = useOnboardingStore((s) => s.completeOnboarding);
 
   const handleLogin = async () => {
     if (!email.includes('@') || password.length < 6) {
@@ -83,6 +87,9 @@ export default function AuthScreen() {
     setError('');
     try {
       await login(email, password);
+      // Mark onboarding complete so _layout routes to the main app
+      completeOnboarding();
+      router.replace('/(tabs)');
     } catch {
       setError('Invalid email or password');
     }
@@ -101,6 +108,8 @@ export default function AuthScreen() {
     try {
       await signup(name.trim(), email, password);
       setTier(selectedTier);
+      completeOnboarding();
+      router.replace('/(tabs)');
     } catch {
       setError('Something went wrong. Try again.');
     }
